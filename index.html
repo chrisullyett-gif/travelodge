@@ -1190,36 +1190,32 @@
 
 </script>
 <script>
-    // Continuous Background Sync
+    // Targeted State Sync for Travelodge Depot
     document.addEventListener("DOMContentLoaded", () => {
         if (!window.firebase) return;
         const db = firebase.database();
-        const syncRef = db.ref('travelodge_all_data');
+        const stateRef = db.ref('travelodge_all_data');
 
-        // Pull remote changes into localStorage
-        syncRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                Object.keys(data).forEach(key => {
-                    if (localStorage.getItem(key) !== data[key]) {
-                        localStorage.setItem(key, data[key]);
-                        // Optional: reload if external data changes
-                    }
-                });
+        // Pull changes from Firebase into localStorage
+        stateRef.on('value', (snapshot) => {
+            const remoteData = snapshot.val();
+            if (remoteData && remoteData.travelodge_depot_state) {
+                const localData = localStorage.getItem('travelodge_depot_state');
+                if (localData !== remoteData.travelodge_depot_state) {
+                    localStorage.setItem('travelodge_depot_state', remoteData.travelodge_depot_state);
+                    console.log("Synced down from Firebase!");
+                }
             }
         });
 
-        // Push local changes every 2 seconds automatically
+        // Push changes from localStorage to Firebase every 2 seconds
         setInterval(() => {
-            const allData = {};
-            let hasData = false;
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                allData[key] = localStorage.getItem(key);
-                hasData = true;
-            }
-            if (hasData) {
-                syncRef.update(allData);
+            const currentState = localStorage.getItem('travelodge_depot_state');
+            if (currentState) {
+                stateRef.set({
+                    travelodge_depot_state: currentState,
+                    lastUpdated: Date.now()
+                });
             }
         }, 2000);
     });
