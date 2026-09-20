@@ -1188,4 +1188,31 @@
    
 
 </script>
+    <script>
+    // Automatic Background Sync (No function changes needed!)
+    document.addEventListener("DOMContentLoaded", () => {
+        if (!window.firebase || !firebase.apps.length) return;
+        const db = firebase.database();
+        const syncRef = db.ref('travelodge_shared_state');
+
+        // Listen for updates from other devices and load them automatically
+        syncRef.on('value', (snapshot) => {
+            const remoteData = snapshot.val();
+            if (remoteData && remoteData.payload) {
+                // If another device updated the data, sync it locally if needed
+                localStorage.setItem('travelodge_data', remoteData.payload);
+            }
+        });
+
+        // Automatically push local changes when actions happen on the page
+        document.addEventListener('click', () => {
+            setTimeout(() => {
+                const currentData = localStorage.getItem('travelodge_data');
+                if (currentData) {
+                    syncRef.set({ payload: currentData, updatedBy: navigator.platform, timestamp: Date.now() });
+                }
+            }, 500);
+        });
+    });
+</script>
 </html>
