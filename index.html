@@ -1189,33 +1189,38 @@
 
 </script>
 <script>
-    // Universal LocalStorage Mirror to Firebase
+    // Continuous Background Sync
     document.addEventListener("DOMContentLoaded", () => {
         if (!window.firebase) return;
         const db = firebase.database();
         const syncRef = db.ref('travelodge_all_data');
 
-        // Pull remote changes
+        // Pull remote changes into localStorage
         syncRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 Object.keys(data).forEach(key => {
-                    localStorage.setItem(key, data[key]);
+                    if (localStorage.getItem(key) !== data[key]) {
+                        localStorage.setItem(key, data[key]);
+                        // Optional: reload if external data changes
+                    }
                 });
             }
         });
 
-        // Push local changes on click
-        document.addEventListener('click', () => {
-            setTimeout(() => {
-                const allData = {};
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    allData[key] = localStorage.getItem(key);
-                }
-                syncRef.set(allData);
-            }, 500);
-        });
+        // Push local changes every 2 seconds automatically
+        setInterval(() => {
+            const allData = {};
+            let hasData = false;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allData[key] = localStorage.getItem(key);
+                hasData = true;
+            }
+            if (hasData) {
+                syncRef.update(allData);
+            }
+        }, 2000);
     });
 </script>
 </html>
