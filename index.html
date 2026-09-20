@@ -1173,14 +1173,15 @@
 
         // Firebase Initialization
         const firebaseConfig = {
-            apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwlLOTeg0zHR3MI",
-            authDomain: "travelogsheffield.firebaseapp.com",
-            projectId: "travelogsheffield",
-            storageBucket: "travelogsheffield.firebasestorage.app",
-            messagingSenderId: "682268814885",
-            appId: "1:682268814885:web:ceb6aa889981163ad399cc",
-            measurementId: "G-SGXMPS2PV6"
-        };
+    apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwllOTeg0ZHR3MI",
+    authDomain: "travelogsheffield.firebaseapp.com",
+    databaseURL: "https://travelogsheffield-default-rtdb.firebaseio.com",
+    projectId: "travelogsheffield",
+    storageBucket: "travelogsheffield.appspot.com",
+    messagingSenderId: "682268814885",
+    appId: "1:682268814885:web:ceb6aa88981163ad399cc",
+    measurementId: "G-SGXMPS2PV6"
+};
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
