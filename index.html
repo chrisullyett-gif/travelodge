@@ -1,76 +1,384 @@
-Here is the complete combined code assembled from all the chunks you sent over. You can check through to make sure everything is present and correct:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travelodge Route & Manifest Portal</title>
+    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js)"></script>
+    <style>
+        :root {
+            --tl-navy: #002D62;
+            --tl-blue: #0047AB;
+            --tl-red: #E31B23;
+            --bg-light: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+        }
 
-```html
-<!-- DRIVER PORTAL -->
-        <div id="driverScreen" class="screen">
-            <div class="card" style="background: var(--tl-navy); color: white;">
-                <h2 style="color: white; margin-bottom: 8px;">🚚 Driver Live Manifest</h2>
-                <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
-                
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
-                    <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--tl-navy);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        header h1 {
+            font-size: 18px;
+        }
+
+        .home-btn {
+            background: var(--tl-red);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .active-screen {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card h2, .card h3 {
+            color: var(--tl-navy);
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--tl-blue);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .btn-primary { background: var(--tl-blue); color: white; }
+        .btn-success { background: var(--success-color); color: white; }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-secondary { background: #e5e7eb; color: var(--text-main); }
+
+        .manifest-card {
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .eng-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .eng-checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            background: #f3f4f6;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .eng-checkbox-label input {
+            margin-right: 6px;
+        }
+
+        .item-photo {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-top: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .route-order-controls {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .route-order-controls button {
+            flex: 1;
+        }
+
+        .notes-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #b45309;
+            margin-top: 6px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+
+    <header id="headerBar" style="display: none;">
+        <h1 id="headerTitle">Travelodge Hub Manager</h1>
+        <button class="home-btn" onclick="returnHome()">🏠 Home</button>
+    </header>
+
+    <!-- PORTAL HOME SELECTOR -->
+    <div id="portalHome" class="screen active-screen">
+        <div class="card" style="text-align: center; padding: 30px 20px;">
+            <h2 style="font-size: 22px; color: var(--tl-navy); margin-bottom: 8px;">Travelodge Operations Portal</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Select your workspace view to continue.</p>
+            
+            <button class="btn btn-primary" style="padding: 16px; font-size: 16px; margin-bottom: 12px;" onclick="openOperativePortal()">🏢 Depot Operative (Manifest Builder)</button>
+            <button class="btn btn-success" style="padding: 16px; font-size: 16px; margin-bottom: 12px;" onclick="openDriverPortal()">🚚 Driver Live Navigation Portal</button>
+            <button class="btn btn-secondary" style="padding: 14px; font-size: 15px; background: #e5e7eb; color: var(--text-main);" onclick="openSettingsPortal()">⚙ Hubs & Settings Configuration</button>
+        </div>
+    </div>
+
+    <!-- OPERATIVE PORTAL -->
+    <div id="operativeScreen" class="screen">
+        <div class="card">
+            <h2>Depot Route Builder</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                <div class="form-group" style="margin:0;">
+                    <label>Start Hub</label>
+                    <select id="opStartHubSelect" onchange="updateRouteEndpoints()"></select>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>End Destination / Hub</label>
+                    <select id="opEndHubSelect" onchange="updateRouteEndpoints()"></select>
                 </div>
             </div>
 
-            <div class="card">
-                <h3>Assigned Drops</h3>
-                <div id="driverManifestList">
-                    <p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>
-                </div>
+            <div class="form-group">
+                <label>Search Hotel Destination</label>
+                <input type="text" id="opHotelSearch" placeholder="Type hotel name to filter..." oninput="filterOpHotels()">
             </div>
 
-            <div class="card" id="returnJourneySection" style="display: none; background: #f0fdf4; border-color: #bbf7d0;">
-                <h3 style="color: #166534;">🏁 End of Route / Return Journey</h3>
-                <p style="font-size: 13px; color: #15803d; margin-bottom: 12px;">All deliveries are completed! Select your return destination.</p>
-                
-                <div class="form-group">
-                    <label style="color: #166534;">Return Hub / Destination</label>
-                    <select id="driverReturnSelect"></select>
-                </div>
+            <div class="form-group">
+                <label>Select Hotel Drop</label>
+                <select id="opHotelSelect" size="4" style="height: 100px;" onchange="loadHotelNotePreset()"></select>
+            </div>
 
-                <button class="btn btn-success" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
-                <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift</button>
+            <div class="form-group">
+                <label>Assigned Engineers</label>
+                <div id="opEngineerCheckboxes" class="eng-checkbox-group"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Sticker Dot Colour</label>
+                <select id="opColorSelect">
+                    <option value="">-- Select Dot Colour --</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Purple">Purple</option>
+                    <option value="White">White</option>
+                    <option value="Black">Black</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hotel Notes / Access Instructions</label>
+                <textarea id="opHotelNotes" rows="2" placeholder="Gate codes, parking restrictions..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Staging Area Photo (Optional)</label>
+                <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 13px;">
+            </div>
+
+            <button class="btn btn-primary" onclick="addManifestDrop()">➕ Add Drop to Manifest</button>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3>Active Manifest (<span id="opDropCount">0</span> Drops)</h3>
+            </div>
+            
+            <div id="opRouteSummaryContainer" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; color: #1e40af;">
+                <strong>Estimated Workload:</strong> <span id="opEstWorkload">0 mins</span> (<span id="opDropTimeDisplay">10</span> mins per stop)
+            </div>
+
+            <div id="opManifestList">
+                <p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 16px;">
+                <button class="btn btn-secondary" style="margin: 0; background: #e5e7eb;" onclick="launchOpFullRouteMap()">🗺️ Full Route Map</button>
+                <button id="publishBtn" class="btn btn-success" style="margin: 0;" onclick="publishManifest()" disabled>🚀 Publish Manifest</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DRIVER PORTAL -->
+    <div id="driverScreen" class="screen">
+        <div class="card" style="background: var(--tl-navy); color: white;">
+            <h2 style="color: white; margin-bottom: 8px;">🚚 Driver Live Manifest</h2>
+            <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
+            
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
+                <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
             </div>
         </div>
 
-        <!-- SETTINGS PORTAL -->
-        <div id="settingsScreen" class="screen">
-            <div class="card">
-                <h2>Hub & Settings Configuration</h2>
-                
-                <div class="form-group">
-                    <label>Stop Duration Estimate (Minutes per Hotel Drop)</label>
-                    <input type="number" id="settingDropTime" min="1" max="60" value="10">
-                </div>
-
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
-
-                <h3>Starting Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="newStartHubInput" placeholder="Add new starting hub...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addStartHubItem()">Add</button>
-                </div>
-                <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
-
-                <h3>End Destinations / Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="newEndHubInput" placeholder="Add end hub destination...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEndHubItem()">Add</button>
-                </div>
-                <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
-
-                <h3>Registered Engineers</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="newEngInput" placeholder="Add engineer name...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEngineer()">Add</button>
-                </div>
-                <div id="engConfigList" style="margin-bottom: 16px;"></div>
-
-                <button class="btn btn-primary" onclick="saveSettings()">💾 Save Hub Settings</button>
+        <div class="card">
+            <h3>Assigned Drops</h3>
+            <div id="driverManifestList">
+                <p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>
             </div>
         </div>
 
+        <div class="card" id="returnJourneySection" style="display: none; background: #f0fdf4; border-color: #bbf7d0;">
+            <h3 style="color: #166534;">🏁 End of Route / Return Journey</h3>
+            <p style="font-size: 13px; color: #15803d; margin-bottom: 12px;">All deliveries are completed! Select your return destination.</p>
+            
+            <div class="form-group">
+                <label style="color: #166534;">Return Hub / Destination</label>
+                <select id="driverReturnSelect"></select>
+            </div>
+
+            <button class="btn btn-success" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
+            <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift</button>
+        </div>
+    </div>
+
+    <!-- SETTINGS PORTAL -->
+    <div id="settingsScreen" class="screen">
+        <div class="card">
+            <h2>Hub & Settings Configuration</h2>
+            
+            <div class="form-group">
+                <label>Stop Duration Estimate (Minutes per Hotel Drop)</label>
+                <input type="number" id="settingDropTime" min="1" max="60" value="10">
+            </div>
+
+            <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
+
+            <h3>Starting Hubs</h3>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="text" id="newStartHubInput" placeholder="Add new starting hub...">
+                <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addStartHubItem()">Add</button>
+            </div>
+            <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
+
+            <h3>End Destinations / Hubs</h3>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="text" id="newEndHubInput" placeholder="Add end hub destination...">
+                <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEndHubItem()">Add</button>
+            </div>
+            <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
+
+            <h3>Registered Engineers</h3>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="text" id="newEngInput" placeholder="Add engineer name...">
+                <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEngineer()">Add</button>
+            </div>
+            <div id="engConfigList" style="margin-bottom: 16px;"></div>
+
+            <button class="btn btn-primary" onclick="saveSettings()">💾 Save Hub Settings</button>
+        </div>
     </div>
 
     <!-- PROOF OF DELIVERY PHOTO MODAL -->
@@ -96,7 +404,6 @@ Here is the complete combined code assembled from all the chunks you sent over. 
     </div>
 
     <script>
-        // Full Complete UK Travelodge Database (Restored from your list)
         const hotelDatabase = [
             "Travelodge Aberdeen Airport", "Travelodge Aberdeen Bucksburn", "Travelodge Aberdeen Central", "Travelodge Aldershot", "Travelodge Alfreton", "Travelodge Alton Four Marks", "Travelodge Altrincham Central", "Travelodge Amesbury Stonehenge", "Travelodge Andover", "Travelodge Arundel Fontwell", "Travelodge Arundel Fontwell Park", "Travelodge Ashbourne", "Travelodge Ashford", "Travelodge Ashford Town Centre", "Travelodge Ashton Under Lyne", "Travelodge Aylesbury", "Travelodge Ayr",
             "Travelodge Bangor", "Travelodge Barnsley", "Travelodge Barnstaple", "Travelodge Barrow In Furness", "Travelodge Barton Mills", "Travelodge Barton Stacey", "Travelodge Basildon", "Travelodge Basildon Wickford", "Travelodge Basingstoke", "Travelodge Bath Central", "Travelodge Bath City Centre Bath Spa", "Travelodge Bath Waterside", "Travelodge Beaconsfield Central", "Travelodge Beckington", "Travelodge Bedford", "Travelodge Bedford Goldington Road", "Travelodge Bedford Marston Moretaine", "Travelodge Belfast Central", "Travelodge Berwick upon Tweed", "Travelodge Bicester", "Travelodge Bicester Cherwell Valley M40", "Travelodge Billingshurst Five Oaks", "Travelodge Birmingham Airport", "Travelodge Birmingham Castle Bromwich", "Travelodge Birmingham Central", "Travelodge Birmingham Central Broadway Plaza", "Travelodge Birmingham Central Moor Street", "Travelodge Birmingham Central Newhall Street", "Travelodge Birmingham Fort Dunlop", "Travelodge Birmingham Frankley M5 Southbound", "Travelodge Birmingham Halesowen", "Travelodge Birmingham Hilton Park M6 Southbound", "Travelodge Birmingham Kingswinford", "Travelodge Birmingham Maypole", "Travelodge Birmingham Oldbury", "Travelodge Birmingham Perry Barr", "Travelodge Birmingham Sheldon", "Travelodge Birmingham Streetly", "Travelodge Birmingham Sutton Coldfield", "Travelodge Birmingham Yardley", "Travelodge Blackburn M65", "Travelodge Blackpool South Promenade", "Travelodge Blackpool South Shore", "Travelodge Blyth A1 M", "Travelodge Bodmin Roche", "Travelodge Bolton Central River Street", "Travelodge Borehamwood", "Travelodge Borehamwood Studio Way", "Travelodge Boston", "Travelodge Bournemouth", "Travelodge Bournemouth Cooper Dean", "Travelodge Bournemouth Seafront", "Travelodge Bracknell", "Travelodge Bracknell Central", "Travelodge Bradford", "Travelodge Bradford Central", "Travelodge Bradford Shipley", "Travelodge Braintree", "Travelodge Brentwood East Horndon", "Travelodge Bridgwater M5", "Travelodge Brighton", "Travelodge Brighton Seafront", "Travelodge Bristol Abbey Wood", "Travelodge Bristol Avonmouth", "Travelodge Bristol Central", "Travelodge Bristol Central Mitchell Lane", "Travelodge Bristol Cribbs Causeway", "Travelodge Bristol Emersons Green", "Travelodge Bristol Filton", "Travelodge Bristol Severn View M48", "Travelodge Bromborough", "Travelodge Bromsgrove Marlbrook", "Travelodge Buckingham", "Travelodge Burford Cotswolds", "Travelodge Burnley", "Travelodge Burton A38 Northbound", "Travelodge Burton A38 Southbound", "Travelodge Burton M6 Northbound", "Travelodge Burton upon Trent Central", "Travelodge Bury",
@@ -120,14 +427,12 @@ Here is the complete combined code assembled from all the chunks you sent over. 
             "Travelodge Yeovil Podimore", "Travelodge York Central", "Travelodge York Central Layerthorpe", "Travelodge York Central Micklegate", "Travelodge York Hull Road", "Travelodge York Monks Cross", "Travelodge York Tadcaster"
         ];
 
-        // Colour mapping for sticker dots
         const colorHexMap = {
             "Red": "#ef4444", "Blue": "#3b82f6", "Green": "#10b981", 
             "Yellow": "#eab308", "Orange": "#f97316", "Purple": "#a855f7", 
             "White": "#9ca3af", "Black": "#1f2937"
         };
 
-        // Initial Application State
         let appState = {
             startHub: "Sheffield Parts Depot",
             endHub: "Sheffield Parts Depot",
@@ -139,7 +444,6 @@ Here is the complete combined code assembled from all the chunks you sent over. 
             manifest: []
         };
 
-        // Load state from local storage on boot
         function loadFromLocalStorage() {
             const saved = localStorage.getItem('travelodge_depot_state');
             if (saved) {
@@ -232,626 +536,4 @@ Here is the complete combined code assembled from all the chunks you sent over. 
             select.innerHTML = '';
             hotels.forEach(h => {
                 let opt = document.createElement('option');
-                opt.value = h;
-                opt.textContent = h;
-                select.appendChild(opt);
-            });
-            loadHotelNotePreset();
-        }
-
-        function filterOpHotels() {
-            const query = document.getElementById('opHotelSearch').value.toLowerCase().trim();
-            const filtered = hotelDatabase.filter(h => {
-                if (query === "") return true;
-                let cleanName = h.replace("Travelodge ", "").toLowerCase();
-                return cleanName.includes(query);
-            });
-            populateOpHotels(filtered);
-        }
-
-        function loadHotelNotePreset() {
-            const hotel = document.getElementById('opHotelSelect').value;
-            const notesField = document.getElementById('opHotelNotes');
-            if (hotel && appState.hotelNotes && appState.hotelNotes[hotel]) {
-                notesField.value = appState.hotelNotes[hotel];
-            } else {
-                notesField.value = "";
-            }
-        }
-
-        function populateOpEngineerCheckboxes() {
-            const container = document.getElementById('opEngineerCheckboxes');
-            container.innerHTML = '';
-            if (!appState.engineers || appState.engineers.length === 0) {
-                container.innerHTML = `<span style="font-size:13px; color:var(--text-muted);">No engineers configured in settings.</span>`;
-                return;
-            }
-            appState.engineers.forEach(eng => {
-                container.innerHTML += `
-                    <label class="eng-checkbox-label">
-                        <input type="checkbox" name="opEngineer" value="${eng}"> ${eng}
-                    </label>
-                `;
-            });
-        }
-
-        function updateColorDropdownOptions() {
-            const usedColors = appState.manifest.map(d => d.color);
-            const colorSelect = document.getElementById('opColorSelect');
-            
-            for (let i = 0; i < colorSelect.options.length; i++) {
-                let opt = colorSelect.options[i];
-                if (opt.value === "") continue;
-                if (usedColors.includes(opt.value)) {
-                    opt.disabled = true;
-                    opt.text = opt.value + " (Already used)";
-                } else {
-                    opt.disabled = false;
-                    opt.text = opt.value;
-                }
-            }
-        }
-
-        function addManifestDrop() {
-            const hotel = document.getElementById('opHotelSelect').value;
-            const colour = document.getElementById('opColorSelect').value;
-            const notes = document.getElementById('opHotelNotes').value.trim();
-            const photoInput = document.getElementById('opPhotoInput');
-
-            const checkedEngs = [];
-            document.querySelectorAll('input[name="opEngineer"]:checked').forEach(cb => {
-                checkedEngs.push(cb.value);
-            });
-
-            if (!hotel) {
-                alert("Please select a hotel destination.");
-                return;
-            }
-            if (checkedEngs.length === 0) {
-                alert("Please select at least one engineer.");
-                return;
-            }
-            if (!colour) {
-                alert("Please select a sticker dot colour.");
-                return;
-            }
-
-            if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (notes) {
-                appState.hotelNotes[hotel] = notes;
-            } else {
-                delete appState.hotelNotes[hotel];
-            }
-
-            if (photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    pushDrop(hotel, checkedEngs, colour, notes, e.target.result);
-                };
-                reader.readAsDataURL(photoInput.files[0]);
-            } else {
-                pushDrop(hotel, checkedEngs, colour, notes, "");
-            }
-        }
-
-        function pushDrop(hotel, engineers, colour, notes, photoUrl) {
-            appState.manifest.push({
-                id: Date.now(),
-                hotel,
-                engineers,
-                color: colour,
-                notes,
-                stagingPhoto: photoUrl,
-                proofPhoto: "",
-                completed: false
-            });
-
-            document.getElementById('opHotelSearch').value = "";
-            populateOpHotels(hotelDatabase);
-            document.querySelectorAll('input[name="opEngineer"]').forEach(cb => cb.checked = false);
-            document.getElementById('opColorSelect').value = "";
-            document.getElementById('opPhotoInput').value = "";
-            document.getElementById('opHotelNotes').value = "";
-
-            saveToLocalStorage();
-            renderOpManifest();
-            updateColorDropdownOptions();
-        }
-
-        function renderOpManifest() {
-            const container = document.getElementById('opManifestList');
-            document.getElementById('opDropCount').textContent = appState.manifest.length;
-            const publishBtn = document.getElementById('publishBtn');
-            const summaryBox = document.getElementById('opRouteSummaryContainer');
-            
-            updateRouteEndpoints();
-
-            if (appState.manifest.length > 0) {
-                publishBtn.removeAttribute('disabled');
-                summaryBox.style.display = 'block';
-                
-                let totalDropMins = appState.manifest.length * appState.dropTimeMins;
-                document.getElementById('opEstWorkload').textContent = `~${totalDropMins} mins stop time + travel`;
-                document.getElementById('opDropTimeDisplay').textContent = appState.dropTimeMins;
-
-                container.innerHTML = '';
-                appState.manifest.forEach((d, idx) => {
-                    let hex = colorHexMap[d.color] || '#ccc';
-                    container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 4px solid ${hex};">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong>Stop ${idx + 1}: ${d.hotel}</strong>
-                                <button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeDrop(${idx})">Remove</button>
-                            </div>
-                            <p style="margin: 8px 0; font-size: 13px; color: var(--text-muted);">
-                                Engineers: <b style="color: var(--tl-navy);">${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b style="color: var(--tl-navy);">${d.color}</b>
-                            </p>
-                            ${d.notes ? `<div class="notes-box">📝 Notes: <input type="text" value="${d.notes}" style="background:transparent; border:none; width:80\%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDropNote(${idx}, this.value)"></div>` : ''}
-                            ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
-                            
-                            <div class="route-order-controls">
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Move Up</button>
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Move Down</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                publishBtn.setAttribute('disabled', 'true');
-                summaryBox.style.display = 'none';
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>`;
-            }
-        }
-
-        function launchOpFullRouteMap() {
-            if (appState.manifest.length === 0) {
-                alert("Please add at least one drop to generate the route.");
-                return;
-            }
-            let origin = encodeURIComponent(appState.startHub);
-            let destination = encodeURIComponent(appState.endHub);
-            let waypointsArr = appState.manifest.map(d => encodeURIComponent(d.hotel));
-            
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-            if (waypointsArr.length > 0) {
-                mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
-            }
-            window.open(mapsUrl, '_blank');
-        }
-
-        function updateDropNote(idx, val) {
-            appState.manifest[idx].notes = val;
-            let hotel = appState.manifest[idx].hotel;
-            if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (val) {
-                appState.hotelNotes[hotel] = val;
-            } else {
-                delete appState.hotelNotes[hotel];
-            }
-            saveToLocalStorage();
-        }
-
-        function moveDrop(idx, direction) {
-            const newIdx = idx + direction;
-            if (newIdx < 0 || newIdx >= appState.manifest.length) return;
-            let item = appState.manifest.splice(idx, 1)[0];
-            appState.manifest.splice(newIdx, 0, item);
-            saveToLocalStorage();
-            renderOpManifest();
-        }
-
-        function removeDrop(idx) {
-            appState.manifest.splice(idx, 1);
-            saveToLocalStorage();
-            renderOpManifest();
-            updateColorDropdownOptions();
-        }
-
-        function publishManifest() {
-            alert("Route manifest published successfully! Driver portal updated.");
-            saveToLocalStorage();
-            openDriverPortal();
-        }
-
-        function renderDriverManifest() {
-            const container = document.getElementById('driverManifestList');
-            document.getElementById('driverStartHub').textContent = appState.startHub;
-            document.getElementById('driverEndHub').textContent = appState.endHub;
-
-            const returnSelect = document.getElementById('driverReturnSelect');
-            returnSelect.innerHTML = '';
-            appState.endHubs.forEach(h => {
-                let opt = document.createElement('option');
-                opt.value = h;
-                opt.textContent = h;
-                if (h === appState.endHub) opt.selected = true;
-                returnSelect.appendChild(opt);
-            });
-
-            let allCompleted = appState.manifest.length > 0 && appState.manifest.every(d => d.completed);
-            const returnSection = document.getElementById('returnJourneySection');
-            if (allCompleted) {
-                returnSection.style.display = 'block';
-            } else {
-                returnSection.style.display = 'none';
-            }
-
-            if (appState.manifest.length > 0) {
-                container.innerHTML = '';
-                appState.manifest.forEach((d, idx) => {
-                    let hex = colorHexMap[d.color] || '#ccc';
-                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 600;">✔ Delivered</span>' : '<span style="color: #f59e0b; font-weight: 600;">Pending</span>';
-
-                    container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong style="font-size: 16px;">Stop ${idx + 1}: ${d.hotel}</strong>
-                                ${statusBadge}
-                            </div>
-                            <p style="margin: 8px 0; font-size: 14px;">
-                                Engineers: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
-                                Sticker Dot: <span class="color-dot" style="background-color: ${hex};"></span><b style="color:var(--tl-navy);">${d.color}</b>
-                            </p>
-                            <div class="notes-box">📝 Hotel / Parking Notes (Editable): <input type="text" value="${d.notes || ''}" placeholder="Add parking or access notes..." style="background:transparent; border:none; width:70%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
-                            ${d.stagingPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--text-muted);">Drop Staging Photo:</p><img src="${d.stagingPhoto}" class="item-photo">` : ''}
-                            ${d.proofPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
-                            
-                            <div style="margin-top: 12px;">
-                                ${!d.completed ? 
-                                    `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Delivery Photo & Complete</button>` : 
-                                    `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`
-                                }
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>`;
-            }
-        }
-
-        function updateDriverDropNote(idx, val) {
-            appState.manifest[idx].notes = val;
-            let hotel = appState.manifest[idx].hotel;
-            if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (val) {
-                appState.hotelNotes[hotel] = val;
-            } else {
-                delete appState.hotelNotes[hotel];
-            }
-            saveToLocalStorage();
-        }
-
-        let activeDeliveryIndex = null;
-        function promptDeliveryProof(idx) {
-            activeDeliveryIndex = idx;
-            document.getElementById('proofPhotoInput').value = "";
-            document.getElementById('proofPhotoModal').style.display = 'flex';
-        }
-
-        function closeProofModal() {
-            document.getElementById('proofPhotoModal').style.display = 'none';
-            activeDeliveryIndex = null;
-        }
-
-        function submitDeliveryProof() {
-            const fileInput = document.getElementById('proofPhotoInput');
-            let drop = appState.manifest[activeDeliveryIndex];
-            
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    drop.proofPhoto = e.target.result;
-                    finalizeDropCompletion(drop);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                finalizeDropCompletion(drop);
-            }
-        }
-
-        function finalizeDropCompletion(drop) {
-            drop.completed = true;
-            saveToLocalStorage();
-            closeProofModal();
-            renderDriverManifest();
-
-            let generatedText = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
-            document.getElementById('whatsappTextOutput').textContent = generatedText;
-            document.getElementById('whatsappModal').style.display = 'flex';
-        }
-
-        function undoDelivery(idx) {
-            appState.manifest[idx].completed = false;
-            appState.manifest[idx].proofPhoto = "";
-            saveToLocalStorage();
-            renderDriverManifest();
-        }
-
-        function copyTextAndClose() {
-            const text = document.getElementById('whatsappTextOutput').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Text copied to clipboard!");
-            }).catch(err => {
-                alert("Failed to copy text automatically.");
-            });
-        }
-
-        function continueRouteFromModal() {
-            closeModal();
-            launchLiveGPSRoute();
-        }
-
-        function closeModal() {
-            document.getElementById('whatsappModal').style.display = 'none';
-        }
-
-        function launchLiveGPSRoute() {
-            let pendingStops = appState.manifest.filter(d => !d.completed);
-
-            if (pendingStops.length === 0) {
-                alert("All stops on this manifest have been completed! Check your end of day return journey below.");
-                return;
-            }
-
-            let destination = pendingStops[0].hotel;
-            let waypointsArr = pendingStops.slice(1).map(d => d.hotel);
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    let lat = position.coords.latitude;
-                    let lng = position.coords.longitude;
-                    let origin = `${lat},${lng}`;
-                    openGoogleMapsUrl(origin, destination, waypointsArr);
-                }, error => {
-                    let origin = appState.startHub;
-                    openGoogleMapsUrl(origin, destination, waypointsArr);
-                }, { timeout: 10000 });
-            } else {
-                let origin = appState.startHub;
-                openGoogleMapsUrl(origin, destination, waypointsArr);
-            }
-        }
-
-        function launchCompleteDriverRoute() {
-            let origin = encodeURIComponent(appState.startHub);
-            let destination = encodeURIComponent(appState.endHub);
-            let waypointsArr = appState.manifest.map(d => encodeURIComponent(d.hotel));
-
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-            if (waypointsArr.length > 0) {
-                mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
-            }
-            window.open(mapsUrl, '_blank');
-        }
-
-        function openGoogleMapsUrl(origin, destination, waypointsArr) {
-            let encodedOrigin = encodeURIComponent(origin);
-            let encodedDest = encodeURIComponent(destination);
-            let encodedWaypoints = waypointsArr.length > 0 ? waypointsArr.map(w => encodeURIComponent(w)).join('|') : '';
-
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodedOrigin}&destination=${encodedDest}`;
-            if (encodedWaypoints) {
-                mapsUrl += `&waypoints=${encodedWaypoints}`;
-            }
-            window.open(mapsUrl, '_blank');
-        }
-
-        function launchReturnNavigation() {
-            let returnDest = document.getElementById('driverReturnSelect').value;
-            if (!returnDest) {
-                alert("Please specify a return destination.");
-                return;
-            }
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    let origin = `${position.coords.latitude},${position.coords.longitude}`;
-                    let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(returnDest)}`;
-                    window.open(mapsUrl, '_blank');
-                }, error => {
-                    let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
-                    let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
-                    window.open(mapsUrl, '_blank');
-                });
-            } else {
-                let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
-                let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
-                window.open(mapsUrl, '_blank');
-            }
-        }
-
-        function completeShiftDone() {
-            if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest for the day.")) {
-                appState.manifest = [];
-                saveToLocalStorage();
-                alert("Shift successfully completed! Great driving today.");
-                returnHome();
-            }
-        }
-
-        function addStartHubItem() {
-            const input = document.getElementById('newStartHubInput');
-            const val = input.value.trim();
-            if (val) {
-                appState.startHubs.push(val);
-                input.value = '';
-                saveToLocalStorage();
-                renderSettingsLists();
-            }
-        }
-
-        function removeStartHubItem(idx) {
-            if (appState.startHubs.length <= 1) {
-                alert("You must keep at least one starting hub.");
-                return;
-            }
-            appState.startHubs.splice(idx, 1);
-            saveToLocalStorage();
-            renderSettingsLists();
-        }
-
-        function addEndHubItem() {
-            const input = document.getElementById('newEndHubInput');
-            const val = input.value.trim();
-            if (val) {
-                appState.endHubs.push(val);
-                input.value = '';
-                saveToLocalStorage();
-                renderSettingsLists();
-            }
-        }
-
-        function removeEndHubItem(idx) {
-            if (appState.endHubs.length <= 1) {
-                alert("You must keep at least one end destination.");
-                return;
-            }
-            appState.endHubs.splice(idx, 1);
-            saveToLocalStorage();
-            renderSettingsLists();
-        }
-
-        function addEngineer() {
-            const input = document.getElementById('newEngInput');
-            const name = input.value.trim();
-            if (name) {
-                appState.engineers.push(name);
-                input.value = '';
-                saveToLocalStorage();
-                renderSettingsLists();
-                populateOpEngineerCheckboxes();
-            }
-        }
-
-        function removeEngineer(idx) {
-            appState.engineers.splice(idx, 1);
-            saveToLocalStorage();
-            renderSettingsLists();
-            populateOpEngineerCheckboxes();
-        }
-
-        function renderSettingsLists() {
-            const startContainer = document.getElementById('startHubConfigList');
-            startContainer.innerHTML = '';
-            appState.startHubs.forEach((h, idx) => {
-                startContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 13px;">${h}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button>
-                    </div>
-                `;
-            });
-
-            const endContainer = document.getElementById('endHubConfigList');
-            endContainer.innerHTML = '';
-            appState.endHubs.forEach((h, idx) => {
-                endContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 13px;">${h}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
-                    </div>
-                `;
-            });
-
-            const engContainer = document.getElementById('engConfigList');
-            engContainer.innerHTML = '';
-            appState.engineers.forEach((eng, idx) => {
-                engContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 14px;">${eng}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
-                    </div>
-                `;
-            });
-        }
-
-        function saveSettings() {
-            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
-            saveToLocalStorage();
-    
-            const payload = {
-                lastUpdated: Date.now(),
-                travelodge_depot_state: JSON.stringify(appState)
-            };
-            db.ref('travelodge_all_data').set(payload);
-    
-            alert("Hub configuration and settings saved successfully!");
-        }
-
-        // Firebase Initialization
-        const firebaseConfig = {
-            apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwlLOTeg0zHR3MI",
-            authDomain: "travelogsheffield.firebaseapp.com",
-            projectId: "travelogsheffield",
-            storageBucket: "travelogsheffield.firebasestorage.app",
-            messagingSenderId: "682268814885",
-            appId: "1:682268814885:web:ceb6aa889981163ad399cc",
-            measurementId: "G-SGXMPS2PV6"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const routeRef = db.ref('travelodge_all_data');
-        routeRef.on('value', (snapshot) => {
-            const remoteData = snapshot.val();
-            if (remoteData && remoteData.travelodge_depot_state) {
-                try {
-                    const parsedState = JSON.parse(remoteData.travelodge_depot_state);
-                    
-                    // Only update properties if they exist in remote data
-                    if (parsedState.startHub) appState.startHub = parsedState.startHub;
-                    if (parsedState.endHub) appState.endHub = parsedState.endHub;
-                    if (Array.isArray(parsedState.startHubs)) appState.startHubs = parsedState.startHubs;
-                    if (Array.isArray(parsedState.endHubs)) appState.endHubs = parsedState.endHubs;
-                    if (Array.isArray(parsedState.engineers)) appState.engineers = parsedState.engineers;
-                    if (typeof parsedState.dropTimeMins === 'number') appState.dropTimeMins = parsedState.dropTimeMins;
-                    if (parsedState.hotelNotes) appState.hotelNotes = parsedState.hotelNotes;
-                    if (Array.isArray(parsedState.manifest)) appState.manifest = parsedState.manifest;
-                    
-                    saveToLocalStorage();
-
-                    // Refresh settings UI elements if they are open on screen
-                    const dropInput = document.getElementById('settingDropTime');
-                    if (dropInput) dropInput.value = appState.dropTimeMins;
-
-                    const endContainer = document.getElementById('endHubConfigList');
-                    if (endContainer && Array.isArray(appState.endHubs)) {
-                        endContainer.innerHTML = '';
-                        appState.endHubs.forEach((h, idx) => {
-                            endContainer.innerHTML += `
-                                <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 13px;">${h}</span>
-                                    <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
-                                </div>
-                            `;
-                        });
-                    }
-
-                    const engContainer = document.getElementById('engConfigList');
-                    if (engContainer && Array.isArray(appState.engineers)) {
-                        engContainer.innerHTML = '';
-                        appState.engineers.forEach((eng, idx) => {
-                            engContainer.innerHTML += `
-                                <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 14px;">${eng}</span>
-                                    <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
-                                </div>
-                            `;
-                        });
-                    }
-
-                    // If a main page render function exists, call it so screens update live
-                    if (typeof renderManifest === 'function') {
-                        renderManifest();
-                    }
-                } catch (e) {
-                    console.error("Error parsing remote state:", e);
-                }
-            }
-        });
-    </script>
-</body>
-</html>
-
-```
+                opt.value =
