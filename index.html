@@ -1168,7 +1168,7 @@
             appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
 
             saveToLocalStorage();
-            db.ref('routeData').set(appState);
+            db.ref('travelodge_all_data').set(appState);
             alert("Hub configuration and settings saved successfully!");
             returnHome();
         }
@@ -1186,7 +1186,7 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const routeRef = db.ref('routeData');
+        const routeRef = db.ref('travelodge_all_data');
 routeRef.on('value', (snapshot) => {
             const remoteData = snapshot.val();
             if (remoteData) {
