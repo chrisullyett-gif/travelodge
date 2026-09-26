@@ -845,11 +845,12 @@
             updateColorDropdownOptions();
         }
 
-        function publishManifest() {
-            alert("Route manifest published successfully! Driver portal updated.");
-            saveToLocalStorage();
-            openDriverPortal();
-        }
+       function publishManifest() {
+    db.ref('routeData').set(appState);
+    alert("Route manifest published successfully! Driver portal updated.");
+    saveToLocalStorage();
+    openDriverPortal();
+}
 
         function renderDriverManifest() {
             const container = document.getElementById('driverManifestList');
