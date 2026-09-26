@@ -845,8 +845,18 @@
             updateColorDropdownOptions();
         }
 
-       function publishManifest() {
-    db.ref('routeData').set(appState);
+      function publishManifest() {
+    const payload = {
+        startHub: appState.startHub,
+        endHub: appState.endHub,
+        startHubs: appState.startHubs,
+        endHubs: appState.endHubs,
+        engineers: appState.engineers,
+        dropTimeMins: appState.dropTimeMins,
+        hotelNotes: appState.hotelNotes,
+        manifest: appState.manifest || []
+    };
+    db.ref('routeData').set(payload);
     alert("Route manifest published successfully! Driver portal updated.");
     saveToLocalStorage();
     openDriverPortal();
