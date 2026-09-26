@@ -1168,9 +1168,14 @@
             appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
 
             saveToLocalStorage();
-            db.ref('travelodge_all_data').set(appState);
-            alert("Hub configuration and settings saved successfully!");
-            returnHome();
+    
+    const payload = {
+        lastUpdated: Date.now(),
+        travelodge_depot_state: JSON.stringify(appState)
+    };
+    db.ref('travelodge_all_data').set(payload);
+    
+    alert("Hub configuration and settings saved successfully!");
         }
 
         // Firebase Initialization
@@ -1188,20 +1193,25 @@
         const db = firebase.database();
         const routeRef = db.ref('travelodge_all_data');
 routeRef.on('value', (snapshot) => {
-            const remoteData = snapshot.val();
-            if (remoteData) {
-                appState.startHub = remoteData.startHub || appState.startHub;
-                appState.endHub = remoteData.endHub || appState.endHub;
-                appState.startHubs = Array.isArray(remoteData.startHubs) ? remoteData.startHubs : appState.startHubs;
-                appState.endHubs = Array.isArray(remoteData.endHubs) ? remoteData.endHubs : appState.endHubs;
-                appState.engineers = Array.isArray(remoteData.engineers) ? remoteData.engineers : appState.engineers;
-                appState.dropTimeMins = typeof remoteData.dropTimeMins === 'number' ? remoteData.dropTimeMins : appState.dropTimeMins;
-                appState.hotelNotes = (remoteData.hotelNotes && typeof remoteData.hotelNotes === 'object') ? remoteData.hotelNotes : {};
-                appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : [];
-                
-                saveToLocalStorage();
-            }
-        });
+    const remoteData = snapshot.val();
+    if (remoteData && remoteData.travelodge_depot_state) {
+        try {
+            const parsedState = JSON.parse(remoteData.travelodge_depot_state);
+            appState.startHub = parsedState.startHub || appState.startHub;
+            appState.endHub = parsedState.endHub || appState.endHub;
+            appState.startHubs = Array.isArray(parsedState.startHubs) ? parsedState.startHubs : appState.startHubs;
+            appState.endHubs = Array.isArray(parsedState.endHubs) ? parsedState.endHubs : appState.endHubs;
+            appState.engineers = Array.isArray(parsedState.engineers) ? parsedState.engineers : appState.engineers;
+            appState.dropTimeMins = typeof parsedState.dropTimeMins === 'number' ? parsedState.dropTimeMins : appState.dropTimeMins;
+            appState.hotelNotes = (parsedState.hotelNotes && typeof parsedState.hotelNotes === 'object') ? parsedState.hotelNotes : {};
+            appState.manifest = Array.isArray(parsedState.manifest) ? parsedState.manifest : [];
+            
+            saveToLocalStorage();
+        } catch (e) {
+            console.error("Error parsing remote state:", e);
+        }
+    }
+});
     </script>
 </body>
 </html>
