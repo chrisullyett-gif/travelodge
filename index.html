@@ -50,9 +50,14 @@
             gap: 12px;
         }
 
-        .header-brand img {
-            height: 38px;
-            object-fit: contain;
+        .brand-logo {
+            background: var(--tl-accent);
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
         }
 
         .header-brand h1 {
@@ -222,13 +227,6 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
-        .item-photo {
-            max-width: 100%;
-            border-radius: 6px;
-            margin-top: 8px;
-            border: 1px solid #e1e4e8;
-        }
-
         .notes-box {
             background: #fffbeb;
             border: 1px solid #fef3c7;
@@ -243,7 +241,7 @@
 
     <header>
         <div class="header-brand">
-            <img src="image_b1dce3.jpg" alt="Travelodge Logo">
+            <div class="brand-logo">Travelodge</div>
             <h1>Sheffield Depot Portal</h1>
         </div>
         <div class="nav-buttons">
@@ -306,7 +304,7 @@
             <!-- Weekly Shift & Hours Tracker -->
             <div class="card">
                 <h2>Driver Shift & Weekly Timesheet</h2>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Track your daily hours from Monday to Friday.</p>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Track your daily hours from Monday to Friday (5 hours standard).</p>
                 <div id="dailyShiftControl" style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
                     <h3 id="currentDayTitle" style="margin-bottom: 8px;">Today's Shift</h3>
                     <div style="display: flex; gap: 10px; align-items: center;">
@@ -326,9 +324,7 @@
                             <th>Hours Worked</th>
                         </tr>
                     </thead>
-                    <tbody id="timesheetTableBody">
-                        <!-- Populated dynamically -->
-                    </tbody>
+                    <tbody id="timesheetTableBody"></tbody>
                 </table>
                 <div style="margin-top: 12px; font-weight: 700; color: var(--tl-navy);">
                     Total Weekly Hours: <span id="totalWeeklyHours">0.00</span> hrs
@@ -409,7 +405,7 @@
         </div>
     </div>
 
-    <!-- WHATSAPP / NOTIFICATION MODAL -->
+    <!-- NOTIFICATION MODAL -->
     <div id="whatsappModal" class="modal">
         <div class="modal-content">
             <h3>Drop Complete!</h3>
@@ -432,20 +428,23 @@
             'Orange': '#f97316'
         };
 
+        const STORAGE_VERSION = "v2_clean";
         let appState = {
-            startHub: "Sheffield Hub, A630 Ringroad, 340 Prince of Wales Road, Sheffield, S2 1FF, UK",
-            endHub: "Langold, Worksop",
+            version: STORAGE_VERSION,
+            startHub: "Sheffield Parts Depot",
+            endHub: "Revill Road Langold",
             startHubs: [
-                "Sheffield Hub, A630 Ringroad, 340 Prince of Wales Road, Sheffield, S2 1FF, UK"
+                "Sheffield Parts Depot",
+                "Revill Road Langold"
             ],
             endHubs: [
-                "Langold, Worksop",
-                "Sheffield Hub, A630 Ringroad, 340 Prince of Wales Road, Sheffield, S2 1FF, UK"
+                "Revill Road Langold",
+                "Sheffield Parts Depot"
             ],
-            engineers: ["Dave", "Mark", "Steve", "Paul"],
+            engineers: ["Mark", "Steve", "Paul", "Andy"],
             dropTimeMins: 10,
             hotelNotes: {},
-            manifest: [],
+            manifest: [], // Starts completely empty as requested
             timesheet: {
                 "Monday": { start: null, end: null, hours: 0 },
                 "Tuesday": { start: null, end: null, hours: 0 },
@@ -460,7 +459,12 @@
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    appState = { ...appState, ...parsed };
+                    if (parsed.version === STORAGE_VERSION) {
+                        appState = { ...appState, ...parsed };
+                    } else {
+                        // Clear out old mismatched version data
+                        saveToLocalStorage();
+                    }
                 } catch(e) {
                     console.error("Local storage load error:", e);
                 }
@@ -547,8 +551,7 @@
                 color,
                 notes: appState.hotelNotes && appState.hotelNotes[hotel] ? appState.hotelNotes[hotel] : '',
                 completed: false,
-                proofPhoto: '',
-                stagingPhoto: ''
+                proofPhoto: ''
             });
 
             hotelInput.value = '';
@@ -783,7 +786,7 @@
         function startShiftToday() {
             let dayName = getCurrentWeekdayName();
             if (dayName === "Saturday" || dayName === "Sunday") {
-                dayName = "Monday"; // Default fallback if tested on weekends
+                dayName = "Monday"; 
             }
             if (!appState.timesheet[dayName]) {
                 appState.timesheet[dayName] = { start: null, end: null, hours: 0 };
@@ -805,10 +808,7 @@
             }
             let endTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             appState.timesheet[dayName].end = endTime;
-            
-            // Calculate dummy/estimated hours or compute based on timestamps (assuming 5-hour shift standard or time difference)
-            // For precision, let's calculate standard hours or default to 5 hours if simple click, or compute delta
-            appState.timesheet[dayName].hours = 5.0; // Standard shift length for Travelodge delivery
+            appState.timesheet[dayName].hours = 5.0; // Standard shift length (5 hours Mon-Fri)
 
             saveToLocalStorage();
             renderTimesheetUI();
@@ -917,7 +917,6 @@
             appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
             saveToLocalStorage();
             
-            // Sync to Firebase if configured
             try {
                 db.ref('travelodge_all_data').set({
                     lastUpdated: Date.now(),
@@ -939,16 +938,19 @@
             measurementId: "G-SGXMPS2PV6"
         };
 
+        let db = null;
         try {
             firebase.initializeApp(firebaseConfig);
-            const db = firebase.database();
+            db = firebase.database();
             db.ref('travelodge_all_data').on('value', (snapshot) => {
                 const remoteData = snapshot.val();
                 if (remoteData && remoteData.travelodge_depot_state) {
                     try {
                         const parsedState = JSON.parse(remoteData.travelodge_depot_state);
-                        appState = { ...appState, ...parsedState };
-                        saveToLocalStorage();
+                        if (parsedState.version === STORAGE_VERSION) {
+                            appState = { ...appState, ...parsedState };
+                            saveToLocalStorage();
+                        }
                     } catch (e) {
                         console.error("Error parsing remote state:", e);
                     }
