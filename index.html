@@ -3,67 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travelodge Sheffield - Depot & Driver Portal</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <title>Sheffield Depot Portal</title>
     <style>
         :root {
-            --tl-navy: #002244;
-            --tl-blue: #0056b3;
-            --tl-accent: #ff6600;
-            --bg-color: #f4f6f9;
+            --primary: #001a35;
+            --accent: #e65c00;
+            --bg: #f4f6f9;
             --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #666666;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --border-radius: 12px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --text: #333333;
+            --border-radius: 8px;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding-bottom: 40px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
         }
 
         header {
-            background: var(--tl-navy);
+            background-color: var(--primary);
             color: white;
             padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .header-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        .brand-logo {
-            background: var(--tl-accent);
-            color: white;
-            font-weight: 800;
-            font-size: 14px;
-            padding: 6px 10px;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
+            gap: 14px;
         }
 
         .header-brand h1 {
-            font-size: 18px;
+            margin: 0;
+            font-size: 20px;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            color: white;
         }
 
         .nav-buttons {
@@ -71,10 +50,71 @@
             gap: 10px;
         }
 
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
         .container {
             max-width: 900px;
-            margin: 24px auto;
+            margin: 32px auto;
             padding: 0 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #555;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            box-sizing: border-box;
         }
 
         .screen {
@@ -84,188 +124,36 @@
         .screen.active {
             display: block;
         }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #e1e4e8;
-        }
-
-        h2 {
-            font-size: 20px;
-            color: var(--tl-navy);
-            margin-bottom: 16px;
-            font-weight: 700;
-        }
-
-        h3 {
-            font-size: 16px;
-            color: var(--tl-blue);
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            background: var(--tl-blue);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-success {
-            background: var(--success-color);
-        }
-
-        .btn-danger {
-            background: var(--danger-color);
-        }
-
-        .btn-accent {
-            background: var(--tl-accent);
-        }
-
-        .manifest-card {
-            background: #ffffff;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 14px;
-            background: #fff;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--tl-blue);
-            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
-        }
-
-        .color-dot {
-            height: 12px;
-            width: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
-        .timesheet-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 14px;
-        }
-
-        .timesheet-table th, .timesheet-table td {
-            border: 1px solid #e2e8f0;
-            padding: 10px;
-            text-align: left;
-        }
-
-        .timesheet-table th {
-            background: #f8fafc;
-            color: var(--tl-navy);
-        }
-
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 16px;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 24px;
-            border-radius: var(--border-radius);
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .notes-box {
-            background: #fffbeb;
-            border: 1px solid #fef3c7;
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin-top: 8px;
-            font-size: 13px;
-        }
     </style>
 </head>
 <body>
 
     <header>
-      <div class="header-brand" style="display: flex; align-items: center; gap: 14px;">
-        <!-- Official Style Sleeping Face Icon Graphic -->
-        <svg width="40" height="34" viewBox="0 0 100 85" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); flex-shrink: 0;">
-            <rect width="100" height="85" rx="16" fill="#001a35"/>
-            <path d="M0 45C0 20 20 5 50 5C80 5 100 20 100 45V85H0V45Z" fill="url(#skyGradient)"/>
-            <path d="M25 55C32 55 38 51 40 45C42 42 45 40 48 42C50 43 49 47 45 50C42 52 38 58 30 62C25 65 18 62 18 58C18 56 21 55 25 55Z" fill="#0055a5"/>
-            <path d="M28 50C29 51 31 51 32 50" stroke="#001a35" stroke-width="2" stroke-linecap="round"/>
-            <defs>
-                <linearGradient id="skyGradient" x1="50" y1="5" x2="50" y2="85" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#cc1111"/>
-                    <stop offset="0.5" stop-color="#0044aa"/>
-                    <stop offset="1" stop-color="#0099ff"/>
-                </linearGradient>
-            </defs>
-        </svg>
-        <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">Sheffield Depot Portal</h1>
-    </div>
+        <div class="header-brand" style="display: flex; align-items: center; gap: 14px;">
+            <!-- Official Style Sleeping Face Icon Graphic -->
+            <svg width="40" height="34" viewBox="0 0 100 85" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); flex-shrink: 0;">
+                <rect width="100" height="85" rx="16" fill="#001a35"/>
+                <path d="M0 45C0 20 20 5 50 5C80 5 100 20 100 45V85H0V45Z" fill="url(#skyGradient)"/>
+                <path d="M25 55C32 55 38 51 40 45C42 42 45 40 48 42C50 43 49 47 45 50C42 52 38 58 30 62C25 65 18 62 18 58C18 56 21 55 25 55Z" fill="#0055a5"/>
+                <path d="M28 50C29 51 31 51 32 50" stroke="#001a35" stroke-width="2" stroke-linecap="round"/>
+                <defs>
+                    <linearGradient id="skyGradient" x1="50" y1="5" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#cc1111"/>
+                        <stop offset="0.5" stop-color="#0044aa"/>
+                        <stop offset="1" stop-color="#0099ff"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">Sheffield Depot Portal</h1>
+        </div>
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="openOperatorPortal()">Operator Hub</button>
             <button class="btn btn-accent" onclick="openDriverPortal()">Driver View</button>
-            <button class="btn btn-secondary" onclick="openSettingsModal()">⚙ Settings</button>
+            <button class="btn btn-secondary" onclick="openSettingsModal()">⚙️ Settings</button>
         </div>
     </header>
 
     <div class="container">
-
         <!-- OPERATOR PORTAL SCREEN -->
         <div id="operatorScreen" class="screen active">
             <div class="card">
@@ -273,709 +161,595 @@
                 <div style="display: flex; gap: 12px; margin-bottom: 16px;">
                     <div style="flex: 1;">
                         <label>Starting Hub</label>
-                        <select id="opStartHub" onchange="appState.startHub = this.value; saveToLocalStorage();"></select>
+                        <select id="opStartHub">
+                            <option value="Sheffield Parts Depot">Sheffield Parts Depot</option>
+                        </select>
                     </div>
                     <div style="flex: 1;">
                         <label>End Destination</label>
-                        <select id="opEndHub" onchange="appState.endHub = this.value; saveToLocalStorage();"></select>
+                        <select id="opEndHub">
+                            <option value="Revill Road Langold">Revill Road Langold</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Add Delivery Stop (Hotel)</label>
-                    <input type="text" id="newHotelInput" placeholder="Enter Travelodge hotel name or location...">
-                </div>
-                <div class="form-group">
-                    <label>Assigned Engineers</label>
-                    <div id="opEngineerCheckboxes" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px;"></div>
-                </div>
-                <div class="form-group">
-                    <label>Sticker Dot Colour</label>
-                    <select id="opColorSelect">
-                        <option value="Red">Red</option>
-                        <option value="Blue">Blue</option>
-                        <option value="Green">Green</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Orange">Orange</option>
+                    <select id="newHotelInput">
+                        <option value="">-- Select or Search Hotel Drop --</option>
+                        <option value="Travelodge Aberdeen Airport">Travelodge Aberdeen Airport</option>
+                        <option value="Travelodge Aberdeen Bucksburn">Travelodge Aberdeen Bucksburn</option>
+                        <option value="Travelodge Aberdeen Central">Travelodge Aberdeen Central</option>
+                        <option value="Travelodge Aldershot">Travelodge Aldershot</option>
+                        <option value="Travelodge Alfreton">Travelodge Alfreton</option>
+                        <option value="Travelodge Alton Four Marks">Travelodge Alton Four Marks</option>
+                        <option value="Travelodge Altrincham Central">Travelodge Altrincham Central</option>
+                        <option value="Travelodge Amesbury Stonehenge">Travelodge Amesbury Stonehenge</option>
+                        <option value="Travelodge Andover">Travelodge Andover</option>
+                        <option value="Travelodge Arundel Fontwell">Travelodge Arundel Fontwell</option>
+                        <option value="Travelodge Arundel Fontwell Park">Travelodge Arundel Fontwell Park</option>
+                        <option value="Travelodge Ashbourne">Travelodge Ashbourne</option>
+                        <option value="Travelodge Ashford">Travelodge Ashford</option>
+                        <option value="Travelodge Ashford Town Centre">Travelodge Ashford Town Centre</option>
+                        <option value="Travelodge Ashton Under Lyne">Travelodge Ashton Under Lyne</option>
+                        <option value="Travelodge Aylesbury">Travelodge Aylesbury</option>
+                        <option value="Travelodge Ayr">Travelodge Ayr</option>
+                        <option value="Travelodge Bangor">Travelodge Bangor</option>
+                        <option value="Travelodge Barnsley">Travelodge Barnsley</option>
+                        <option value="Travelodge Barnstaple">Travelodge Barnstaple</option>
+                        <option value="Travelodge Barrow In Furness">Travelodge Barrow In Furness</option>
+                        <option value="Travelodge Barton Mills">Travelodge Barton Mills</option>
+                        <option value="Travelodge Barton Stacey">Travelodge Barton Stacey</option>
+                        <option value="Travelodge Basildon">Travelodge Basildon</option>
+                        <option value="Travelodge Basildon Wickford">Travelodge Basildon Wickford</option>
+                        <option value="Travelodge Basingstoke">Travelodge Basingstoke</option>
+                        <option value="Travelodge Bath Central">Travelodge Bath Central</option>
+                        <option value="Travelodge Bath City Centre Bath Spa">Travelodge Bath City Centre Bath Spa</option>
+                        <option value="Travelodge Bath Waterside">Travelodge Bath Waterside</option>
+                        <option value="Travelodge Beaconsfield Central">Travelodge Beaconsfield Central</option>
+                        <option value="Travelodge Beckington">Travelodge Beckington</option>
+                        <option value="Travelodge Bedford">Travelodge Bedford</option>
+                        <option value="Travelodge Bedford Goldington Road">Travelodge Bedford Goldington Road</option>
+                        <option value="Travelodge Bedford Marston Moretaine">Travelodge Bedford Marston Moretaine</option>
+                        <option value="Travelodge Belfast Central">Travelodge Belfast Central</option>
+                        <option value="Travelodge Berwick upon Tweed">Travelodge Berwick upon Tweed</option>
+                        <option value="Travelodge Bicester">Travelodge Bicester</option>
+                        <option value="Travelodge Bicester Cherwell Valley M40">Travelodge Bicester Cherwell Valley M40</option>
+                        <option value="Travelodge Billingshurst Five Oaks">Travelodge Billingshurst Five Oaks</option>
+                        <option value="Travelodge Birmingham Airport">Travelodge Birmingham Airport</option>
+                        <option value="Travelodge Birmingham Castle Bromwich">Travelodge Birmingham Castle Bromwich</option>
+                        <option value="Travelodge Birmingham Central">Travelodge Birmingham Central</option>
+                        <option value="Travelodge Birmingham Central Broadway Plaza">Travelodge Birmingham Central Broadway Plaza</option>
+                        <option value="Travelodge Birmingham Central Moor Street">Travelodge Birmingham Central Moor Street</option>
+                        <option value="Travelodge Birmingham Central Newhall Street">Travelodge Birmingham Central Newhall Street</option>
+                        <option value="Travelodge Birmingham Fort Dunlop">Travelodge Birmingham Fort Dunlop</option>
+                        <option value="Travelodge Birmingham Frankley M5 Southbound">Travelodge Birmingham Frankley M5 Southbound</option>
+                        <option value="Travelodge Birmingham Halesowen">Travelodge Birmingham Halesowen</option>
+                        <option value="Travelodge Birmingham Hilton Park M6 Southbound">Travelodge Birmingham Hilton Park M6 Southbound</option>
+                        <option value="Travelodge Birmingham Kingswinford">Travelodge Birmingham Kingswinford</option>
+                        <option value="Travelodge Birmingham Maypole">Travelodge Birmingham Maypole</option>
+                        <option value="Travelodge Birmingham Oldbury">Travelodge Birmingham Oldbury</option>
+                        <option value="Travelodge Birmingham Perry Barr">Travelodge Birmingham Perry Barr</option>
+                        <option value="Travelodge Birmingham Sheldon">Travelodge Birmingham Sheldon</option>
+                        <option value="Travelodge Birmingham Streetly">Travelodge Birmingham Streetly</option>
+                        <option value="Travelodge Birmingham Sutton Coldfield">Travelodge Birmingham Sutton Coldfield</option>
+                        <option value="Travelodge Birmingham Yardley">Travelodge Birmingham Yardley</option>
+                        <option value="Travelodge Blackburn M65">Travelodge Blackburn M65</option>
+                        <option value="Travelodge Blackpool South Promenade">Travelodge Blackpool South Promenade</option>
+                        <option value="Travelodge Blackpool South Shore">Travelodge Blackpool South Shore</option>
+                        <option value="Travelodge Blyth A1 M">Travelodge Blyth A1 M</option>
+                        <option value="Travelodge Bodmin Roche">Travelodge Bodmin Roche</option>
+                        <option value="Travelodge Bolton Central River Street">Travelodge Bolton Central River Street</option>
+                        <option value="Travelodge Borehamwood">Travelodge Borehamwood</option>
+                        <option value="Travelodge Borehamwood Studio Way">Travelodge Borehamwood Studio Way</option>
+                        <option value="Travelodge Boston">Travelodge Boston</option>
+                        <option value="Travelodge Bournemouth">Travelodge Bournemouth</option>
+                        <option value="Travelodge Bournemouth Cooper Dean">Travelodge Bournemouth Cooper Dean</option>
+                        <option value="Travelodge Bournemouth Seafront">Travelodge Bournemouth Seafront</option>
+                        <option value="Travelodge Bracknell">Travelodge Bracknell</option>
+                        <option value="Travelodge Bracknell Central">Travelodge Bracknell Central</option>
+                        <option value="Travelodge Bradford">Travelodge Bradford</option>
+                        <option value="Travelodge Bradford Central">Travelodge Bradford Central</option>
+                        <option value="Travelodge Bradford Shipley">Travelodge Bradford Shipley</option>
+                        <option value="Travelodge Braintree">Travelodge Braintree</option>
+                        <option value="Travelodge Brentwood East Horndon">Travelodge Brentwood East Horndon</option>
+                        <option value="Travelodge Bridgwater M5">Travelodge Bridgwater M5</option>
+                        <option value="Travelodge Brighton">Travelodge Brighton</option>
+                        <option value="Travelodge Brighton Seafront">Travelodge Brighton Seafront</option>
+                        <option value="Travelodge Bristol Abbey Wood">Travelodge Bristol Abbey Wood</option>
+                        <option value="Travelodge Bristol Avonmouth">Travelodge Bristol Avonmouth</option>
+                        <option value="Travelodge Bristol Central">Travelodge Bristol Central</option>
+                        <option value="Travelodge Bristol Central Mitchell Lane">Travelodge Bristol Central Mitchell Lane</option>
+                        <option value="Travelodge Bristol Cribbs Causeway">Travelodge Bristol Cribbs Causeway</option>
+                        <option value="Travelodge Bristol Emersons Green">Travelodge Bristol Emersons Green</option>
+                        <option value="Travelodge Bristol Filton">Travelodge Bristol Filton</option>
+                        <option value="Travelodge Bristol Severn View M48">Travelodge Bristol Severn View M48</option>
+                        <option value="Travelodge Bromborough">Travelodge Bromborough</option>
+                        <option value="Travelodge Bromsgrove Marlbrook">Travelodge Bromsgrove Marlbrook</option>
+                        <option value="Travelodge Buckingham">Travelodge Buckingham</option>
+                        <option value="Travelodge Burford Cotswolds">Travelodge Burford Cotswolds</option>
+                        <option value="Travelodge Burnley">Travelodge Burnley</option>
+                        <option value="Travelodge Burton A38 Northbound">Travelodge Burton A38 Northbound</option>
+                        <option value="Travelodge Burton A38 Southbound">Travelodge Burton A38 Southbound</option>
+                        <option value="Travelodge Burton M6 Northbound">Travelodge Burton M6 Northbound</option>
+                        <option value="Travelodge Burton upon Trent Central">Travelodge Burton upon Trent Central</option>
+                        <option value="Travelodge Bury">Travelodge Bury</option>
+                        <option value="Travelodge Caernarfon">Travelodge Caernarfon</option>
+                        <option value="Travelodge Caerphilly">Travelodge Caerphilly</option>
+                        <option value="Travelodge Camberley">Travelodge Camberley</option>
+                        <option value="Travelodge Camberley Central">Travelodge Camberley Central</option>
+                        <option value="Travelodge Cambridge Central">Travelodge Cambridge Central</option>
+                        <option value="Travelodge Cambridge Fourwentways">Travelodge Cambridge Fourwentways</option>
+                        <option value="Travelodge Cambridge Orchard Park">Travelodge Cambridge Orchard Park</option>
+                        <option value="Travelodge Cambridge Swavesey">Travelodge Cambridge Swavesey</option>
+                        <option value="Travelodge Canterbury Chaucer Central">Travelodge Canterbury Chaucer Central</option>
+                        <option value="Travelodge Canterbury Whitstable">Travelodge Canterbury Whitstable</option>
+                        <option value="Travelodge Cardiff Airport">Travelodge Cardiff Airport</option>
+                        <option value="Travelodge Cardiff Atlantic Wharf">Travelodge Cardiff Atlantic Wharf</option>
+                        <option value="Travelodge Cardiff Central">Travelodge Cardiff Central</option>
+                        <option value="Travelodge Cardiff Central Queen Street">Travelodge Cardiff Central Queen Street</option>
+                        <option value="Travelodge Cardiff Gate">Travelodge Cardiff Gate</option>
+                        <option value="Travelodge Cardiff Llanedeyrn">Travelodge Cardiff Llanedeyrn</option>
+                        <option value="Travelodge Cardiff M4">Travelodge Cardiff M4</option>
+                        <option value="Travelodge Cardiff Whitchurch">Travelodge Cardiff Whitchurch</option>
+                        <option value="Travelodge Carlisle Central">Travelodge Carlisle Central</option>
+                        <option value="Travelodge Carlisle M6">Travelodge Carlisle M6</option>
+                        <option value="Travelodge Carlisle Todhills">Travelodge Carlisle Todhills</option>
+                        <option value="Travelodge Caterham Whyteleafe">Travelodge Caterham Whyteleafe</option>
+                        <option value="Travelodge Chatham Maritime Hotel">Travelodge Chatham Maritime Hotel</option>
+                        <option value="Travelodge Chelmsford">Travelodge Chelmsford</option>
+                        <option value="Travelodge Cheltenham">Travelodge Cheltenham</option>
+                        <option value="Travelodge Chertsey">Travelodge Chertsey</option>
+                        <option value="Travelodge Cheshire Oaks">Travelodge Cheshire Oaks</option>
+                        <option value="Travelodge Cheshunt">Travelodge Cheshunt</option>
+                        <option value="Travelodge Chester-le-Street">Travelodge Chester-le-Street</option>
+                        <option value="Travelodge Chester Central">Travelodge Chester Central</option>
+                        <option value="Travelodge Chester Central Bridge Street">Travelodge Chester Central Bridge Street</option>
+                        <option value="Travelodge Chesterfield">Travelodge Chesterfield</option>
+                        <option value="Travelodge Chesterfield Town Centre">Travelodge Chesterfield Town Centre</option>
+                        <option value="Travelodge Chester Northop Hall">Travelodge Chester Northop Hall</option>
+                        <option value="Travelodge Chester Warrington Road">Travelodge Chester Warrington Road</option>
+                        <option value="Travelodge Chichester Central">Travelodge Chichester Central</option>
+                        <option value="Travelodge Chichester Emsworth">Travelodge Chichester Emsworth</option>
+                        <option value="Travelodge Chippenham">Travelodge Chippenham</option>
+                        <option value="Travelodge Chippenham Leigh Delamere M4 Eastbound">Travelodge Chippenham Leigh Delamere M4 Eastbound</option>
+                        <option value="Travelodge Chippenham Leigh Delamere M4 Westbound">Travelodge Chippenham Leigh Delamere M4 Westbound</option>
+                        <option value="Travelodge Christchurch">Travelodge Christchurch</option>
+                        <option value="Travelodge Cirencester">Travelodge Cirencester</option>
+                        <option value="Travelodge Clacton-on-Sea Central">Travelodge Clacton-on-Sea Central</option>
+                        <option value="Travelodge Cockermouth">Travelodge Cockermouth</option>
+                        <option value="Travelodge Colchester Feering">Travelodge Colchester Feering</option>
+                        <option value="Travelodge Colchester Northern Gateway">Travelodge Colchester Northern Gateway</option>
+                        <option value="Travelodge Colwyn Bay">Travelodge Colwyn Bay</option>
+                        <option value="Travelodge Coventry Binley">Travelodge Coventry Binley</option>
+                        <option value="Travelodge Crewe">Travelodge Crewe</option>
+                        <option value="Travelodge Crewe Barthomley">Travelodge Crewe Barthomley</option>
+                        <option value="Travelodge Croydon Central">Travelodge Croydon Central</option>
+                        <option value="Travelodge Darlington">Travelodge Darlington</option>
+                        <option value="Travelodge Dartford">Travelodge Dartford</option>
+                        <option value="Travelodge Derby Chaddesden">Travelodge Derby Chaddesden</option>
+                        <option value="Travelodge Derby Cricket Ground">Travelodge Derby Cricket Ground</option>
+                        <option value="Travelodge Derby Pride Park">Travelodge Derby Pride Park</option>
+                        <option value="Travelodge Devizes">Travelodge Devizes</option>
+                        <option value="Travelodge Doncaster">Travelodge Doncaster</option>
+                        <option value="Travelodge Doncaster Lakeside">Travelodge Doncaster Lakeside</option>
+                        <option value="Travelodge Doncaster M18 M180">Travelodge Doncaster M18 M180</option>
+                        <option value="Travelodge Dorking">Travelodge Dorking</option>
+                        <option value="Travelodge Dover">Travelodge Dover</option>
+                        <option value="Travelodge Droitwich">Travelodge Droitwich</option>
+                        <option value="Travelodge Dudley Town Centre">Travelodge Dudley Town Centre</option>
+                        <option value="Travelodge Dumbarton">Travelodge Dumbarton</option>
+                        <option value="Travelodge Dumfries">Travelodge Dumfries</option>
+                        <option value="Travelodge Dundee Central">Travelodge Dundee Central</option>
+                        <option value="Travelodge Dundee Strathmore Avenue">Travelodge Dundee Strathmore Avenue</option>
+                        <option value="Travelodge Dunfermline">Travelodge Dunfermline</option>
+                        <option value="Travelodge Durham">Travelodge Durham</option>
+                        <option value="Travelodge Eastbourne Willingdon Drove">Travelodge Eastbourne Willingdon Drove</option>
+                        <option value="Travelodge East Grinstead">Travelodge East Grinstead</option>
+                        <option value="Travelodge Eastleigh Central">Travelodge Eastleigh Central</option>
+                        <option value="Travelodge Edinburgh Airport Ratho Station">Travelodge Edinburgh Airport Ratho Station</option>
+                        <option value="Travelodge Edinburgh Cameron Toll">Travelodge Edinburgh Cameron Toll</option>
+                        <option value="Travelodge Edinburgh Central">Travelodge Edinburgh Central</option>
+                        <option value="Travelodge Edinburgh Central Queen Street">Travelodge Edinburgh Central Queen Street</option>
+                        <option value="Travelodge Edinburgh Central Rose Street">Travelodge Edinburgh Central Rose Street</option>
+                        <option value="Travelodge Edinburgh Central Waterloo Place">Travelodge Edinburgh Central Waterloo Place</option>
+                        <option value="Travelodge Edinburgh Dreghorn">Travelodge Edinburgh Dreghorn</option>
+                        <option value="Travelodge Edinburgh Haymarket">Travelodge Edinburgh Haymarket</option>
+                        <option value="Travelodge Edinburgh Park">Travelodge Edinburgh Park</option>
+                        <option value="Travelodge Elgin">Travelodge Elgin</option>
+                        <option value="Travelodge Ely">Travelodge Ely</option>
+                        <option value="Travelodge Exeter M5">Travelodge Exeter M5</option>
+                        <option value="Travelodge Falkirk">Travelodge Falkirk</option>
+                        <option value="Travelodge Farnborough Central">Travelodge Farnborough Central</option>
+                        <option value="Travelodge Fleet">Travelodge Fleet</option>
+                        <option value="Travelodge Fort William">Travelodge Fort William</option>
+                        <option value="Travelodge Frimley">Travelodge Frimley</option>
+                        <option value="Travelodge Gainsborough">Travelodge Gainsborough</option>
+                        <option value="Travelodge Gateshead">Travelodge Gateshead</option>
+                        <option value="Travelodge Gatwick Airport Central">Travelodge Gatwick Airport Central</option>
+                        <option value="Travelodge Glasgow Airport">Travelodge Glasgow Airport</option>
+                        <option value="Travelodge Glasgow Braehead">Travelodge Glasgow Braehead</option>
+                        <option value="Travelodge Glasgow Central">Travelodge Glasgow Central</option>
+                        <option value="Travelodge Glasgow Cumbernauld">Travelodge Glasgow Cumbernauld</option>
+                        <option value="Travelodge Glasgow Govan">Travelodge Glasgow Govan</option>
+                        <option value="Travelodge Glasgow Paisley Road">Travelodge Glasgow Paisley Road</option>
+                        <option value="Travelodge Glasgow Queen Street">Travelodge Glasgow Queen Street</option>
+                        <option value="Travelodge Glastonbury">Travelodge Glastonbury</option>
+                        <option value="Travelodge Glenrothes">Travelodge Glenrothes</option>
+                        <option value="Travelodge Gloucester">Travelodge Gloucester</option>
+                        <option value="Travelodge Gosport">Travelodge Gosport</option>
+                        <option value="Travelodge Grantham A1">Travelodge Grantham A1</option>
+                        <option value="Travelodge Grantham Colsterworth">Travelodge Grantham Colsterworth</option>
+                        <option value="Travelodge Grantham South Witham">Travelodge Grantham South Witham</option>
+                        <option value="Travelodge Gravesend">Travelodge Gravesend</option>
+                        <option value="Travelodge Great Yarmouth">Travelodge Great Yarmouth</option>
+                        <option value="Travelodge Great Yarmouth Acle">Travelodge Great Yarmouth Acle</option>
+                        <option value="Travelodge Guildford">Travelodge Guildford</option>
+                        <option value="Travelodge Halifax">Travelodge Halifax</option>
+                        <option value="Travelodge Halkyn">Travelodge Halkyn</option>
+                        <option value="Travelodge Harlow">Travelodge Harlow</option>
+                        <option value="Travelodge Harrogate">Travelodge Harrogate</option>
+                        <option value="Travelodge Harrogate West Park">Travelodge Harrogate West Park</option>
+                        <option value="Travelodge Hartlebury">Travelodge Hartlebury</option>
+                        <option value="Travelodge Hastings">Travelodge Hastings</option>
+                        <option value="Travelodge Hatfield Central">Travelodge Hatfield Central</option>
+                        <option value="Travelodge Havant Rowlands Castle">Travelodge Havant Rowlands Castle</option>
+                        <option value="Travelodge Haverhill">Travelodge Haverhill</option>
+                        <option value="Travelodge Haydock St Helens">Travelodge Haydock St Helens</option>
+                        <option value="Travelodge Hayle">Travelodge Hayle</option>
+                        <option value="Travelodge Heathrow Heston M4 Eastbound">Travelodge Heathrow Heston M4 Eastbound</option>
+                        <option value="Travelodge Heathrow Heston M4 Westbound">Travelodge Heathrow Heston M4 Westbound</option>
+                        <option value="Travelodge Hellingly Eastbourne">Travelodge Hellingly Eastbourne</option>
+                        <option value="Travelodge Hemel Hempstead">Travelodge Hemel Hempstead</option>
+                        <option value="Travelodge Hereford">Travelodge Hereford</option>
+                        <option value="Travelodge Hereford Grafton">Travelodge Hereford Grafton</option>
+                        <option value="Travelodge Hexham">Travelodge Hexham</option>
+                        <option value="Travelodge Hickstead">Travelodge Hickstead</option>
+                        <option value="Travelodge Highbridge Burnham-on-Sea">Travelodge Highbridge Burnham-on-Sea</option>
+                        <option value="Travelodge High Wycombe Central">Travelodge High Wycombe Central</option>
+                        <option value="Travelodge Holyhead">Travelodge Holyhead</option>
+                        <option value="Travelodge Horsham Central">Travelodge Horsham Central</option>
+                        <option value="Travelodge Huddersfield">Travelodge Huddersfield</option>
+                        <option value="Travelodge Hull Central">Travelodge Hull Central</option>
+                        <option value="Travelodge Hull South Cave">Travelodge Hull South Cave</option>
+                        <option value="Travelodge Huntingdon Fenstanton">Travelodge Huntingdon Fenstanton</option>
+                        <option value="Travelodge Ilminster">Travelodge Ilminster</option>
+                        <option value="Travelodge Inverness">Travelodge Inverness</option>
+                        <option value="Travelodge Inverness City Centre">Travelodge Inverness City Centre</option>
+                        <option value="Travelodge Inverness Fairways">Travelodge Inverness Fairways</option>
+                        <option value="Travelodge Ipswich">Travelodge Ipswich</option>
+                        <option value="Travelodge Ipswich Beacon Hill">Travelodge Ipswich Beacon Hill</option>
+                        <option value="Travelodge Ipswich Capel St Mary">Travelodge Ipswich Capel St Mary</option>
+                        <option value="Travelodge Ipswich Central">Travelodge Ipswich Central</option>
+                        <option value="Travelodge Ipswich Stowmarket">Travelodge Ipswich Stowmarket</option>
+                        <option value="Travelodge Keighley">Travelodge Keighley</option>
+                        <option value="Travelodge Kendal">Travelodge Kendal</option>
+                        <option value="Travelodge Kendal Town Centre">Travelodge Kendal Town Centre</option>
+                        <option value="Travelodge Kettering">Travelodge Kettering</option>
+                        <option value="Travelodge Kettering Thrapston">Travelodge Kettering Thrapston</option>
+                        <option value="Travelodge Kidderminster">Travelodge Kidderminster</option>
+                        <option value="Travelodge Kilmarnock">Travelodge Kilmarnock</option>
+                        <option value="Travelodge Kings Lynn">Travelodge Kings Lynn</option>
+                        <option value="Travelodge Kings Lynn Long Sutton">Travelodge Kings Lynn Long Sutton</option>
+                        <option value="Travelodge Kingston Upon Thames Central">Travelodge Kingston Upon Thames Central</option>
+                        <option value="Travelodge Kinross M90">Travelodge Kinross M90</option>
+                        <option value="Travelodge Knutsford M6">Travelodge Knutsford M6</option>
+                        <option value="Travelodge Lancaster M6">Travelodge Lancaster M6</option>
+                        <option value="Travelodge Langley">Travelodge Langley</option>
+                        <option value="Travelodge Leatherhead">Travelodge Leatherhead</option>
+                        <option value="Travelodge Leeds Bradford Airport">Travelodge Leeds Bradford Airport</option>
+                        <option value="Travelodge Leeds Central">Travelodge Leeds Central</option>
+                        <option value="Travelodge Leeds Central Vicar Lane">Travelodge Leeds Central Vicar Lane</option>
+                        <option value="Travelodge Leeds Colton">Travelodge Leeds Colton</option>
+                        <option value="Travelodge Leeds Morley">Travelodge Leeds Morley</option>
+                        <option value="Travelodge Leicester Central">Travelodge Leicester Central</option>
+                        <option value="Travelodge Leicester Central North">Travelodge Leicester Central North</option>
+                        <option value="Travelodge Leicester City Centre">Travelodge Leicester City Centre</option>
+                        <option value="Travelodge Leicester Hinckley Road">Travelodge Leicester Hinckley Road</option>
+                        <option value="Travelodge Leicester Markfield">Travelodge Leicester Markfield</option>
+                        <option value="Travelodge Lincoln City Centre">Travelodge Lincoln City Centre</option>
+                        <option value="Travelodge Lincoln Thorpe On The Hill">Travelodge Lincoln Thorpe On The Hill</option>
+                        <option value="Travelodge Littlehampton Rustington">Travelodge Littlehampton Rustington</option>
+                        <option value="Travelodge Liverpool Aigburth">Travelodge Liverpool Aigburth</option>
+                        <option value="Travelodge Liverpool Central">Travelodge Liverpool Central</option>
+                        <option value="Travelodge Liverpool Central The Strand">Travelodge Liverpool Central The Strand</option>
+                        <option value="Travelodge Liverpool Docks">Travelodge Liverpool Docks</option>
+                        <option value="Travelodge Liverpool Edge Lane">Travelodge Liverpool Edge Lane</option>
+                        <option value="Travelodge Liverpool John Lennon Airport">Travelodge Liverpool John Lennon Airport</option>
+                        <option value="Travelodge Liverpool Stonedale Park">Travelodge Liverpool Stonedale Park</option>
+                        <option value="Travelodge Liverpool Stoneycroft">Travelodge Liverpool Stoneycroft</option>
+                        <option value="Travelodge Livingston">Travelodge Livingston</option>
+                        <option value="Travelodge Llandudno">Travelodge Llandudno</option>
+                        <option value="Travelodge Llanelli Central">Travelodge Llanelli Central</option>
+                        <option value="Travelodge Llanelli Cross Hands">Travelodge Llanelli Cross Hands</option>
+                        <option value="Travelodge London Acton">Travelodge London Acton</option>
+                        <option value="Travelodge London Barking">Travelodge London Barking</option>
+                        <option value="Travelodge London Battersea">Travelodge London Battersea</option>
+                        <option value="Travelodge London Beckenham">Travelodge London Beckenham</option>
+                        <option value="Travelodge London Beckton">Travelodge London Beckton</option>
+                        <option value="Travelodge London Belvedere">Travelodge London Belvedere</option>
+                        <option value="Travelodge London Bermondsey">Travelodge London Bermondsey</option>
+                        <option value="Travelodge London Brent Cross">Travelodge London Brent Cross</option>
+                        <option value="Travelodge London Bromley">Travelodge London Bromley</option>
+                        <option value="Travelodge London Central Aldgate East">Travelodge London Central Aldgate East</option>
+                        <option value="Travelodge London Central Bank">Travelodge London Central Bank</option>
+                        <option value="Travelodge London Central City Road">Travelodge London Central City Road</option>
+                        <option value="Travelodge London Central Elephant and Castle">Travelodge London Central Elephant and Castle</option>
+                        <option value="Travelodge London Central Euston">Travelodge London Central Euston</option>
+                        <option value="Travelodge London Central Kings Cross">Travelodge London Central Kings Cross</option>
+                        <option value="Travelodge London Central Marylebone">Travelodge London Central Marylebone</option>
+                        <option value="Travelodge London Central Southwark">Travelodge London Central Southwark</option>
+                        <option value="Travelodge London Central Tower Bridge">Travelodge London Central Tower Bridge</option>
+                        <option value="Travelodge London Central Waterloo">Travelodge London Central Waterloo</option>
+                        <option value="Travelodge London Chessington Tolworth">Travelodge London Chessington Tolworth</option>
+                        <option value="Travelodge London Chigwell">Travelodge London Chigwell</option>
+                        <option value="Travelodge London City">Travelodge London City</option>
+                        <option value="Travelodge London City Airport">Travelodge London City Airport</option>
+                        <option value="Travelodge London Covent Garden">Travelodge London Covent Garden</option>
+                        <option value="Travelodge London Cricklewood">Travelodge London Cricklewood</option>
+                        <option value="Travelodge London Crystal Palace">Travelodge London Crystal Palace</option>
+                        <option value="Travelodge London Dagenham">Travelodge London Dagenham</option>
+                        <option value="Travelodge London Dagenham East">Travelodge London Dagenham East</option>
+                        <option value="Travelodge London Docklands">Travelodge London Docklands</option>
+                        <option value="Travelodge London Ealing">Travelodge London Ealing</option>
+                        <option value="Travelodge London Edmonton">Travelodge London Edmonton</option>
+                        <option value="Travelodge London Excel">Travelodge London Excel</option>
+                        <option value="Travelodge London Farringdon">Travelodge London Farringdon</option>
+                        <option value="Travelodge London Feltham">Travelodge London Feltham</option>
+                        <option value="Travelodge London Finchley">Travelodge London Finchley</option>
+                        <option value="Travelodge London Finsbury Park">Travelodge London Finsbury Park</option>
+                        <option value="Travelodge London Fulham">Travelodge London Fulham</option>
+                        <option value="Travelodge London Greenwich">Travelodge London Greenwich</option>
+                        <option value="Travelodge London Greenwich High Road">Travelodge London Greenwich High Road</option>
+                        <option value="Travelodge London Hackney">Travelodge London Hackney</option>
+                        <option value="Travelodge London Harrow">Travelodge London Harrow</option>
+                        <option value="Travelodge London Ilford">Travelodge London Ilford</option>
+                        <option value="Travelodge London Ilford Gants Hill">Travelodge London Ilford Gants Hill</option>
+                        <option value="Travelodge London Kew Bridge">Travelodge London Kew Bridge</option>
+                        <option value="Travelodge London Kings Cross Royal Scot">Travelodge London Kings Cross Royal Scot</option>
+                        <option value="Travelodge London Kingston Upon Thames">Travelodge London Kingston Upon Thames</option>
+                        <option value="Travelodge London Lewisham">Travelodge London Lewisham</option>
+                        <option value="Travelodge London Liverpool Street">Travelodge London Liverpool Street</option>
+                        <option value="Travelodge London Mile End">Travelodge London Mile End</option>
+                        <option value="Travelodge London Northolt">Travelodge London Northolt</option>
+                        <option value="Travelodge London Oval Cricket Ground">Travelodge London Oval Cricket Ground</option>
+                        <option value="Travelodge London Park Royal">Travelodge London Park Royal</option>
+                        <option value="Travelodge London Peckham">Travelodge London Peckham</option>
+                        <option value="Travelodge London Raynes Park">Travelodge London Raynes Park</option>
+                        <option value="Travelodge London Richmond Central">Travelodge London Richmond Central</option>
+                        <option value="Travelodge London Romford">Travelodge London Romford</option>
+                        <option value="Travelodge London Romford The Quadrant">Travelodge London Romford The Quadrant</option>
+                        <option value="Travelodge London Snaresbrook">Travelodge London Snaresbrook</option>
+                        <option value="Travelodge London South Croydon">Travelodge London South Croydon</option>
+                        <option value="Travelodge London Southgate">Travelodge London Southgate</option>
+                        <option value="Travelodge London Stratford">Travelodge London Stratford</option>
+                        <option value="Travelodge London Stratford Centre">Travelodge London Stratford Centre</option>
+                        <option value="Travelodge London Teddington">Travelodge London Teddington</option>
+                        <option value="Travelodge London Twickenham">Travelodge London Twickenham</option>
+                        <option value="Travelodge London Wembley">Travelodge London Wembley</option>
+                        <option value="Travelodge London Wembley High Road">Travelodge London Wembley High Road</option>
+                        <option value="Travelodge London Whetstone">Travelodge London Whetstone</option>
+                        <option value="Travelodge London Wimbledon Central">Travelodge London Wimbledon Central</option>
+                        <option value="Travelodge London Wimbledon Morden">Travelodge London Wimbledon Morden</option>
+                        <option value="Travelodge London Wood Green">Travelodge London Wood Green</option>
+                        <option value="Travelodge Loughborough Central">Travelodge Loughborough Central</option>
+                        <option value="Travelodge Lowestoft">Travelodge Lowestoft</option>
+                        <option value="Travelodge Ludlow">Travelodge Ludlow</option>
+                        <option value="Travelodge Ludlow Woofferton">Travelodge Ludlow Woofferton</option>
+                        <option value="Travelodge Luton">Travelodge Luton</option>
+                        <option value="Travelodge Lutterworth">Travelodge Lutterworth</option>
+                        <option value="Travelodge Lytham St Annes">Travelodge Lytham St Annes</option>
+                        <option value="Travelodge Macclesfield Adlington">Travelodge Macclesfield Adlington</option>
+                        <option value="Travelodge Macclesfield Central">Travelodge Macclesfield Central</option>
+                        <option value="Travelodge Maidenhead Central">Travelodge Maidenhead Central</option>
+                        <option value="Travelodge Maidstone Central">Travelodge Maidstone Central</option>
+                        <option value="Travelodge Maldon">Travelodge Maldon</option>
+                        <option value="Travelodge Manchester Ancoats">Travelodge Manchester Ancoats</option>
+                        <option value="Travelodge Manchester Birch M62 Eastbound">Travelodge Manchester Birch M62 Eastbound</option>
+                        <option value="Travelodge Manchester Birch M62 Westbound">Travelodge Manchester Birch M62 Westbound</option>
+                        <option value="Travelodge Manchester Central">Travelodge Manchester Central</option>
+                        <option value="Travelodge Manchester Central Arena">Travelodge Manchester Central Arena</option>
+                        <option value="Travelodge Manchester Didsbury">Travelodge Manchester Didsbury</option>
+                        <option value="Travelodge Manchester Piccadilly">Travelodge Manchester Piccadilly</option>
+                        <option value="Travelodge Manchester Sale">Travelodge Manchester Sale</option>
+                        <option value="Travelodge Manchester Salford Quays">Travelodge Manchester Salford Quays</option>
+                        <option value="Travelodge Manchester Sportcity">Travelodge Manchester Sportcity</option>
+                        <option value="Travelodge Manchester Trafford Park">Travelodge Manchester Trafford Park</option>
+                        <option value="Travelodge Manchester Upper Brook Street">Travelodge Manchester Upper Brook Street</option>
+                        <option value="Travelodge Mansfield">Travelodge Mansfield</option>
+                        <option value="Travelodge Margate Westwood">Travelodge Margate Westwood</option>
+                        <option value="Travelodge Market Harborough">Travelodge Market Harborough</option>
+                        <option value="Travelodge Marlow">Travelodge Marlow</option>
+                        <option value="Travelodge Medway M2">Travelodge Medway M2</option>
+                        <option value="Travelodge Melksham">Travelodge Melksham</option>
+                        <option value="Travelodge Merthyr Tydfil">Travelodge Merthyr Tydfil</option>
+                        <option value="Travelodge Middlesbrough">Travelodge Middlesbrough</option>
+                        <option value="Travelodge Middlewich">Travelodge Middlewich</option>
+                        <option value="Travelodge Milton Keynes at The Hub">Travelodge Milton Keynes at The Hub</option>
+                        <option value="Travelodge Milton Keynes Central">Travelodge Milton Keynes Central</option>
+                        <option value="Travelodge Milton Keynes Old Stratford">Travelodge Milton Keynes Old Stratford</option>
+                        <option value="Travelodge Milton Keynes Shenley Church End">Travelodge Milton Keynes Shenley Church End</option>
+                        <option value="Travelodge Morecambe">Travelodge Morecambe</option>
+                        <option value="Travelodge Newark-on-Trent">Travelodge Newark-on-Trent</option>
+                        <option value="Travelodge Newbury Chieveley M4">Travelodge Newbury Chieveley M4</option>
+                        <option value="Travelodge Newbury London Road">Travelodge Newbury London Road</option>
+                        <option value="Travelodge Newbury Tot Hill">Travelodge Newbury Tot Hill</option>
+                        <option value="Travelodge Newcastle Airport">Travelodge Newcastle Airport</option>
+                        <option value="Travelodge Newcastle Central">Travelodge Newcastle Central</option>
+                        <option value="Travelodge Newcastle Cobalt Business Park">Travelodge Newcastle Cobalt Business Park</option>
+                        <option value="Travelodge Newcastle Gosforth">Travelodge Newcastle Gosforth</option>
+                        <option value="Travelodge Newcastle Quayside">Travelodge Newcastle Quayside</option>
+                        <option value="Travelodge Newcastle Seaton Burn">Travelodge Newcastle Seaton Burn</option>
+                        <option value="Travelodge Newcastle Under Lyme Central">Travelodge Newcastle Under Lyme Central</option>
+                        <option value="Travelodge Newcastle Whitemare Pool">Travelodge Newcastle Whitemare Pool</option>
+                        <option value="Travelodge Newport Central">Travelodge Newport Central</option>
+                        <option value="Travelodge Newport Isle Of Wight">Travelodge Newport Isle Of Wight</option>
+                        <option value="Travelodge Newquay Seafront">Travelodge Newquay Seafront</option>
+                        <option value="Travelodge Northampton Central">Travelodge Northampton Central</option>
+                        <option value="Travelodge Northampton Round Spinney">Travelodge Northampton Round Spinney</option>
+                        <option value="Travelodge Northampton Upton Way">Travelodge Northampton Upton Way</option>
+                        <option value="Travelodge Northampton Wootton">Travelodge Northampton Wootton</option>
+                        <option value="Travelodge Northwich Lostock Gralam">Travelodge Northwich Lostock Gralam</option>
+                        <option value="Travelodge Norwich Central">Travelodge Norwich Central</option>
+                        <option value="Travelodge Norwich Central Riverside">Travelodge Norwich Central Riverside</option>
+                        <option value="Travelodge Norwich Cringleford">Travelodge Norwich Cringleford</option>
+                        <option value="Travelodge Nottingham Central">Travelodge Nottingham Central</option>
+                        <option value="Travelodge Nottingham Em Airport Donington Park M1">Travelodge Nottingham Em Airport Donington Park M1</option>
+                        <option value="Travelodge Nottingham Riverside">Travelodge Nottingham Riverside</option>
+                        <option value="Travelodge Nottingham Trowell M1">Travelodge Nottingham Trowell M1</option>
+                        <option value="Travelodge Nottingham Wollaton Park">Travelodge Nottingham Wollaton Park</option>
+                        <option value="Travelodge Nuneaton">Travelodge Nuneaton</option>
+                        <option value="Travelodge Nuneaton Bedworth">Travelodge Nuneaton Bedworth</option>
+                        <option value="Travelodge Okehampton Sourton Cross">Travelodge Okehampton Sourton Cross</option>
+                        <option value="Travelodge Okehampton Whiddon Down">Travelodge Okehampton Whiddon Down</option>
+                        <option value="Travelodge Oldham Chadderton">Travelodge Oldham Chadderton</option>
+                        <option value="Travelodge Oswestry">Travelodge Oswestry</option>
+                        <option value="Travelodge Oxford Abingdon Road">Travelodge Oxford Abingdon Road</option>
+                        <option value="Travelodge Oxford Peartree">Travelodge Oxford Peartree</option>
+                        <option value="Travelodge Oxford Wheatley">Travelodge Oxford Wheatley</option>
+                        <option value="Travelodge Paignton Seafront">Travelodge Paignton Seafront</option>
+                        <option value="Travelodge Pembroke Dock">Travelodge Pembroke Dock</option>
+                        <option value="Travelodge Penrith">Travelodge Penrith</option>
+                        <option value="Travelodge Perth A9">Travelodge Perth A9</option>
+                        <option value="Travelodge Perth Broxden Junction">Travelodge Perth Broxden Junction</option>
+                        <option value="Travelodge Perth Central">Travelodge Perth Central</option>
+                        <option value="Travelodge Peterborough Alwalton">Travelodge Peterborough Alwalton</option>
+                        <option value="Travelodge Peterborough Central">Travelodge Peterborough Central</option>
+                        <option value="Travelodge Peterborough Eye Green">Travelodge Peterborough Eye Green</option>
+                        <option value="Travelodge Plymouth">Travelodge Plymouth</option>
+                        <option value="Travelodge Plymouth Derriford">Travelodge Plymouth Derriford</option>
+                        <option value="Travelodge Plymouth Roborough">Travelodge Plymouth Roborough</option>
+                        <option value="Travelodge Pontefract Ferrybridge A1 M62">Travelodge Pontefract Ferrybridge A1 M62</option>
+                        <option value="Travelodge Poole">Travelodge Poole</option>
+                        <option value="Travelodge Poole North">Travelodge Poole North</option>
+                        <option value="Travelodge Porthmadog">Travelodge Porthmadog</option>
+                        <option value="Travelodge Portsmouth">Travelodge Portsmouth</option>
+                        <option value="Travelodge Portsmouth City Centre">Travelodge Portsmouth City Centre</option>
+                        <option value="Travelodge Portsmouth Hilsea">Travelodge Portsmouth Hilsea</option>
+                        <option value="Travelodge Preston Central">Travelodge Preston Central</option>
+                        <option value="Travelodge Preston Chorley">Travelodge Preston Chorley</option>
+                        <option value="Travelodge Preston North">Travelodge Preston North</option>
+                        <option value="Travelodge Ramsgate Seafront">Travelodge Ramsgate Seafront</option>
+                        <option value="Travelodge Reading Central">Travelodge Reading Central</option>
+                        <option value="Travelodge Reading M4 Eastbound">Travelodge Reading M4 Eastbound</option>
+                        <option value="Travelodge Reading M4 Westbound">Travelodge Reading M4 Westbound</option>
+                        <option value="Travelodge Reading Whitley">Travelodge Reading Whitley</option>
+                        <option value="Travelodge Redhill">Travelodge Redhill</option>
+                        <option value="Travelodge Redhill Town Centre">Travelodge Redhill Town Centre</option>
+                        <option value="Travelodge Retford Markham Moor">Travelodge Retford Markham Moor</option>
+                        <option value="Travelodge Rhyl Seafront">Travelodge Rhyl Seafront</option>
+                        <option value="Travelodge Ringwood">Travelodge Ringwood</option>
+                        <option value="Travelodge Rochdale">Travelodge Rochdale</option>
+                        <option value="Travelodge Rugby Central">Travelodge Rugby Central</option>
+                        <option value="Travelodge Rugby Dunchurch">Travelodge Rugby Dunchurch</option>
+                        <option value="Travelodge Rugeley">Travelodge Rugeley</option>
+                        <option value="Travelodge Ryde Isle of Wight">Travelodge Ryde Isle of Wight</option>
+                        <option value="Travelodge Saltash">Travelodge Saltash</option>
+                        <option value="Travelodge Sandwich">Travelodge Sandwich</option>
+                        <option value="Travelodge Scarborough St Nicholas">Travelodge Scarborough St Nicholas</option>
+                        <option value="Travelodge Scotch Corner A1 Southbound">Travelodge Scotch Corner A1 Southbound</option>
+                        <option value="Travelodge Scotch Corner Skeeby">Travelodge Scotch Corner Skeeby</option>
+                        <option value="Travelodge Scunthorpe">Travelodge Scunthorpe</option>
+                        <option value="Travelodge Sedgefield">Travelodge Sedgefield</option>
+                        <option value="Travelodge Sheffield Central">Travelodge Sheffield Central</option>
+                        <option value="Travelodge Sheffield Meadowhall">Travelodge Sheffield Meadowhall</option>
+                        <option value="Travelodge Sheffield Richmond">Travelodge Sheffield Richmond</option>
+                        <option value="Travelodge Shrewsbury Battlefield">Travelodge Shrewsbury Battlefield</option>
+                        <option value="Travelodge Shrewsbury Bayston Hill">Travelodge Shrewsbury Bayston Hill</option>
+                        <option value="Travelodge Sittingbourne">Travelodge Sittingbourne</option>
+                        <option value="Travelodge Skegness Seafront">Travelodge Skegness Seafront</option>
+                        <option value="Travelodge Skipton">Travelodge Skipton</option>
+                        <option value="Travelodge Sleaford">Travelodge Sleaford</option>
+                        <option value="Travelodge Slough">Travelodge Slough</option>
+                        <option value="Travelodge Southampton">Travelodge Southampton</option>
+                        <option value="Travelodge Southampton Central">Travelodge Southampton Central</option>
+                        <option value="Travelodge Southampton Eastleigh">Travelodge Southampton Eastleigh</option>
+                        <option value="Travelodge Southend On Sea">Travelodge Southend On Sea</option>
+                        <option value="Travelodge Spalding">Travelodge Spalding</option>
+                        <option value="Travelodge Stafford Central">Travelodge Stafford Central</option>
+                        <option value="Travelodge Stafford M6">Travelodge Stafford M6</option>
+                        <option value="Travelodge Staines">Travelodge Staines</option>
+                        <option value="Travelodge St Albans City Centre">Travelodge St Albans City Centre</option>
+                        <option value="Travelodge Stansted Great Dunmow">Travelodge Stansted Great Dunmow</option>
+                        <option value="Travelodge St Austell">Travelodge St Austell</option>
+                        <option value="Travelodge St Clears Carmarthen">Travelodge St Clears Carmarthen</option>
+                        <option value="Travelodge Stirling City Centre">Travelodge Stirling City Centre</option>
+                        <option value="Travelodge Stirling M80">Travelodge Stirling M80</option>
+                        <option value="Travelodge Stockport">Travelodge Stockport</option>
+                        <option value="Travelodge Stoke-on-Trent Trentham">Travelodge Stoke-on-Trent Trentham</option>
+                        <option value="Travelodge Stoke Talke">Travelodge Stoke Talke</option>
+                        <option value="Travelodge Stonehouse">Travelodge Stonehouse</option>
+                        <option value="Travelodge Stoney Cross Lyndhurst">Travelodge Stoney Cross Lyndhurst</option>
+                        <option value="Travelodge Stratford Alcester">Travelodge Stratford Alcester</option>
+                        <option value="Travelodge Stratford Upon Avon">Travelodge Stratford Upon Avon</option>
+                        <option value="Travelodge Sunbury M3">Travelodge Sunbury M3</option>
+                        <option value="Travelodge Sunderland Central">Travelodge Sunderland Central</option>
+                        <option value="Travelodge Swansea Central">Travelodge Swansea Central</option>
+                        <option value="Travelodge Swansea M4">Travelodge Swansea M4</option>
+                        <option value="Travelodge Swindon Central">Travelodge Swindon Central</option>
+                        <option value="Travelodge Swindon West">Travelodge Swindon West</option>
+                        <option value="Travelodge Tamworth Central">Travelodge Tamworth Central</option>
+                        <option value="Travelodge Tamworth M42">Travelodge Tamworth M42</option>
+                        <option value="Travelodge Taunton">Travelodge Taunton</option>
+                        <option value="Travelodge Telford">Travelodge Telford</option>
+                        <option value="Travelodge Telford Shawbirch">Travelodge Telford Shawbirch</option>
+                        <option value="Travelodge Tewkesbury">Travelodge Tewkesbury</option>
+                        <option value="Travelodge Thame">Travelodge Thame</option>
+                        <option value="Travelodge The Regent Hotel Leamington Spa">Travelodge The Regent Hotel Leamington Spa</option>
+                        <option value="Travelodge Thetford">Travelodge Thetford</option>
+                        <option value="Travelodge Thurrock Lakeside">Travelodge Thurrock Lakeside</option>
+                        <option value="Travelodge Tiverton">Travelodge Tiverton</option>
+                        <option value="Travelodge Toddington M1 Southbound">Travelodge Toddington M1 Southbound</option>
+                        <option value="Travelodge Torquay">Travelodge Torquay</option>
+                        <option value="Travelodge Towcester Silverstone">Travelodge Towcester Silverstone</option>
+                        <option value="Travelodge Tunbridge Wells">Travelodge Tunbridge Wells</option>
+                        <option value="Travelodge Wadebridge">Travelodge Wadebridge</option>
+                        <option value="Travelodge Wakefield">Travelodge Wakefield</option>
+                        <option value="Travelodge Wakefield Woolley Edge M1 Northbound">Travelodge Wakefield Woolley Edge M1 Northbound</option>
+                        <option value="Travelodge Wakefield Woolley Edge M1 Southbound">Travelodge Wakefield Woolley Edge M1 Southbound</option>
+                        <option value="Travelodge Wallasey New Brighton">Travelodge Wallasey New Brighton</option>
+                        <option value="Travelodge Walsall">Travelodge Walsall</option>
+                        <option value="Travelodge Walton-on-Thames">Travelodge Walton-on-Thames</option>
+                        <option value="Travelodge Walton-on-Thames Central">Travelodge Walton-on-Thames Central</option>
+                        <option value="Travelodge Warminster">Travelodge Warminster</option>
+                        <option value="Travelodge Warrington">Travelodge Warrington</option>
+                        <option value="Travelodge Warrington Gemini">Travelodge Warrington Gemini</option>
+                        <option value="Travelodge Warrington Lowton">Travelodge Warrington Lowton</option>
+                        <option value="Travelodge Washington A1m Northbound">Travelodge Washington A1m Northbound</option>
+                        <option value="Travelodge Washington A1m Southbound">Travelodge Washington A1m Southbound</option>
+                        <option value="Travelodge Watford Central">Travelodge Watford Central</option>
+                        <option value="Travelodge Wellingborough">Travelodge Wellingborough</option>
+                        <option value="Travelodge Wellingborough Rushden">Travelodge Wellingborough Rushden</option>
+                        <option value="Travelodge Welwyn Garden City">Travelodge Welwyn Garden City</option>
+                        <option value="Travelodge West Bromwich">Travelodge West Bromwich</option>
+                        <option value="Travelodge Weston-super-Mare">Travelodge Weston-super-Mare</option>
+                        <option value="Travelodge Widnes">Travelodge Widnes</option>
+                        <option value="Travelodge Winchester">Travelodge Winchester</option>
+                        <option value="Travelodge Windsor Central">Travelodge Windsor Central</option>
+                        <option value="Travelodge Wirral Eastham">Travelodge Wirral Eastham</option>
+                        <option value="Travelodge Witney">Travelodge Witney</option>
+                        <option value="Travelodge Worcester">Travelodge Worcester</option>
+                        <option value="Travelodge Workington">Travelodge Workington</option>
+                        <option value="Travelodge Worksop">Travelodge Worksop</option>
+                        <option value="Travelodge Worthing Seafront">Travelodge Worthing Seafront</option>
+                        <option value="Travelodge Wrexham">Travelodge Wrexham</option>
+                        <option value="Travelodge Yeovil Podimore">Travelodge Yeovil Podimore</option>
+                        <option value="Travelodge York Central">Travelodge York Central</option>
+                        <option value="Travelodge York Central Layerthorpe">Travelodge York Central Layerthorpe</option>
+                        <option value="Travelodge York Central Micklegate">Travelodge York Central Micklegate</option>
+                        <option value="Travelodge York Hull Road">Travelodge York Hull Road</option>
+                        <option value="Travelodge York Monks Cross">Travelodge York Monks Cross</option>
+                        <option value="Travelodge York Tadcaster">Travelodge York Tadcaster</option>
                     </select>
                 </div>
-                <button class="btn" onclick="addDropToManifest()">+ Add Drop to Manifest</button>
-                <button class="btn btn-secondary" onclick="launchOpFullRouteMap()">🗺 View Full Route Map</button>
-            </div>
-
-            <div class="card">
-                <h3>Active Manifest Stops</h3>
-                <div id="opManifestList"></div>
-                <div style="margin-top: 16px;">
-                    <button class="btn btn-success" onclick="publishManifest()">Publish Manifest to Driver</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- DRIVER PORTAL SCREEN -->
-        <div id="driverScreen" class="screen">
-            <!-- Weekly Shift & Hours Tracker -->
-            <div class="card">
-                <h2>Driver Shift & Weekly Timesheet</h2>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Track your daily hours from Monday to Friday (5 hours standard).</p>
-                <div id="dailyShiftControl" style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
-                    <h3 id="currentDayTitle" style="margin-bottom: 8px;">Today's Shift</h3>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <button class="btn btn-success" onclick="startShiftToday()">▶ Start Shift</button>
-                        <button class="btn btn-danger" onclick="endShiftToday()">⏹ Finish Shift</button>
-                        <span id="todayStatusText" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Status: Not Started</span>
-                    </div>
-                </div>
-
-                <h3>Weekly Summary (Mon - Fri)</h3>
-                <table class="timesheet-table">
-                    <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Hours Worked</th>
-                        </tr>
-                    </thead>
-                    <tbody id="timesheetTableBody"></tbody>
-                </table>
-                <div style="margin-top: 12px; font-weight: 700; color: var(--tl-navy);">
-                    Total Weekly Hours: <span id="totalWeeklyHours">0.00</span> hrs
-                </div>
-            </div>
-
-            <!-- Route Manifest for Driver -->
-            <div class="card">
-                <h2>Active Delivery Manifest</h2>
-                <p style="font-size: 13px; margin-bottom: 12px;">
-                    <strong>Start Hub:</strong> <span id="driverStartHub"></span><br>
-                    <strong>End Destination:</strong> <span id="driverEndHub"></span>
-                </p>
-                <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-                    <button class="btn" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
-                    <button class="btn btn-secondary" onclick="launchCompleteDriverRoute()">🗺 Full Route Overview</button>
-                </div>
-                <div id="driverManifestList"></div>
-
-                <div id="returnJourneySection" style="display: none; margin-top: 24px; padding-top: 16px; border-top: 2px dashed #e2e8f0;">
-                    <h3>End of Day Return Journey</h3>
-                    <div class="form-group">
-                        <label>Select Return Destination</label>
-                        <select id="driverReturnSelect"></select>
-                    </div>
-                    <button class="btn btn-accent" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
-                    <button class="btn btn-danger" style="margin-left: 8px;" onclick="completeShiftDone()">✓ Complete Shift & Clear Day</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- SETTINGS SCREEN -->
-        <div id="settingsScreen" class="screen">
-            <div class="card">
-                <h2>Depot & App Settings</h2>
-                <div class="form-group">
-                    <label>Default Drop Time per Stop (Minutes)</label>
-                    <input type="number" id="settingDropTime" value="10">
-                </div>
-
-                <h3>Configured Starting Hubs</h3>
-                <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
-                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-                    <input type="text" id="newStartHubInput" placeholder="Add new start hub address...">
-                    <button class="btn" onclick="addStartHubItem()">Add</button>
-                </div>
-
-                <h3>Configured End Destinations</h3>
-                <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
-                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-                    <input type="text" id="newEndHubInput" placeholder="Add new destination address...">
-                    <button class="btn" onclick="addEndHubItem()">Add</button>
-                </div>
-
-                <h3>Registered Engineers</h3>
-                <div id="engConfigList" style="margin-bottom: 16px;"></div>
-                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-                    <input type="text" id="newEngInput" placeholder="Add engineer name...">
-                    <button class="btn" onclick="addEngineer()">Add</button>
-                </div>
-
-                <button class="btn btn-success" onclick="saveSettings()">Save All Settings</button>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- PROOF PHOTO MODAL -->
-    <div id="proofPhotoModal" class="modal">
-        <div class="modal-content">
-            <h3>Delivery Handover Photo</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Take or upload a photo to confirm delivery handover.</p>
-            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="margin-bottom: 16px;">
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
-                <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Drop</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- NOTIFICATION MODAL -->
-    <div id="whatsappModal" class="modal">
-        <div class="modal-content">
-            <h3>Drop Complete!</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Generated confirmation note:</p>
-            <div id="whatsappTextOutput" class="notes-box" style="margin-bottom: 16px; user-select: all;"></div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
-                <button class="btn" onclick="copyTextAndClose()">Copy Text</button>
-                <button class="btn btn-accent" onclick="continueRouteFromModal()">Continue Route ➔</button>
             </div>
         </div>
     </div>
 
     <script>
-        const colorHexMap = {
-            'Red': '#ef4444',
-            'Blue': '#3b82f6',
-            'Green': '#10b981',
-            'Yellow': '#eab308',
-            'Orange': '#f97316'
-        };
-
-        const STORAGE_VERSION = "v2_clean";
-        let appState = {
-            version: STORAGE_VERSION,
-            startHub: "Sheffield Parts Depot",
-            endHub: "Revill Road Langold",
-            startHubs: [
-                "Sheffield Parts Depot",
-                "Revill Road Langold"
-            ],
-            endHubs: [
-                "Revill Road Langold",
-                "Sheffield Parts Depot"
-            ],
-            engineers: ["Mark", "Steve", "Paul", "Andy"],
-            dropTimeMins: 10,
-            hotelNotes: {},
-            manifest: [], // Starts completely empty as requested
-            timesheet: {
-                "Monday": { start: null, end: null, hours: 0 },
-                "Tuesday": { start: null, end: null, hours: 0 },
-                "Wednesday": { start: null, end: null, hours: 0 },
-                "Thursday": { start: null, end: null, hours: 0 },
-                "Friday": { start: null, end: null, hours: 0 }
-            }
-        };
-
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('travelodge_depot_state');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    if (parsed.version === STORAGE_VERSION) {
-                        appState = { ...appState, ...parsed };
-                    } else {
-                        // Clear out old mismatched version data
-                        saveToLocalStorage();
-                    }
-                } catch(e) {
-                    console.error("Local storage load error:", e);
-                }
-            }
-        }
-
-        function saveToLocalStorage() {
-            localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
-        }
-
-        // Navigation
-        function openOperatorPortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('operatorScreen').classList.add('active');
-            renderOpManifest();
-            populateDropdowns();
-        }
-
-        function openDriverPortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('driverScreen').classList.add('active');
-            renderDriverManifest();
-            renderTimesheetUI();
-        }
-
-        function openSettingsModal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('settingsScreen').classList.add('active');
-            renderSettingsLists();
-            document.getElementById('settingDropTime').value = appState.dropTimeMins;
-        }
-
-        function populateDropdowns() {
-            const startSelect = document.getElementById('opStartHub');
-            const endSelect = document.getElementById('opEndHub');
-            
-            startSelect.innerHTML = '';
-            appState.startHubs.forEach(h => {
-                let opt = document.createElement('option');
-                opt.value = h;
-                opt.textContent = h;
-                if (h === appState.startHub) opt.selected = true;
-                startSelect.appendChild(opt);
-            });
-
-            endSelect.innerHTML = '';
-            appState.endHubs.forEach(h => {
-                let opt = document.createElement('option');
-                opt.value = h;
-                opt.textContent = h;
-                if (h === appState.endHub) opt.selected = true;
-                endSelect.appendChild(opt);
-            });
-
-            populateOpEngineerCheckboxes();
-        }
-
-        function populateOpEngineerCheckboxes() {
-            const container = document.getElementById('opEngineerCheckboxes');
-            container.innerHTML = '';
-            appState.engineers.forEach(eng => {
-                container.innerHTML += `
-                    <label style="display: inline-flex; align-items: center; gap: 4px; font-weight: normal; cursor: pointer;">
-                        <input type="checkbox" name="opEngCheckbox" value="${eng}"> ${eng}
-                    </label>
-                `;
-            });
-        }
-
-        function addDropToManifest() {
-            const hotelInput = document.getElementById('newHotelInput');
-            const hotel = hotelInput.value.trim();
-            if (!hotel) {
-                alert("Please enter a hotel name.");
-                return;
-            }
-
-            const checkedEng = Array.from(document.querySelectorAll('input[name="opEngCheckbox"]:checked')).map(cb => cb.value);
-            const color = document.getElementById('opColorSelect').value;
-
-            appState.manifest.push({
-                hotel,
-                engineers: checkedEng,
-                color,
-                notes: appState.hotelNotes && appState.hotelNotes[hotel] ? appState.hotelNotes[hotel] : '',
-                completed: false,
-                proofPhoto: ''
-            });
-
-            hotelInput.value = '';
-            saveToLocalStorage();
-            renderOpManifest();
-        }
-
-        function renderOpManifest() {
-            const container = document.getElementById('opManifestList');
-            if (appState.manifest.length === 0) {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No drops added to manifest yet.</p>`;
-                return;
-            }
-
-            container.innerHTML = '';
-            appState.manifest.forEach((d, idx) => {
-                let hex = colorHexMap[d.color] || '#ccc';
-                container.innerHTML += `
-                    <div class="manifest-card" style="border-left: 4px solid ${hex};">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong>Stop ${idx + 1}: ${d.hotel}</strong>
-                            <div>
-                                <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 12px;" onclick="moveDrop(${idx}, -1)">▲</button>
-                                <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 12px;" onclick="moveDrop(${idx}, 1)">▼</button>
-                                <button class="btn btn-danger" style="padding: 2px 6px; font-size: 12px;" onclick="removeDrop(${idx})">X</button>
-                            </div>
-                        </div>
-                        <p style="margin: 6px 0; font-size: 13px;">
-                            Engineers: <b>${d.engineers.join(', ') || 'None'}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span>${d.color}
-                        </p>
-                        <input type="text" value="${d.notes || ''}" placeholder="Add parking/access notes..." style="font-size: 13px; margin-top: 4px;" onchange="updateDropNote(${idx}, this.value)">
-                    </div>
-                `;
-            });
-        }
-
-        function moveDrop(idx, direction) {
-            const newIdx = idx + direction;
-            if (newIdx < 0 || newIdx >= appState.manifest.length) return;
-            let item = appState.manifest.splice(idx, 1)[0];
-            appState.manifest.splice(newIdx, 0, item);
-            saveToLocalStorage();
-            renderOpManifest();
-        }
-
-        function removeDrop(idx) {
-            appState.manifest.splice(idx, 1);
-            saveToLocalStorage();
-            renderOpManifest();
-        }
-
-        function updateDropNote(idx, val) {
-            appState.manifest[idx].notes = val;
-            let hotel = appState.manifest[idx].hotel;
-            if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (val) appState.hotelNotes[hotel] = val;
-            else delete appState.hotelNotes[hotel];
-            saveToLocalStorage();
-        }
-
-        function publishManifest() {
-            alert("Route manifest published successfully! Driver portal updated.");
-            saveToLocalStorage();
-            openDriverPortal();
-        }
-
-        function launchOpFullRouteMap() {
-            if (appState.manifest.length === 0) {
-                alert("Please add at least one drop to generate the route.");
-                return;
-            }
-            openGoogleMapsUrl(appState.startHub, appState.endHub, appState.manifest.map(d => d.hotel));
-        }
-
-        // Driver Portal Logic
-        function renderDriverManifest() {
-            const container = document.getElementById('driverManifestList');
-            document.getElementById('driverStartHub').textContent = appState.startHub;
-            document.getElementById('driverEndHub').textContent = appState.endHub;
-
-            const returnSelect = document.getElementById('driverReturnSelect');
-            returnSelect.innerHTML = '';
-            appState.endHubs.forEach(h => {
-                let opt = document.createElement('option');
-                opt.value = h;
-                opt.textContent = h;
-                if (h === appState.endHub) opt.selected = true;
-                returnSelect.appendChild(opt);
-            });
-
-            let allCompleted = appState.manifest.length > 0 && appState.manifest.every(d => d.completed);
-            document.getElementById('returnJourneySection').style.display = allCompleted ? 'block' : 'none';
-
-            if (appState.manifest.length > 0) {
-                container.innerHTML = '';
-                appState.manifest.forEach((d, idx) => {
-                    let hex = colorHexMap[d.color] || '#ccc';
-                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 600;">✔ Delivered</span>' : '<span style="color: #f59e0b; font-weight: 600;">Pending</span>';
-
-                    container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong style="font-size: 15px;">Stop ${idx + 1}: ${d.hotel}</strong>
-                                ${statusBadge}
-                            </div>
-                            <p style="margin: 6px 0; font-size: 13px;">
-                                Engineers: <b>${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b>${d.color}</b>
-                            </p>
-                            <div class="notes-box">📝 Notes: <input type="text" value="${d.notes || ''}" placeholder="Add parking notes..." style="background:transparent; border:none; width:75%; font-size:13px; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
-                            ${d.proofPhoto ? `<p style="margin:6px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
-                            <div style="margin-top: 10px;">
-                                ${!d.completed ? `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Photo & Complete</button>` : `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`}
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>`;
-            }
-        }
-
-        function updateDriverDropNote(idx, val) {
-            appState.manifest[idx].notes = val;
-            saveToLocalStorage();
-        }
-
-        let activeDeliveryIndex = null;
-        function promptDeliveryProof(idx) {
-            activeDeliveryIndex = idx;
-            document.getElementById('proofPhotoInput').value = "";
-            document.getElementById('proofPhotoModal').style.display = 'flex';
-        }
-
-        function closeProofModal() {
-            document.getElementById('proofPhotoModal').style.display = 'none';
-            activeDeliveryIndex = null;
-        }
-
-        function submitDeliveryProof() {
-            const fileInput = document.getElementById('proofPhotoInput');
-            let drop = appState.manifest[activeDeliveryIndex];
-            
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    drop.proofPhoto = e.target.result;
-                    finalizeDropCompletion(drop);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                finalizeDropCompletion(drop);
-            }
-        }
-
-        function finalizeDropCompletion(drop) {
-            drop.completed = true;
-            saveToLocalStorage();
-            closeProofModal();
-            renderDriverManifest();
-
-            document.getElementById('whatsappTextOutput').textContent = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
-            document.getElementById('whatsappModal').style.display = 'flex';
-        }
-
-        function undoDelivery(idx) {
-            appState.manifest[idx].completed = false;
-            appState.manifest[idx].proofPhoto = "";
-            saveToLocalStorage();
-            renderDriverManifest();
-        }
-
-        function copyTextAndClose() {
-            const text = document.getElementById('whatsappTextOutput').textContent;
-            navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
-        }
-
-        function continueRouteFromModal() {
-            closeModal();
-            launchLiveGPSRoute();
-        }
-
-        function closeModal() {
-            document.getElementById('whatsappModal').style.display = 'none';
-        }
-
-        function launchLiveGPSRoute() {
-            let pendingStops = appState.manifest.filter(d => !d.completed);
-            if (pendingStops.length === 0) {
-                alert("All stops completed! Check your end of day return journey below.");
-                return;
-            }
-            openGoogleMapsUrl(appState.startHub, pendingStops[0].hotel, pendingStops.slice(1).map(d => d.hotel));
-        }
-
-        function launchCompleteDriverRoute() {
-            openGoogleMapsUrl(appState.startHub, appState.endHub, appState.manifest.map(d => d.hotel));
-        }
-
-        function openGoogleMapsUrl(origin, destination, waypointsArr) {
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
-            if (waypointsArr && waypointsArr.length > 0) {
-                mapsUrl += `&waypoints=${waypointsArr.map(w => encodeURIComponent(w)).join('|')}`;
-            }
-            window.open(mapsUrl, '_blank');
-        }
-
-        function launchReturnNavigation() {
-            let returnDest = document.getElementById('driverReturnSelect').value;
-            if (!returnDest) {
-                alert("Please specify a return destination.");
-                return;
-            }
-            let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
-            openGoogleMapsUrl(lastDrop, returnDest, []);
-        }
-
-        function completeShiftDone() {
-            if (confirm("Sign off and complete today's shift? This clears the active manifest.")) {
-                appState.manifest = [];
-                saveToLocalStorage();
-                alert("Shift successfully completed!");
-                openOperatorPortal();
-            }
-        }
-
-        // Timesheet Tracker Logic
-        function getCurrentWeekdayName() {
-            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            return days[new Date().getDay()];
-        }
-
-        function startShiftToday() {
-            let dayName = getCurrentWeekdayName();
-            if (dayName === "Saturday" || dayName === "Sunday") {
-                dayName = "Monday"; 
-            }
-            if (!appState.timesheet[dayName]) {
-                appState.timesheet[dayName] = { start: null, end: null, hours: 0 };
-            }
-            appState.timesheet[dayName].start = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            saveToLocalStorage();
-            renderTimesheetUI();
-            alert(`Shift started for ${dayName} at ${appState.timesheet[dayName].start}`);
-        }
-
-        function endShiftToday() {
-            let dayName = getCurrentWeekdayName();
-            if (dayName === "Saturday" || dayName === "Sunday") {
-                dayName = "Monday";
-            }
-            if (!appState.timesheet[dayName] || !appState.timesheet[dayName].start) {
-                alert("Please start your shift first!");
-                return;
-            }
-            let endTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            appState.timesheet[dayName].end = endTime;
-            appState.timesheet[dayName].hours = 5.0; // Standard shift length (5 hours Mon-Fri)
-
-            saveToLocalStorage();
-            renderTimesheetUI();
-            alert(`Shift finished for ${dayName} at ${endTime}`);
-        }
-
-        function renderTimesheetUI() {
-            const tbody = document.getElementById('timesheetTableBody');
-            tbody.innerHTML = '';
-            let totalHours = 0;
-
-            const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-            daysOfWeek.forEach(day => {
-                let entry = appState.timesheet[day] || { start: '-', end: '-', hours: 0 };
-                totalHours += Number(entry.hours || 0);
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${day}</b></td>
-                        <td>${entry.start || '-'}</td>
-                        <td>${entry.end || '-'}</td>
-                        <td>${entry.hours ? entry.hours.toFixed(2) + ' hrs' : '-'}</td>
-                    </tr>
-                `;
-            });
-
-            document.getElementById('totalWeeklyHours').textContent = totalHours.toFixed(2);
-            let activeDay = getCurrentWeekdayName();
-            if(daysOfWeek.includes(activeDay)) {
-                document.getElementById('currentDayTitle').textContent = `Today's Shift (${activeDay})`;
-                let record = appState.timesheet[activeDay];
-                let statusText = record && record.start ? (record.end ? `Completed (${record.hours} hrs)` : `In Progress (Started at ${record.start})`) : `Not Started`;
-                document.getElementById('todayStatusText').textContent = `Status: ${statusText}`;
-            }
-        }
-
-        // Settings Management
-        function addStartHubItem() {
-            const val = document.getElementById('newStartHubInput').value.trim();
-            if (val) {
-                appState.startHubs.push(val);
-                document.getElementById('newStartHubInput').value = '';
-                saveToLocalStorage();
-                renderSettingsLists();
-            }
-        }
-
-        function removeStartHubItem(idx) {
-            if (appState.startHubs.length <= 1) { alert("Keep at least one starting hub."); return; }
-            appState.startHubs.splice(idx, 1);
-            saveToLocalStorage();
-            renderSettingsLists();
-        }
-
-        function addEndHubItem() {
-            const val = document.getElementById('newEndHubInput').value.trim();
-            if (val) {
-                appState.endHubs.push(val);
-                document.getElementById('newEndHubInput').value = '';
-                saveToLocalStorage();
-                renderSettingsLists();
-            }
-        }
-
-        function removeEndHubItem(idx) {
-            if (appState.endHubs.length <= 1) { alert("Keep at least one end destination."); return; }
-            appState.endHubs.splice(idx, 1);
-            saveToLocalStorage();
-            renderSettingsLists();
-        }
-
-        function addEngineer() {
-            const name = document.getElementById('newEngInput').value.trim();
-            if (name) {
-                appState.engineers.push(name);
-                document.getElementById('newEngInput').value = '';
-                saveToLocalStorage();
-                renderSettingsLists();
-            }
-        }
-
-        function removeEngineer(idx) {
-            appState.engineers.splice(idx, 1);
-            saveToLocalStorage();
-            renderSettingsLists();
-        }
-
-        function renderSettingsLists() {
-            const renderList = (elementId, items, removeFnName) => {
-                const container = document.getElementById(elementId);
-                container.innerHTML = '';
-                items.forEach((item, idx) => {
-                    container.innerHTML += `
-                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 13px;">${item}</span>
-                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px;" onclick="${removeFnName}(${idx})">X</button>
-                        </div>
-                    `;
-                });
-            };
-            renderList('startHubConfigList', appState.startHubs, 'removeStartHubItem');
-            renderList('endHubConfigList', appState.endHubs, 'removeEndHubItem');
-            renderList('engConfigList', appState.engineers, 'removeEngineer');
-        }
-
-        function saveSettings() {
-            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
-            saveToLocalStorage();
-            
-            try {
-                db.ref('travelodge_all_data').set({
-                    lastUpdated: Date.now(),
-                    travelodge_depot_state: JSON.stringify(appState)
-                });
-            } catch(e) { console.error("Firebase sync error:", e); }
-
-            alert("Settings saved successfully!");
-        }
-
-        // Firebase Initialization & Sync
-        const firebaseConfig = {
-            apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwlLOTeg0zHR3MI",
-            authDomain: "travelogsheffield.firebaseapp.com",
-            projectId: "travelogsheffield",
-            storageBucket: "travelogsheffield.firebasestorage.app",
-            messagingSenderId: "682268814885",
-            appId: "1:682268814885:web:ceb6aa889981163ad399cc",
-            measurementId: "G-SGXMPS2PV6"
-        };
-
-        let db = null;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            db.ref('travelodge_all_data').on('value', (snapshot) => {
-                const remoteData = snapshot.val();
-                if (remoteData && remoteData.travelodge_depot_state) {
-                    try {
-                        const parsedState = JSON.parse(remoteData.travelodge_depot_state);
-                        if (parsedState.version === STORAGE_VERSION) {
-                            appState = { ...appState, ...parsedState };
-                            saveToLocalStorage();
-                        }
-                    } catch (e) {
-                        console.error("Error parsing remote state:", e);
-                    }
-                }
-            });
-        } catch(e) {
-            console.warn("Firebase initialized offline or skipped:", e);
-        }
-
-        // Initial Load
-        loadFromLocalStorage();
-        openOperatorPortal();
+        function openOperatorPortal() {}
+        function openDriverPortal() {}
+        function openSettingsModal() {}
     </script>
 </body>
 </html>
