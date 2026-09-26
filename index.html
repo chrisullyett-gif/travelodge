@@ -1197,22 +1197,23 @@ routeRef.on('value', (snapshot) => {
     if (remoteData && remoteData.travelodge_depot_state) {
         try {
             const parsedState = JSON.parse(remoteData.travelodge_depot_state);
-            appState.startHub = parsedState.startHub || appState.startHub;
-            appState.endHub = parsedState.endHub || appState.endHub;
-            appState.startHubs = Array.isArray(parsedState.startHubs) ? parsedState.startHubs : appState.startHubs;
-            appState.endHubs = Array.isArray(parsedState.endHubs) ? parsedState.endHubs : appState.endHubs;
-            appState.engineers = Array.isArray(parsedState.engineers) ? parsedState.engineers : appState.engineers;
-            appState.dropTimeMins = typeof parsedState.dropTimeMins === 'number' ? parsedState.dropTimeMins : appState.dropTimeMins;
-            appState.hotelNotes = (parsedState.hotelNotes && typeof parsedState.hotelNotes === 'object') ? parsedState.hotelNotes : {};
-            appState.manifest = Array.isArray(parsedState.manifest) ? parsedState.manifest : [];
             
-           saveToLocalStorage();
+            // Only update properties if they exist in remote data
+            if (parsedState.startHub) appState.startHub = parsedState.startHub;
+            if (parsedState.endHub) appState.endHub = parsedState.endHub;
+            if (Array.isArray(parsedState.startHubs)) appState.startHubs = parsedState.startHubs;
+            if (Array.isArray(parsedState.endHubs)) appState.endHubs = parsedState.endHubs;
+            if (Array.isArray(parsedState.engineers)) appState.engineers = parsedState.engineers;
+            if (typeof parsedState.dropTimeMins === 'number') appState.dropTimeMins = parsedState.dropTimeMins;
+            if (parsedState.hotelNotes) appState.hotelNotes = parsedState.hotelNotes;
+            if (Array.isArray(parsedState.manifest)) appState.manifest = parsedState.manifest;
             
-            // 1. Update the Drop Time input box
+            saveToLocalStorage();
+
+            // Refresh settings UI elements if they are open on screen
             const dropInput = document.getElementById('settingDropTime');
             if (dropInput) dropInput.value = appState.dropTimeMins;
 
-            // 2. Re-render End Hubs list if on screen
             const endContainer = document.getElementById('endHubConfigList');
             if (endContainer && Array.isArray(appState.endHubs)) {
                 endContainer.innerHTML = '';
@@ -1226,7 +1227,6 @@ routeRef.on('value', (snapshot) => {
                 });
             }
 
-            // 3. Re-render Engineers list if on screen
             const engContainer = document.getElementById('engConfigList');
             if (engContainer && Array.isArray(appState.engineers)) {
                 engContainer.innerHTML = '';
@@ -1240,9 +1240,15 @@ routeRef.on('value', (snapshot) => {
                 });
             }
 
-        } catch (e) {
+          // If a main page render function exists, call it so screens update live
+            if (typeof renderManifest === 'function') {
+                renderManifest();
+            }
+        catch (e) {
             console.error("Error parsing remote state:", e);
         }
+    }
+});
     </script>
 </body>
 </html>
