@@ -3,31 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travelodge Sheffield Parts Depot Portal</title>
-    <!-- Firebase App (Core) SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <!-- Firebase Database SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
+    <title>Travelodge Sheffield - Depot & Driver Portal</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root {
-            --tl-navy: #002D62;
-            --tl-red: #E31B23;
-            --tl-blue: #00539F;
+            --tl-navy: #002244;
+            --tl-blue: #0056b3;
+            --tl-accent: #ff6600;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border-color: #e5e7eb;
+            --text-main: #333333;
+            --text-muted: #666666;
             --success-color: #10b981;
-            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --border-radius: 12px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -37,38 +35,40 @@
         }
 
         header {
-            background-color: var(--tl-navy);
+            background: var(--tl-navy);
             color: white;
-            padding: 16px 20px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        header h1 {
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-brand img {
+            height: 38px;
+            object-fit: contain;
+        }
+
+        .header-brand h1 {
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.5px;
         }
 
-        .header-btn {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .header-btn:hover {
-            background: rgba(255,255,255,0.25);
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
         }
 
         .container {
-            max-width: 600px;
-            margin: 20px auto;
+            max-width: 900px;
+            margin: 24px auto;
             padding: 0 16px;
         }
 
@@ -76,29 +76,76 @@
             display: none;
         }
 
-        .active-screen {
+        .screen.active {
             display: block;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e1e4e8;
         }
 
         h2 {
             font-size: 20px;
             color: var(--tl-navy);
             margin-bottom: 16px;
+            font-weight: 700;
         }
 
         h3 {
             font-size: 16px;
-            color: var(--tl-navy);
+            color: var(--tl-blue);
             margin-bottom: 12px;
+        }
+
+        .btn {
+            background: var(--tl-blue);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+        }
+
+        .btn-accent {
+            background: var(--tl-accent);
+        }
+
+        .manifest-card {
+            background: #ffffff;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
         .form-group {
@@ -111,154 +158,51 @@
             font-weight: 600;
             color: var(--text-muted);
             margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        select, input[type="text"], input[type="number"], textarea {
+        input, select, textarea {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 14px;
             background: #fff;
-            color: var(--text-main);
         }
 
-        select:focus, input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--tl-blue);
-            box-shadow: 0 0 0 3px rgba(0,83,159,0.1);
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            margin-top: 10px;
-            transition: background 0.2s;
-        }
-
-        .btn-primary {
-            background-color: var(--tl-blue);
-            color: white;
-        }
-        .btn-primary:hover { background-color: #003d73; }
-
-        .btn-danger {
-            background-color: var(--tl-red);
-            color: white;
-        }
-        .btn-danger:hover { background-color: #c5141b; }
-
-        .btn-success {
-            background-color: var(--success-color);
-            color: white;
-        }
-        .btn-success:hover { background-color: #059669; }
-
-        .btn-secondary {
-            background-color: #e5e7eb;
-            color: var(--text-main);
-        }
-        .btn-secondary:hover { background-color: #d1d5db; }
-
-        .home-menu-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .menu-tile {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .menu-tile:hover {
-            border-color: var(--tl-blue);
-            box-shadow: 0 4px 12px rgba(0,83,159,0.08);
-        }
-
-        .menu-tile h3 {
-            font-size: 18px;
-            color: var(--tl-navy);
-            margin-bottom: 6px;
-        }
-
-        .menu-tile p {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 6px;
-        }
-
-        .eng-checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f9fafb;
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .manifest-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 12px;
-            position: relative;
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
         }
 
         .color-dot {
-            display: inline-block;
-            width: 12px;
             height: 12px;
+            width: 12px;
             border-radius: 50%;
-            margin-right: 4px;
+            display: inline-block;
+            margin-right: 6px;
             vertical-align: middle;
         }
 
-        .notes-box {
-            background: #fffbeb;
-            border: 1px solid #fef3c7;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: #b45309;
-            margin-top: 8px;
-        }
-
-        .item-photo {
+        .timesheet-table {
             width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-top: 8px;
-            border: 1px solid var(--border-color);
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 14px;
         }
 
-        .modal-overlay {
+        .timesheet-table th, .timesheet-table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .timesheet-table th {
+            background: #f8fafc;
+            color: var(--tl-navy);
+        }
+
+        .modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
@@ -269,289 +213,256 @@
             padding: 16px;
         }
 
-        .modal-card {
+        .modal-content {
             background: white;
+            padding: 24px;
+            border-radius: var(--border-radius);
             width: 100%;
-            max-width: 400px;
-            border-radius: 12px;
-            padding: 20px;
+            max-width: 450px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
-        .route-order-controls {
-            display: flex;
-            gap: 8px;
+        .item-photo {
+            max-width: 100%;
+            border-radius: 6px;
             margin-top: 8px;
+            border: 1px solid #e1e4e8;
+        }
+
+        .notes-box {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
 
-    <header id="headerBar" style="display: none;">
-        <h1>Travelodge Sheffield Depot Portal</h1>
-        <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
+    <header>
+        <div class="header-brand">
+            <img src="image_b1dce3.jpg" alt="Travelodge Logo">
+            <h1>Sheffield Depot Portal</h1>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="openOperatorPortal()">Operator Hub</button>
+            <button class="btn btn-accent" onclick="openDriverPortal()">Driver View</button>
+            <button class="btn btn-secondary" onclick="openSettingsModal()">⚙ Settings</button>
+        </div>
     </header>
 
     <div class="container">
 
-        <!-- PORTAL HOME -->
-        <div id="portalHome" class="screen active-screen">
-            <div style="text-align: center; margin: 20px 0 30px 0;">
-                <h2 style="font-size: 24px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
-                <p style="color: var(--text-muted); font-size: 14px;">Select your workflow mode below</p>
-            </div>
-
-            <div class="home-menu-grid">
-                <div class="menu-tile" onclick="openOperativePortal()">
-                    <h3>📋 Operative / Staging Mode</h3>
-                    <p>Build daily delivery manifests, allocate parts to engineers, map sticker dots, and preview routes.</p>
-                </div>
-
-                <div class="menu-tile" onclick="openDriverPortal()">
-                    <h3>🚚 Driver & Delivery Portal</h3>
-                    <p>View active route, update drop-off notes, capture delivery photo proof, and trigger live GPS maps.</p>
-                </div>
-
-                <div class="menu-tile" onclick="openSettingsPortal()">
-                    <h3>⚙️ Hub & Driver Settings</h3>
-                    <p>Configure starting hubs, end destinations, registered engineers, and estimated drop durations.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- OPERATIVE PORTAL -->
-        <div id="operativeScreen" class="screen">
+        <!-- OPERATOR PORTAL SCREEN -->
+        <div id="operatorScreen" class="screen active">
             <div class="card">
-                <h2>Build Daily Route Manifest</h2>
-                
-                <div class="form-group">
-                    <label>Start Hub Depot</label>
-                    <select id="opStartHubSelect" onchange="updateRouteEndpoints()"></select>
+                <h2>Route Manifest & Planning</h2>
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div style="flex: 1;">
+                        <label>Starting Hub</label>
+                        <select id="opStartHub" onchange="appState.startHub = this.value; saveToLocalStorage();"></select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>End Destination</label>
+                        <select id="opEndHub" onchange="appState.endHub = this.value; saveToLocalStorage();"></select>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>End Destination Hub</label>
-                    <select id="opEndHubSelect" onchange="updateRouteEndpoints()"></select>
+                    <label>Add Delivery Stop (Hotel)</label>
+                    <input type="text" id="newHotelInput" placeholder="Enter Travelodge hotel name or location...">
                 </div>
-
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
-
                 <div class="form-group">
-                    <label>Search Travelodge Hotel</label>
-                    <input type="text" id="opHotelSearch" placeholder="Type hotel name (e.g., Sheffield, Leeds)..." oninput="filterOpHotels()">
+                    <label>Assigned Engineers</label>
+                    <div id="opEngineerCheckboxes" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px;"></div>
                 </div>
-
                 <div class="form-group">
-                    <label>Select Hotel Destination</label>
-                    <select id="opHotelSelect" onchange="loadHotelNotePreset()"></select>
-                </div>
-
-                <div class="form-group">
-                    <label>Assign Engineers (Check all applicable)</label>
-                    <div id="opEngineerCheckboxes" class="checkbox-group"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Sticker Dot Colour Identifier</label>
+                    <label>Sticker Dot Colour</label>
                     <select id="opColorSelect">
-                        <option value="">-- Select Dot Colour --</option>
                         <option value="Red">Red</option>
                         <option value="Blue">Blue</option>
                         <option value="Green">Green</option>
                         <option value="Yellow">Yellow</option>
                         <option value="Orange">Orange</option>
-                        <option value="Purple">Purple</option>
-                        <option value="White">White</option>
-                        <option value="Black">Black</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label>Staging / Packing Notes (Optional)</label>
-                    <textarea id="opHotelNotes" rows="2" placeholder="Special parts instructions or bay details..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Staging Photo (Optional)</label>
-                    <input type="file" id="opPhotoInput" accept="image/*" style="font-size: 14px;">
-                </div>
-
-                <button class="btn btn-primary" onclick="addManifestDrop()">➕ Add Drop to Manifest</button>
+                <button class="btn" onclick="addDropToManifest()">+ Add Drop to Manifest</button>
+                <button class="btn btn-secondary" onclick="launchOpFullRouteMap()">🗺 View Full Route Map</button>
             </div>
 
             <div class="card">
-                <h3>Current Route Manifest (<span id="opDropCount">0</span> Stops)</h3>
-                
-                <div id="opRouteSummaryContainer" style="margin-bottom: 12px; display: none;">
-                    <div class="notes-box" style="background:#eff6ff; border-color:#dbeafe; color:#1e40af;">
-                        ⏱️ <strong>Estimated Workload:</strong> <span id="opEstWorkload">0 mins</span><br>
-                        <span style="font-size:12px; color:var(--text-muted);">Based on <span id="opDropTimeDisplay">10</span> mins per stop + transit time.</span>
-                    </div>
-                    <button class="btn btn-secondary" style="margin-top: 8px;" onclick="launchOpFullRouteMap()">🗺️ Open Full Route in Google Maps</button>
+                <h3>Active Manifest Stops</h3>
+                <div id="opManifestList"></div>
+                <div style="margin-top: 16px;">
+                    <button class="btn btn-success" onclick="publishManifest()">Publish Manifest to Driver</button>
                 </div>
-
-                <div id="opManifestList">
-                    <p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>
-                </div>
-
-                <button id="publishBtn" class="btn btn-success" style="margin-top: 16px;" onclick="publishManifest()" disabled>🚀 Publish Manifest to Driver</button>
             </div>
         </div>
 
-        <!-- DRIVER PORTAL -->
+        <!-- DRIVER PORTAL SCREEN -->
         <div id="driverScreen" class="screen">
-            <div class="card" style="background: var(--tl-navy); color: white;">
-                <h2 style="color: white; margin-bottom: 8px;">🚚 Driver Live Manifest</h2>
-                <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
-                
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
-                    <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
-                </div>
-            </div>
-
+            <!-- Weekly Shift & Hours Tracker -->
             <div class="card">
-                <h3>Assigned Drops</h3>
-                <div id="driverManifestList">
-                    <p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>
+                <h2>Driver Shift & Weekly Timesheet</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Track your daily hours from Monday to Friday.</p>
+                <div id="dailyShiftControl" style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+                    <h3 id="currentDayTitle" style="margin-bottom: 8px;">Today's Shift</h3>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn btn-success" onclick="startShiftToday()">▶ Start Shift</button>
+                        <button class="btn btn-danger" onclick="endShiftToday()">⏹ Finish Shift</button>
+                        <span id="todayStatusText" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Status: Not Started</span>
+                    </div>
+                </div>
+
+                <h3>Weekly Summary (Mon - Fri)</h3>
+                <table class="timesheet-table">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Hours Worked</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timesheetTableBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+                <div style="margin-top: 12px; font-weight: 700; color: var(--tl-navy);">
+                    Total Weekly Hours: <span id="totalWeeklyHours">0.00</span> hrs
                 </div>
             </div>
 
-            <div class="card" id="returnJourneySection" style="display: none; background: #f0fdf4; border-color: #bbf7d0;">
-                <h3 style="color: #166534;">🏁 End of Route / Return Journey</h3>
-                <p style="font-size: 13px; color: #15803d; margin-bottom: 12px;">All deliveries are completed! Select your return destination.</p>
-                
-                <div class="form-group">
-                    <label style="color: #166534;">Return Hub / Destination</label>
-                    <select id="driverReturnSelect"></select>
+            <!-- Route Manifest for Driver -->
+            <div class="card">
+                <h2>Active Delivery Manifest</h2>
+                <p style="font-size: 13px; margin-bottom: 12px;">
+                    <strong>Start Hub:</strong> <span id="driverStartHub"></span><br>
+                    <strong>End Destination:</strong> <span id="driverEndHub"></span>
+                </p>
+                <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                    <button class="btn" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
+                    <button class="btn btn-secondary" onclick="launchCompleteDriverRoute()">🗺 Full Route Overview</button>
                 </div>
+                <div id="driverManifestList"></div>
 
-                <button class="btn btn-success" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
-                <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift</button>
+                <div id="returnJourneySection" style="display: none; margin-top: 24px; padding-top: 16px; border-top: 2px dashed #e2e8f0;">
+                    <h3>End of Day Return Journey</h3>
+                    <div class="form-group">
+                        <label>Select Return Destination</label>
+                        <select id="driverReturnSelect"></select>
+                    </div>
+                    <button class="btn btn-accent" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
+                    <button class="btn btn-danger" style="margin-left: 8px;" onclick="completeShiftDone()">✓ Complete Shift & Clear Day</button>
+                </div>
             </div>
         </div>
 
-        <!-- SETTINGS PORTAL -->
+        <!-- SETTINGS SCREEN -->
         <div id="settingsScreen" class="screen">
             <div class="card">
-                <h2>Hub & Settings Configuration</h2>
-                
+                <h2>Depot & App Settings</h2>
                 <div class="form-group">
-                    <label>Stop Duration Estimate (Minutes per Hotel Drop)</label>
-                    <input type="number" id="settingDropTime" min="1" max="60" value="10">
+                    <label>Default Drop Time per Stop (Minutes)</label>
+                    <input type="number" id="settingDropTime" value="10">
                 </div>
 
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
-
-                <h3>Starting Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="newStartHubInput" placeholder="Add new starting hub...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addStartHubItem()">Add</button>
-                </div>
+                <h3>Configured Starting Hubs</h3>
                 <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
-
-                <h3>End Destinations / Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="newEndHubInput" placeholder="Add end hub destination...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEndHubItem()">Add</button>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="newStartHubInput" placeholder="Add new start hub address...">
+                    <button class="btn" onclick="addStartHubItem()">Add</button>
                 </div>
+
+                <h3>Configured End Destinations</h3>
                 <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="newEndHubInput" placeholder="Add new destination address...">
+                    <button class="btn" onclick="addEndHubItem()">Add</button>
+                </div>
 
                 <h3>Registered Engineers</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="newEngInput" placeholder="Add engineer name...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEngineer()">Add</button>
-                </div>
                 <div id="engConfigList" style="margin-bottom: 16px;"></div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="newEngInput" placeholder="Add engineer name...">
+                    <button class="btn" onclick="addEngineer()">Add</button>
+                </div>
 
-                <button class="btn btn-primary" onclick="saveSettings()">💾 Save Hub Settings</button>
+                <button class="btn btn-success" onclick="saveSettings()">Save All Settings</button>
             </div>
         </div>
 
     </div>
 
-    <!-- PROOF OF DELIVERY PHOTO MODAL -->
-    <div id="proofPhotoModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3>📷 Delivery Photo Proof</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Capture or upload a handover photo to confirm delivery.</p>
-            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 16px;">
-            <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Stop</button>
-            <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
+    <!-- PROOF PHOTO MODAL -->
+    <div id="proofPhotoModal" class="modal">
+        <div class="modal-content">
+            <h3>Delivery Handover Photo</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Take or upload a photo to confirm delivery handover.</p>
+            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="margin-bottom: 16px;">
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
+                <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Drop</button>
+            </div>
         </div>
     </div>
 
-    <!-- WHATSAPP SUMMARY MODAL -->
-    <div id="whatsappModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3>💬 Delivery Notification</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Copy text summary for WhatsApp confirmation:</p>
-            <div id="whatsappTextOutput" style="background: #f9fafb; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; word-break: break-all;"></div>
-            <button class="btn btn-primary" onclick="copyTextAndClose()">📋 Copy Text & Continue</button>
-            <button class="btn btn-secondary" onclick="continueRouteFromModal()">Skip & Continue Route</button>
+    <!-- WHATSAPP / NOTIFICATION MODAL -->
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <h3>Drop Complete!</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Generated confirmation note:</p>
+            <div id="whatsappTextOutput" class="notes-box" style="margin-bottom: 16px; user-select: all;"></div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn" onclick="copyTextAndClose()">Copy Text</button>
+                <button class="btn btn-accent" onclick="continueRouteFromModal()">Continue Route ➔</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Full Complete UK Travelodge Database (Restored from your list)
-        const hotelDatabase = [
-            "Travelodge Aberdeen Airport", "Travelodge Aberdeen Bucksburn", "Travelodge Aberdeen Central", "Travelodge Aldershot", "Travelodge Alfreton", "Travelodge Alton Four Marks", "Travelodge Altrincham Central", "Travelodge Amesbury Stonehenge", "Travelodge Andover", "Travelodge Arundel Fontwell", "Travelodge Arundel Fontwell Park", "Travelodge Ashbourne", "Travelodge Ashford", "Travelodge Ashford Town Centre", "Travelodge Ashton Under Lyne", "Travelodge Aylesbury", "Travelodge Ayr",
-            "Travelodge Bangor", "Travelodge Barnsley", "Travelodge Barnstaple", "Travelodge Barrow In Furness", "Travelodge Barton Mills", "Travelodge Barton Stacey", "Travelodge Basildon", "Travelodge Basildon Wickford", "Travelodge Basingstoke", "Travelodge Bath Central", "Travelodge Bath City Centre Bath Spa", "Travelodge Bath Waterside", "Travelodge Beaconsfield Central", "Travelodge Beckington", "Travelodge Bedford", "Travelodge Bedford Goldington Road", "Travelodge Bedford Marston Moretaine", "Travelodge Belfast Central", "Travelodge Berwick upon Tweed", "Travelodge Bicester", "Travelodge Bicester Cherwell Valley M40", "Travelodge Billingshurst Five Oaks", "Travelodge Birmingham Airport", "Travelodge Birmingham Castle Bromwich", "Travelodge Birmingham Central", "Travelodge Birmingham Central Broadway Plaza", "Travelodge Birmingham Central Moor Street", "Travelodge Birmingham Central Newhall Street", "Travelodge Birmingham Fort Dunlop", "Travelodge Birmingham Frankley M5 Southbound", "Travelodge Birmingham Halesowen", "Travelodge Birmingham Hilton Park M6 Southbound", "Travelodge Birmingham Kingswinford", "Travelodge Birmingham Maypole", "Travelodge Birmingham Oldbury", "Travelodge Birmingham Perry Barr", "Travelodge Birmingham Sheldon", "Travelodge Birmingham Streetly", "Travelodge Birmingham Sutton Coldfield", "Travelodge Birmingham Yardley", "Travelodge Blackburn M65", "Travelodge Blackpool South Promenade", "Travelodge Blackpool South Shore", "Travelodge Blyth A1 M", "Travelodge Bodmin Roche", "Travelodge Bolton Central River Street", "Travelodge Borehamwood", "Travelodge Borehamwood Studio Way", "Travelodge Boston", "Travelodge Bournemouth", "Travelodge Bournemouth Cooper Dean", "Travelodge Bournemouth Seafront", "Travelodge Bracknell", "Travelodge Bracknell Central", "Travelodge Bradford", "Travelodge Bradford Central", "Travelodge Bradford Shipley", "Travelodge Braintree", "Travelodge Brentwood East Horndon", "Travelodge Bridgwater M5", "Travelodge Brighton", "Travelodge Brighton Seafront", "Travelodge Bristol Abbey Wood", "Travelodge Bristol Avonmouth", "Travelodge Bristol Central", "Travelodge Bristol Central Mitchell Lane", "Travelodge Bristol Cribbs Causeway", "Travelodge Bristol Emersons Green", "Travelodge Bristol Filton", "Travelodge Bristol Severn View M48", "Travelodge Bromborough", "Travelodge Bromsgrove Marlbrook", "Travelodge Buckingham", "Travelodge Burford Cotswolds", "Travelodge Burnley", "Travelodge Burton A38 Northbound", "Travelodge Burton A38 Southbound", "Travelodge Burton M6 Northbound", "Travelodge Burton upon Trent Central", "Travelodge Bury",
-            "Travelodge Caernarfon", "Travelodge Caerphilly", "Travelodge Camberley", "Travelodge Camberley Central", "Travelodge Cambridge Central", "Travelodge Cambridge Fourwentways", "Travelodge Cambridge Orchard Park", "Travelodge Cambridge Swavesey", "Travelodge Canterbury Chaucer Central", "Travelodge Canterbury Whitstable", "Travelodge Cardiff Airport", "Travelodge Cardiff Atlantic Wharf", "Travelodge Cardiff Central", "Travelodge Cardiff Central Queen Street", "Travelodge Cardiff Gate", "Travelodge Cardiff Llanedeyrn", "Travelodge Cardiff M4", "Travelodge Cardiff Whitchurch", "Travelodge Carlisle Central", "Travelodge Carlisle M6", "Travelodge Carlisle Todhills", "Travelodge Caterham Whyteleafe", "Travelodge Chatham Maritime Hotel", "Travelodge Chelmsford", "Travelodge Cheltenham", "Travelodge Chertsey", "Travelodge Cheshire Oaks", "Travelodge Cheshunt", "Travelodge Chester-le-Street", "Travelodge Chester Central", "Travelodge Chester Central Bridge Street", "Travelodge Chesterfield", "Travelodge Chesterfield Town Centre", "Travelodge Chester Northop Hall", "Travelodge Chester Warrington Road", "Travelodge Chichester Central", "Travelodge Chichester Emsworth", "Travelodge Chippenham", "Travelodge Chippenham Leigh Delamere M4 Eastbound", "Travelodge Chippenham Leigh Delamere M4 Westbound", "Travelodge Christchurch", "Travelodge Cirencester", "Travelodge Clacton-on-Sea Central", "Travelodge Cockermouth", "Travelodge Colchester Feering", "Travelodge Colchester Northern Gateway", "Travelodge Colwyn Bay", "Travelodge Coventry Binley", "Travelodge Crewe", "Travelodge Crewe Barthomley", "Travelodge Croydon Central",
-            "Travelodge Darlington", "Travelodge Dartford", "Travelodge Derby Chaddesden", "Travelodge Derby Cricket Ground", "Travelodge Derby Pride Park", "Travelodge Devizes", "Travelodge Doncaster", "Travelodge Doncaster Lakeside", "Travelodge Doncaster M18 M180", "Travelodge Dorking", "Travelodge Dover", "Travelodge Droitwich", "Travelodge Dudley Town Centre", "Travelodge Dumbarton", "Travelodge Dumfries", "Travelodge Dundee Central", "Travelodge Dundee Strathmore Avenue", "Travelodge Dunfermline", "Travelodge Durham",
-            "Travelodge Eastbourne Willingdon Drove", "Travelodge East Grinstead", "Travelodge Eastleigh Central", "Travelodge Edinburgh Airport Ratho Station", "Travelodge Edinburgh Cameron Toll", "Travelodge Edinburgh Central", "Travelodge Edinburgh Central Queen Street", "Travelodge Edinburgh Central Rose Street", "Travelodge Edinburgh Central Waterloo Place", "Travelodge Edinburgh Dreghorn", "Travelodge Edinburgh Haymarket", "Travelodge Edinburgh Park", "Travelodge Elgin", "Travelodge Ely", "Travelodge Exeter M5",
-            "Travelodge Falkirk", "Travelodge Farnborough Central", "Travelodge Fleet", "Travelodge Fort William", "Travelodge Frimley",
-            "Travelodge Gainsborough", "Travelodge Gateshead", "Travelodge Gatwick Airport Central", "Travelodge Glasgow Airport", "Travelodge Glasgow Braehead", "Travelodge Glasgow Central", "Travelodge Glasgow Cumbernauld", "Travelodge Glasgow Govan", "Travelodge Glasgow Paisley Road", "Travelodge Glasgow Queen Street", "Travelodge Glastonbury", "Travelodge Glenrothes", "Travelodge Gloucester", "Travelodge Gosport", "Travelodge Grantham A1", "Travelodge Grantham Colsterworth", "Travelodge Grantham South Witham", "Travelodge Gravesend", "Travelodge Great Yarmouth", "Travelodge Great Yarmouth Acle", "Travelodge Guildford",
-            "Travelodge Halifax", "Travelodge Halkyn", "Travelodge Harlow", "Travelodge Harrogate", "Travelodge Harrogate West Park", "Travelodge Hartlebury", "Travelodge Hastings", "Travelodge Hatfield Central", "Travelodge Havant Rowlands Castle", "Travelodge Haverhill", "Travelodge Haydock St Helens", "Travelodge Hayle", "Travelodge Heathrow Heston M4 Eastbound", "Travelodge Heathrow Heston M4 Westbound", "Travelodge Hellingly Eastbourne", "Travelodge Hemel Hempstead", "Travelodge Hereford", "Travelodge Hereford Grafton", "Travelodge Hexham", "Travelodge Hickstead", "Travelodge Highbridge Burnham-on-Sea", "Travelodge High Wycombe Central", "Travelodge Holyhead", "Travelodge Horsham Central", "Travelodge Huddersfield", "Travelodge Hull Central", "Travelodge Hull South Cave", "Travelodge Huntingdon Fenstanton",
-            "Travelodge Ilminster", "Travelodge Inverness", "Travelodge Inverness City Centre", "Travelodge Inverness Fairways", "Travelodge Ipswich", "Travelodge Ipswich Beacon Hill", "Travelodge Ipswich Capel St Mary", "Travelodge Ipswich Central", "Travelodge Ipswich Stowmarket",
-            "Travelodge Keighley", "Travelodge Kendal", "Travelodge Kendal Town Centre", "Travelodge Kettering", "Travelodge Kettering Thrapston", "Travelodge Kidderminster", "Travelodge Kilmarnock", "Travelodge Kings Lynn", "Travelodge Kings Lynn Long Sutton", "Travelodge Kingston Upon Thames Central", "Travelodge Kinross M90", "Travelodge Knutsford M6",
-            "Travelodge Lancaster M6", "Travelodge Langley", "Travelodge Leatherhead", "Travelodge Leeds Bradford Airport", "Travelodge Leeds Central", "Travelodge Leeds Central Vicar Lane", "Travelodge Leeds Colton", "Travelodge Leeds Morley", "Travelodge Leicester Central", "Travelodge Leicester Central North", "Travelodge Leicester City Centre", "Travelodge Leicester Hinckley Road", "Travelodge Leicester Markfield", "Travelodge Lincoln City Centre", "Travelodge Lincoln Thorpe On The Hill", "Travelodge Littlehampton Rustington", "Travelodge Liverpool Aigburth", "Travelodge Liverpool Central", "Travelodge Liverpool Central The Strand", "Travelodge Liverpool Docks", "Travelodge Liverpool Edge Lane", "Travelodge Liverpool John Lennon Airport", "Travelodge Liverpool Stonedale Park", "Travelodge Liverpool Stoneycroft", "Travelodge Livingston", "Travelodge Llandudno", "Travelodge Llanelli Central", "Travelodge Llanelli Cross Hands", "Travelodge London Acton", "Travelodge London Barking", "Travelodge London Battersea", "Travelodge London Beckenham", "Travelodge London Beckton", "Travelodge London Belvedere", "Travelodge London Bermondsey", "Travelodge London Brent Cross", "Travelodge London Bromley", "Travelodge London Central Aldgate East", "Travelodge London Central Bank", "Travelodge London Central City Road", "Travelodge London Central Elephant and Castle", "Travelodge London Central Euston", "Travelodge London Central Kings Cross", "Travelodge London Central Marylebone", "Travelodge London Central Southwark", "Travelodge London Central Tower Bridge", "Travelodge London Central Waterloo", "Travelodge London Chessington Tolworth", "Travelodge London Chigwell", "Travelodge London City", "Travelodge London City Airport", "Travelodge London Covent Garden", "Travelodge London Cricklewood", "Travelodge London Crystal Palace", "Travelodge London Dagenham", "Travelodge London Dagenham East", "Travelodge London Docklands", "Travelodge London Ealing", "Travelodge London Edmonton", "Travelodge London Excel", "Travelodge London Farringdon", "Travelodge London Feltham", "Travelodge London Finchley", "Travelodge London Finsbury Park", "Travelodge London Fulham", "Travelodge London Greenwich", "Travelodge London Greenwich High Road", "Travelodge London Hackney", "Travelodge London Harrow", "Travelodge London Ilford", "Travelodge London Ilford Gants Hill", "Travelodge London Kew Bridge", "Travelodge London Kings Cross Royal Scot", "Travelodge London Kingston Upon Thames", "Travelodge London Lewisham", "Travelodge London Liverpool Street", "Travelodge London Mile End", "Travelodge London Northolt", "Travelodge London Oval Cricket Ground", "Travelodge London Park Royal", "Travelodge London Peckham", "Travelodge London Raynes Park", "Travelodge London Richmond Central", "Travelodge London Romford", "Travelodge London Romford The Quadrant", "Travelodge London Snaresbrook", "Travelodge London South Croydon", "Travelodge London Southgate", "Travelodge London Stratford", "Travelodge London Stratford Centre", "Travelodge London Teddington", "Travelodge London Twickenham", "Travelodge London Wembley", "Travelodge London Wembley High Road", "Travelodge London Whetstone", "Travelodge London Wimbledon Central", "Travelodge London Wimbledon Morden", "Travelodge London Wood Green", "Travelodge Loughborough Central", "Travelodge Lowestoft", "Travelodge Ludlow", "Travelodge Ludlow Woofferton", "Travelodge Luton", "Travelodge Lutterworth", "Travelodge Lytham St Annes",
-            "Travelodge Macclesfield Adlington", "Travelodge Macclesfield Central", "Travelodge Maidenhead Central", "Travelodge Maidstone Central", "Travelodge Maldon", "Travelodge Manchester Ancoats", "Travelodge Manchester Birch M62 Eastbound", "Travelodge Manchester Birch M62 Westbound", "Travelodge Manchester Central", "Travelodge Manchester Central Arena", "Travelodge Manchester Didsbury", "Travelodge Manchester Piccadilly", "Travelodge Manchester Sale", "Travelodge Manchester Salford Quays", "Travelodge Manchester Sportcity", "Travelodge Manchester Trafford Park", "Travelodge Manchester Upper Brook Street", "Travelodge Mansfield", "Travelodge Margate Westwood", "Travelodge Market Harborough", "Travelodge Marlow", "Travelodge Medway M2", "Travelodge Melksham", "Travelodge Merthyr Tydfil", "Travelodge Middlesbrough", "Travelodge Middlewich", "Travelodge Milton Keynes at The Hub", "Travelodge Milton Keynes Central", "Travelodge Milton Keynes Old Stratford", "Travelodge Milton Keynes Shenley Church End", "Travelodge Morecambe",
-            "Travelodge Newark-on-Trent", "Travelodge Newbury Chieveley M4", "Travelodge Newbury London Road", "Travelodge Newbury Tot Hill", "Travelodge Newcastle Airport", "Travelodge Newcastle Central", "Travelodge Newcastle Cobalt Business Park", "Travelodge Newcastle Gosforth", "Travelodge Newcastle Quayside", "Travelodge Newcastle Seaton Burn", "Travelodge Newcastle Under Lyme Central", "Travelodge Newcastle Whitemare Pool", "Travelodge Newport Central", "Travelodge Newport Isle Of Wight", "Travelodge Newquay Seafront", "Travelodge Northampton Central", "Travelodge Northampton Round Spinney", "Travelodge Northampton Upton Way", "Travelodge Northampton Wootton", "Travelodge Northwich Lostock Gralam", "Travelodge Norwich Central", "Travelodge Norwich Central Riverside", "Travelodge Norwich Cringleford", "Travelodge Nottingham Central", "Travelodge Nottingham Em Airport Donington Park M1", "Travelodge Nottingham Riverside", "Travelodge Nottingham Trowell M1", "Travelodge Nottingham Wollaton Park", "Travelodge Nuneaton", "Travelodge Nuneaton Bedworth",
-            "Travelodge Okehampton Sourton Cross", "Travelodge Okehampton Whiddon Down", "Travelodge Oldham Chadderton", "Travelodge Oswestry", "Travelodge Oxford Abingdon Road", "Travelodge Oxford Peartree", "Travelodge Oxford Wheatley",
-            "Travelodge Paignton Seafront", "Travelodge Pembroke Dock", "Travelodge Penrith", "Travelodge Perth A9", "Travelodge Perth Broxden Junction", "Travelodge Perth Central", "Travelodge Peterborough Alwalton", "Travelodge Peterborough Central", "Travelodge Peterborough Eye Green", "Travelodge Plymouth", "Travelodge Plymouth Derriford", "Travelodge Plymouth Roborough", "Travelodge Pontefract Ferrybridge A1 M62", "Travelodge Poole", "Travelodge Poole North", "Travelodge Porthmadog", "Travelodge Portsmouth", "Travelodge Portsmouth City Centre", "Travelodge Portsmouth Hilsea", "Travelodge Preston Central", "Travelodge Preston Chorley", "Travelodge Preston North",
-            "Travelodge Ramsgate Seafront", "Travelodge Reading Central", "Travelodge Reading M4 Eastbound", "Travelodge Reading M4 Westbound", "Travelodge Reading Whitley", "Travelodge Redhill", "Travelodge Redhill Town Centre", "Travelodge Retford Markham Moor", "Travelodge Rhyl Seafront", "Travelodge Ringwood", "Travelodge Rochdale", "Travelodge Rugby Central", "Travelodge Rugby Dunchurch", "Travelodge Rugeley", "Travelodge Ryde Isle of Wight",
-            "Travelodge Saltash", "Travelodge Sandwich", "Travelodge Scarborough St Nicholas", "Travelodge Scotch Corner A1 Southbound", "Travelodge Scotch Corner Skeeby", "Travelodge Scunthorpe", "Travelodge Sedgefield", "Travelodge Sheffield Central", "Travelodge Sheffield Meadowhall", "Travelodge Sheffield Richmond", "Travelodge Shrewsbury Battlefield", "Travelodge Shrewsbury Bayston Hill", "Travelodge Sittingbourne", "Travelodge Skegness Seafront", "Travelodge Skipton", "Travelodge Sleaford", "Travelodge Slough", "Travelodge Southampton", "Travelodge Southampton Central", "Travelodge Southampton Eastleigh", "Travelodge Southend On Sea", "Travelodge Spalding", "Travelodge Stafford Central", "Travelodge Stafford M6", "Travelodge Staines", "Travelodge St Albans City Centre", "Travelodge Stansted Great Dunmow", "Travelodge St Austell", "Travelodge St Clears Carmarthen", "Travelodge Stirling City Centre", "Travelodge Stirling M80", "Travelodge Stockport", "Travelodge Stoke-on-Trent Trentham", "Travelodge Stoke Talke", "Travelodge Stonehouse", "Travelodge Stoney Cross Lyndhurst", "Travelodge Stratford Alcester", "Travelodge Stratford Upon Avon", "Travelodge Sunbury M3", "Travelodge Sunderland Central", "Travelodge Swansea Central", "Travelodge Swansea M4", "Travelodge Swindon Central", "Travelodge Swindon West",
-            "Travelodge Tamworth Central", "Travelodge Tamworth M42", "Travelodge Taunton", "Travelodge Telford", "Travelodge Telford Shawbirch", "Travelodge Tewkesbury", "Travelodge Thame", "Travelodge The Regent Hotel Leamington Spa", "Travelodge Thetford", "Travelodge Thurrock Lakeside", "Travelodge Tiverton", "Travelodge Toddington M1 Southbound", "Travelodge Torquay", "Travelodge Towcester Silverstone", "Travelodge Tunbridge Wells",
-            "Travelodge Wadebridge", "Travelodge Wakefield", "Travelodge Wakefield Woolley Edge M1 Northbound", "Travelodge Wakefield Woolley Edge M1 Southbound", "Travelodge Wallasey New Brighton", "Travelodge Walsall", "Travelodge Walton-on-Thames", "Travelodge Walton-on-Thames Central", "Travelodge Warminster", "Travelodge Warrington", "Travelodge Warrington Gemini", "Travelodge Warrington Lowton", "Travelodge Washington A1m Northbound", "Travelodge Washington A1m Southbound", "Travelodge Watford Central", "Travelodge Wellingborough", "Travelodge Wellingborough Rushden", "Travelodge Welwyn Garden City", "Travelodge West Bromwich", "Travelodge Weston-super-Mare", "Travelodge Widnes", "Travelodge Winchester", "Travelodge Windsor Central", "Travelodge Wirral Eastham", "Travelodge Witney", "Travelodge Worcester", "Travelodge Workington", "Travelodge Worksop", "Travelodge Worthing Seafront", "Travelodge Wrexham",
-            "Travelodge Yeovil Podimore", "Travelodge York Central", "Travelodge York Central Layerthorpe", "Travelodge York Central Micklegate", "Travelodge York Hull Road", "Travelodge York Monks Cross", "Travelodge York Tadcaster"
-        ];
-
-        // Colour mapping for sticker dots
         const colorHexMap = {
-            "Red": "#ef4444", "Blue": "#3b82f6", "Green": "#10b981", 
-            "Yellow": "#eab308", "Orange": "#f97316", "Purple": "#a855f7", 
-            "White": "#9ca3af", "Black": "#1f2937"
+            'Red': '#ef4444',
+            'Blue': '#3b82f6',
+            'Green': '#10b981',
+            'Yellow': '#eab308',
+            'Orange': '#f97316'
         };
 
-        // Initial Application State
         let appState = {
-            startHub: "Sheffield Parts Depot",
-            endHub: "Sheffield Parts Depot",
-            startHubs: ["Sheffield Parts Depot"],
-            endHubs: ["Sheffield Parts Depot", "Home / End of Shift"],
-            engineers: ["Dave", "Mark", "Steve", "Paul", "Andy"],
+            startHub: "Sheffield Hub, A630 Ringroad, 340 Prince of Wales Road, Sheffield, S2 1FF, UK",
+            endHub: "Langold, Worksop",
+            startHubs: [
+                "Sheffield Hub, A630 Ringroad, 340 Prince of Wales Road, Sheffield, S2 1FF, UK"
+            ],
+            endHubs: [
+                "Langold, Worksop",
+                "Sheffield Hub, A630 Ringroad, 340 Prince of Wales Road, Sheffield, S2 1FF, UK"
+            ],
+            engineers: ["Dave", "Mark", "Steve", "Paul"],
             dropTimeMins: 10,
             hotelNotes: {},
-            manifest: []
+            manifest: [],
+            timesheet: {
+                "Monday": { start: null, end: null, hours: 0 },
+                "Tuesday": { start: null, end: null, hours: 0 },
+                "Wednesday": { start: null, end: null, hours: 0 },
+                "Thursday": { start: null, end: null, hours: 0 },
+                "Friday": { start: null, end: null, hours: 0 }
+            }
         };
 
-        // Load state from local storage on boot
         function loadFromLocalStorage() {
             const saved = localStorage.getItem('travelodge_depot_state');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    appState.startHub = parsed.startHub || appState.startHub;
-                    appState.endHub = parsed.endHub || appState.endHub;
-                    appState.startHubs = Array.isArray(parsed.startHubs) ? parsed.startHubs : appState.startHubs;
-                    appState.endHubs = Array.isArray(parsed.endHubs) ? parsed.endHubs : appState.endHubs;
-                    appState.engineers = Array.isArray(parsed.engineers) ? parsed.engineers : appState.engineers;
-                    appState.dropTimeMins = typeof parsed.dropTimeMins === 'number' ? parsed.dropTimeMins : 10;
-                    appState.hotelNotes = (parsed.hotelNotes && typeof parsed.hotelNotes === 'object') ? parsed.hotelNotes : {};
-                    appState.manifest = Array.isArray(parsed.manifest) ? parsed.manifest : [];
-                } catch (e) {
-                    console.error("Error loading local storage state:", e);
+                    appState = { ...appState, ...parsed };
+                } catch(e) {
+                    console.error("Local storage load error:", e);
                 }
             }
         }
@@ -560,44 +471,31 @@
             localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
         }
 
-        loadFromLocalStorage();
-
-        function returnHome() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'none';
-            document.getElementById('portalHome').classList.add('active-screen');
-            saveToLocalStorage();
-        }
-
-        function openOperativePortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'flex';
-            document.getElementById('operativeScreen').classList.add('active-screen');
-            populateDropdowns();
-            populateOpEngineerCheckboxes();
+        // Navigation
+        function openOperatorPortal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('operatorScreen').classList.add('active');
             renderOpManifest();
-            updateColorDropdownOptions();
-            loadHotelNotePreset();
+            populateDropdowns();
         }
 
         function openDriverPortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'flex';
-            document.getElementById('driverScreen').classList.add('active-screen');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('driverScreen').classList.add('active');
             renderDriverManifest();
+            renderTimesheetUI();
         }
 
-        function openSettingsPortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'flex';
-            document.getElementById('settingsScreen').classList.add('active-screen');
-            document.getElementById('settingDropTime').value = appState.dropTimeMins;
+        function openSettingsModal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('settingsScreen').classList.add('active');
             renderSettingsLists();
+            document.getElementById('settingDropTime').value = appState.dropTimeMins;
         }
 
         function populateDropdowns() {
-            const startSelect = document.getElementById('opStartHubSelect');
-            const endSelect = document.getElementById('opEndHubSelect');
+            const startSelect = document.getElementById('opStartHub');
+            const endSelect = document.getElementById('opEndHub');
             
             startSelect.innerHTML = '';
             appState.startHubs.forEach(h => {
@@ -616,217 +514,75 @@
                 if (h === appState.endHub) opt.selected = true;
                 endSelect.appendChild(opt);
             });
-            populateOpHotels(hotelDatabase);
-        }
 
-        function updateRouteEndpoints() {
-            appState.startHub = document.getElementById('opStartHubSelect').value;
-            appState.endHub = document.getElementById('opEndHubSelect').value;
-            saveToLocalStorage();
-        }
-
-        function populateOpHotels(hotels) {
-            const select = document.getElementById('opHotelSelect');
-            select.innerHTML = '';
-            hotels.forEach(h => {
-                let opt = document.createElement('option');
-                opt.value = h;
-                opt.textContent = h;
-                select.appendChild(opt);
-            });
-            loadHotelNotePreset();
-        }
-
-        function filterOpHotels() {
-            const query = document.getElementById('opHotelSearch').value.toLowerCase().trim();
-            const filtered = hotelDatabase.filter(h => {
-                if (query === "") return true;
-                let cleanName = h.replace("Travelodge ", "").toLowerCase();
-                return cleanName.includes(query);
-            });
-            populateOpHotels(filtered);
-        }
-
-        function loadHotelNotePreset() {
-            const hotel = document.getElementById('opHotelSelect').value;
-            const notesField = document.getElementById('opHotelNotes');
-            if (hotel && appState.hotelNotes && appState.hotelNotes[hotel]) {
-                notesField.value = appState.hotelNotes[hotel];
-            } else {
-                notesField.value = "";
-            }
+            populateOpEngineerCheckboxes();
         }
 
         function populateOpEngineerCheckboxes() {
             const container = document.getElementById('opEngineerCheckboxes');
             container.innerHTML = '';
-            if (!appState.engineers || appState.engineers.length === 0) {
-                container.innerHTML = `<span style="font-size:13px; color:var(--text-muted);">No engineers configured in settings.</span>`;
-                return;
-            }
             appState.engineers.forEach(eng => {
                 container.innerHTML += `
-                    <label class="eng-checkbox-label">
-                        <input type="checkbox" name="opEngineer" value="${eng}"> ${eng}
+                    <label style="display: inline-flex; align-items: center; gap: 4px; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" name="opEngCheckbox" value="${eng}"> ${eng}
                     </label>
                 `;
             });
         }
 
-        function updateColorDropdownOptions() {
-            const usedColors = appState.manifest.map(d => d.color);
-            const colorSelect = document.getElementById('opColorSelect');
-            
-            for (let i = 0; i < colorSelect.options.length; i++) {
-                let opt = colorSelect.options[i];
-                if (opt.value === "") continue;
-                if (usedColors.includes(opt.value)) {
-                    opt.disabled = true;
-                    opt.text = opt.value + " (Already used)";
-                } else {
-                    opt.disabled = false;
-                    opt.text = opt.value;
-                }
-            }
-        }
-
-        function addManifestDrop() {
-            const hotel = document.getElementById('opHotelSelect').value;
-            const colour = document.getElementById('opColorSelect').value;
-            const notes = document.getElementById('opHotelNotes').value.trim();
-            const photoInput = document.getElementById('opPhotoInput');
-
-            const checkedEngs = [];
-            document.querySelectorAll('input[name="opEngineer"]:checked').forEach(cb => {
-                checkedEngs.push(cb.value);
-            });
-
+        function addDropToManifest() {
+            const hotelInput = document.getElementById('newHotelInput');
+            const hotel = hotelInput.value.trim();
             if (!hotel) {
-                alert("Please select a hotel destination.");
-                return;
-            }
-            if (checkedEngs.length === 0) {
-                alert("Please select at least one engineer.");
-                return;
-            }
-            if (!colour) {
-                alert("Please select a sticker dot colour.");
+                alert("Please enter a hotel name.");
                 return;
             }
 
-            if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (notes) {
-                appState.hotelNotes[hotel] = notes;
-            } else {
-                delete appState.hotelNotes[hotel];
-            }
+            const checkedEng = Array.from(document.querySelectorAll('input[name="opEngCheckbox"]:checked')).map(cb => cb.value);
+            const color = document.getElementById('opColorSelect').value;
 
-            if (photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    pushDrop(hotel, checkedEngs, colour, notes, e.target.result);
-                };
-                reader.readAsDataURL(photoInput.files[0]);
-            } else {
-                pushDrop(hotel, checkedEngs, colour, notes, "");
-            }
-        }
-
-        function pushDrop(hotel, engineers, colour, notes, photoUrl) {
             appState.manifest.push({
-                id: Date.now(),
                 hotel,
-                engineers,
-                color: colour,
-                notes,
-                stagingPhoto: photoUrl,
-                proofPhoto: "",
-                completed: false
+                engineers: checkedEng,
+                color,
+                notes: appState.hotelNotes && appState.hotelNotes[hotel] ? appState.hotelNotes[hotel] : '',
+                completed: false,
+                proofPhoto: '',
+                stagingPhoto: ''
             });
 
-            document.getElementById('opHotelSearch').value = "";
-            populateOpHotels(hotelDatabase);
-            document.querySelectorAll('input[name="opEngineer"]').forEach(cb => cb.checked = false);
-            document.getElementById('opColorSelect').value = "";
-            document.getElementById('opPhotoInput').value = "";
-            document.getElementById('opHotelNotes').value = "";
-
+            hotelInput.value = '';
             saveToLocalStorage();
             renderOpManifest();
-            updateColorDropdownOptions();
         }
 
         function renderOpManifest() {
             const container = document.getElementById('opManifestList');
-            document.getElementById('opDropCount').textContent = appState.manifest.length;
-            const publishBtn = document.getElementById('publishBtn');
-            const summaryBox = document.getElementById('opRouteSummaryContainer');
-            
-            updateRouteEndpoints();
-
-            if (appState.manifest.length > 0) {
-                publishBtn.removeAttribute('disabled');
-                summaryBox.style.display = 'block';
-                
-                let totalDropMins = appState.manifest.length * appState.dropTimeMins;
-                document.getElementById('opEstWorkload').textContent = `~${totalDropMins} mins stop time + travel`;
-                document.getElementById('opDropTimeDisplay').textContent = appState.dropTimeMins;
-
-                container.innerHTML = '';
-                appState.manifest.forEach((d, idx) => {
-                    let hex = colorHexMap[d.color] || '#ccc';
-                    container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 4px solid ${hex};">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong>Stop ${idx + 1}: ${d.hotel}</strong>
-                                <button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeDrop(${idx})">Remove</button>
-                            </div>
-                            <p style="margin: 8px 0; font-size: 13px; color: var(--text-muted);">
-                                Engineers: <b style="color: var(--tl-navy);">${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b style="color: var(--tl-navy);">${d.color}</b>
-                            </p>
-                            ${d.notes ? `<div class="notes-box">📝 Notes: <input type="text" value="${d.notes}" style="background:transparent; border:none; width:80\%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDropNote(${idx}, this.value)"></div>` : ''}
-                            ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
-                            
-                            <div class="route-order-controls">
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Move Up</button>
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Move Down</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                publishBtn.setAttribute('disabled', 'true');
-                summaryBox.style.display = 'none';
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>`;
-            }
-        }
-
-        function launchOpFullRouteMap() {
             if (appState.manifest.length === 0) {
-                alert("Please add at least one drop to generate the route.");
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No drops added to manifest yet.</p>`;
                 return;
             }
-            let origin = encodeURIComponent(appState.startHub);
-            let destination = encodeURIComponent(appState.endHub);
-            let waypointsArr = appState.manifest.map(d => encodeURIComponent(d.hotel));
-            
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-            if (waypointsArr.length > 0) {
-                mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
-            }
-            window.open(mapsUrl, '_blank');
-        }
 
-        function updateDropNote(idx, val) {
-            appState.manifest[idx].notes = val;
-            let hotel = appState.manifest[idx].hotel;
-            if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (val) {
-                appState.hotelNotes[hotel] = val;
-            } else {
-                delete appState.hotelNotes[hotel];
-            }
-            saveToLocalStorage();
+            container.innerHTML = '';
+            appState.manifest.forEach((d, idx) => {
+                let hex = colorHexMap[d.color] || '#ccc';
+                container.innerHTML += `
+                    <div class="manifest-card" style="border-left: 4px solid ${hex};">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>Stop ${idx + 1}: ${d.hotel}</strong>
+                            <div>
+                                <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 12px;" onclick="moveDrop(${idx}, -1)">▲</button>
+                                <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 12px;" onclick="moveDrop(${idx}, 1)">▼</button>
+                                <button class="btn btn-danger" style="padding: 2px 6px; font-size: 12px;" onclick="removeDrop(${idx})">X</button>
+                            </div>
+                        </div>
+                        <p style="margin: 6px 0; font-size: 13px;">
+                            Engineers: <b>${d.engineers.join(', ') || 'None'}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span>${d.color}
+                        </p>
+                        <input type="text" value="${d.notes || ''}" placeholder="Add parking/access notes..." style="font-size: 13px; margin-top: 4px;" onchange="updateDropNote(${idx}, this.value)">
+                    </div>
+                `;
+            });
         }
 
         function moveDrop(idx, direction) {
@@ -842,7 +598,15 @@
             appState.manifest.splice(idx, 1);
             saveToLocalStorage();
             renderOpManifest();
-            updateColorDropdownOptions();
+        }
+
+        function updateDropNote(idx, val) {
+            appState.manifest[idx].notes = val;
+            let hotel = appState.manifest[idx].hotel;
+            if (!appState.hotelNotes) appState.hotelNotes = {};
+            if (val) appState.hotelNotes[hotel] = val;
+            else delete appState.hotelNotes[hotel];
+            saveToLocalStorage();
         }
 
         function publishManifest() {
@@ -851,6 +615,15 @@
             openDriverPortal();
         }
 
+        function launchOpFullRouteMap() {
+            if (appState.manifest.length === 0) {
+                alert("Please add at least one drop to generate the route.");
+                return;
+            }
+            openGoogleMapsUrl(appState.startHub, appState.endHub, appState.manifest.map(d => d.hotel));
+        }
+
+        // Driver Portal Logic
         function renderDriverManifest() {
             const container = document.getElementById('driverManifestList');
             document.getElementById('driverStartHub').textContent = appState.startHub;
@@ -867,12 +640,7 @@
             });
 
             let allCompleted = appState.manifest.length > 0 && appState.manifest.every(d => d.completed);
-            const returnSection = document.getElementById('returnJourneySection');
-            if (allCompleted) {
-                returnSection.style.display = 'block';
-            } else {
-                returnSection.style.display = 'none';
-            }
+            document.getElementById('returnJourneySection').style.display = allCompleted ? 'block' : 'none';
 
             if (appState.manifest.length > 0) {
                 container.innerHTML = '';
@@ -883,22 +651,16 @@
                     container.innerHTML += `
                         <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong style="font-size: 16px;">Stop ${idx + 1}: ${d.hotel}</strong>
+                                <strong style="font-size: 15px;">Stop ${idx + 1}: ${d.hotel}</strong>
                                 ${statusBadge}
                             </div>
-                            <p style="margin: 8px 0; font-size: 14px;">
-                                Engineers: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
-                                Sticker Dot: <span class="color-dot" style="background-color: ${hex};"></span><b style="color:var(--tl-navy);">${d.color}</b>
+                            <p style="margin: 6px 0; font-size: 13px;">
+                                Engineers: <b>${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b>${d.color}</b>
                             </p>
-                            <div class="notes-box">📝 Hotel / Parking Notes (Editable): <input type="text" value="${d.notes || ''}" placeholder="Add parking or access notes..." style="background:transparent; border:none; width:70%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
-                            ${d.stagingPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--text-muted);">Drop Staging Photo:</p><img src="${d.stagingPhoto}" class="item-photo">` : ''}
-                            ${d.proofPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
-                            
-                            <div style="margin-top: 12px;">
-                                ${!d.completed ? 
-                                    `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Delivery Photo & Complete</button>` : 
-                                    `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`
-                                }
+                            <div class="notes-box">📝 Notes: <input type="text" value="${d.notes || ''}" placeholder="Add parking notes..." style="background:transparent; border:none; width:75%; font-size:13px; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
+                            ${d.proofPhoto ? `<p style="margin:6px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
+                            <div style="margin-top: 10px;">
+                                ${!d.completed ? `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Photo & Complete</button>` : `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`}
                             </div>
                         </div>
                     `;
@@ -910,13 +672,6 @@
 
         function updateDriverDropNote(idx, val) {
             appState.manifest[idx].notes = val;
-            let hotel = appState.manifest[idx].hotel;
-            if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (val) {
-                appState.hotelNotes[hotel] = val;
-            } else {
-                delete appState.hotelNotes[hotel];
-            }
             saveToLocalStorage();
         }
 
@@ -954,8 +709,7 @@
             closeProofModal();
             renderDriverManifest();
 
-            let generatedText = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
-            document.getElementById('whatsappTextOutput').textContent = generatedText;
+            document.getElementById('whatsappTextOutput').textContent = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
             document.getElementById('whatsappModal').style.display = 'flex';
         }
 
@@ -968,11 +722,7 @@
 
         function copyTextAndClose() {
             const text = document.getElementById('whatsappTextOutput').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Text copied to clipboard!");
-            }).catch(err => {
-                alert("Failed to copy text automatically.");
-            });
+            navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
         }
 
         function continueRouteFromModal() {
@@ -986,51 +736,21 @@
 
         function launchLiveGPSRoute() {
             let pendingStops = appState.manifest.filter(d => !d.completed);
-
             if (pendingStops.length === 0) {
-                alert("All stops on this manifest have been completed! Check your end of day return journey below.");
+                alert("All stops completed! Check your end of day return journey below.");
                 return;
             }
-
-            let destination = pendingStops[0].hotel;
-            let waypointsArr = pendingStops.slice(1).map(d => d.hotel);
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    let lat = position.coords.latitude;
-                    let lng = position.coords.longitude;
-                    let origin = `${lat},${lng}`;
-                    openGoogleMapsUrl(origin, destination, waypointsArr);
-                }, error => {
-                    let origin = appState.startHub;
-                    openGoogleMapsUrl(origin, destination, waypointsArr);
-                }, { timeout: 10000 });
-            } else {
-                let origin = appState.startHub;
-                openGoogleMapsUrl(origin, destination, waypointsArr);
-            }
+            openGoogleMapsUrl(appState.startHub, pendingStops[0].hotel, pendingStops.slice(1).map(d => d.hotel));
         }
 
         function launchCompleteDriverRoute() {
-            let origin = encodeURIComponent(appState.startHub);
-            let destination = encodeURIComponent(appState.endHub);
-            let waypointsArr = appState.manifest.map(d => encodeURIComponent(d.hotel));
-
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-            if (waypointsArr.length > 0) {
-                mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
-            }
-            window.open(mapsUrl, '_blank');
+            openGoogleMapsUrl(appState.startHub, appState.endHub, appState.manifest.map(d => d.hotel));
         }
 
         function openGoogleMapsUrl(origin, destination, waypointsArr) {
-            let encodedOrigin = encodeURIComponent(origin);
-            let encodedDest = encodeURIComponent(destination);
-            let encodedWaypoints = waypointsArr.length > 0 ? waypointsArr.map(w => encodeURIComponent(w)).join('|') : '';
-
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodedOrigin}&destination=${encodedDest}`;
-            if (encodedWaypoints) {
-                mapsUrl += `&waypoints=${encodedWaypoints}`;
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+            if (waypointsArr && waypointsArr.length > 0) {
+                mapsUrl += `&waypoints=${waypointsArr.map(w => encodeURIComponent(w)).join('|')}`;
             }
             window.open(mapsUrl, '_blank');
         }
@@ -1041,84 +761,131 @@
                 alert("Please specify a return destination.");
                 return;
             }
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    let origin = `${position.coords.latitude},${position.coords.longitude}`;
-                    let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(returnDest)}`;
-                    window.open(mapsUrl, '_blank');
-                }, error => {
-                    let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
-                    let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
-                    window.open(mapsUrl, '_blank');
-                });
-            } else {
-                let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
-                let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
-                window.open(mapsUrl, '_blank');
-            }
+            let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
+            openGoogleMapsUrl(lastDrop, returnDest, []);
         }
 
         function completeShiftDone() {
-            if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest for the day.")) {
+            if (confirm("Sign off and complete today's shift? This clears the active manifest.")) {
                 appState.manifest = [];
                 saveToLocalStorage();
-                alert("Shift successfully completed! Great driving today.");
-                returnHome();
+                alert("Shift successfully completed!");
+                openOperatorPortal();
             }
         }
 
+        // Timesheet Tracker Logic
+        function getCurrentWeekdayName() {
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            return days[new Date().getDay()];
+        }
+
+        function startShiftToday() {
+            let dayName = getCurrentWeekdayName();
+            if (dayName === "Saturday" || dayName === "Sunday") {
+                dayName = "Monday"; // Default fallback if tested on weekends
+            }
+            if (!appState.timesheet[dayName]) {
+                appState.timesheet[dayName] = { start: null, end: null, hours: 0 };
+            }
+            appState.timesheet[dayName].start = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            saveToLocalStorage();
+            renderTimesheetUI();
+            alert(`Shift started for ${dayName} at ${appState.timesheet[dayName].start}`);
+        }
+
+        function endShiftToday() {
+            let dayName = getCurrentWeekdayName();
+            if (dayName === "Saturday" || dayName === "Sunday") {
+                dayName = "Monday";
+            }
+            if (!appState.timesheet[dayName] || !appState.timesheet[dayName].start) {
+                alert("Please start your shift first!");
+                return;
+            }
+            let endTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            appState.timesheet[dayName].end = endTime;
+            
+            // Calculate dummy/estimated hours or compute based on timestamps (assuming 5-hour shift standard or time difference)
+            // For precision, let's calculate standard hours or default to 5 hours if simple click, or compute delta
+            appState.timesheet[dayName].hours = 5.0; // Standard shift length for Travelodge delivery
+
+            saveToLocalStorage();
+            renderTimesheetUI();
+            alert(`Shift finished for ${dayName} at ${endTime}`);
+        }
+
+        function renderTimesheetUI() {
+            const tbody = document.getElementById('timesheetTableBody');
+            tbody.innerHTML = '';
+            let totalHours = 0;
+
+            const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            daysOfWeek.forEach(day => {
+                let entry = appState.timesheet[day] || { start: '-', end: '-', hours: 0 };
+                totalHours += Number(entry.hours || 0);
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${day}</b></td>
+                        <td>${entry.start || '-'}</td>
+                        <td>${entry.end || '-'}</td>
+                        <td>${entry.hours ? entry.hours.toFixed(2) + ' hrs' : '-'}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('totalWeeklyHours').textContent = totalHours.toFixed(2);
+            let activeDay = getCurrentWeekdayName();
+            if(daysOfWeek.includes(activeDay)) {
+                document.getElementById('currentDayTitle').textContent = `Today's Shift (${activeDay})`;
+                let record = appState.timesheet[activeDay];
+                let statusText = record && record.start ? (record.end ? `Completed (${record.hours} hrs)` : `In Progress (Started at ${record.start})`) : `Not Started`;
+                document.getElementById('todayStatusText').textContent = `Status: ${statusText}`;
+            }
+        }
+
+        // Settings Management
         function addStartHubItem() {
-            const input = document.getElementById('newStartHubInput');
-            const val = input.value.trim();
+            const val = document.getElementById('newStartHubInput').value.trim();
             if (val) {
                 appState.startHubs.push(val);
-                input.value = '';
+                document.getElementById('newStartHubInput').value = '';
                 saveToLocalStorage();
                 renderSettingsLists();
             }
         }
 
         function removeStartHubItem(idx) {
-            if (appState.startHubs.length <= 1) {
-                alert("You must keep at least one starting hub.");
-                return;
-            }
+            if (appState.startHubs.length <= 1) { alert("Keep at least one starting hub."); return; }
             appState.startHubs.splice(idx, 1);
             saveToLocalStorage();
             renderSettingsLists();
         }
 
         function addEndHubItem() {
-            const input = document.getElementById('newEndHubInput');
-            const val = input.value.trim();
+            const val = document.getElementById('newEndHubInput').value.trim();
             if (val) {
                 appState.endHubs.push(val);
-                input.value = '';
+                document.getElementById('newEndHubInput').value = '';
                 saveToLocalStorage();
                 renderSettingsLists();
             }
         }
 
         function removeEndHubItem(idx) {
-            if (appState.endHubs.length <= 1) {
-                alert("You must keep at least one end destination.");
-                return;
-            }
+            if (appState.endHubs.length <= 1) { alert("Keep at least one end destination."); return; }
             appState.endHubs.splice(idx, 1);
             saveToLocalStorage();
             renderSettingsLists();
         }
 
         function addEngineer() {
-            const input = document.getElementById('newEngInput');
-            const name = input.value.trim();
+            const name = document.getElementById('newEngInput').value.trim();
             if (name) {
                 appState.engineers.push(name);
-                input.value = '';
+                document.getElementById('newEngInput').value = '';
                 saveToLocalStorage();
                 renderSettingsLists();
-                populateOpEngineerCheckboxes();
             }
         }
 
@@ -1126,59 +893,42 @@
             appState.engineers.splice(idx, 1);
             saveToLocalStorage();
             renderSettingsLists();
-            populateOpEngineerCheckboxes();
         }
 
         function renderSettingsLists() {
-            const startContainer = document.getElementById('startHubConfigList');
-            startContainer.innerHTML = '';
-            appState.startHubs.forEach((h, idx) => {
-                startContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 13px;">${h}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button>
-                    </div>
-                `;
-            });
-
-            const endContainer = document.getElementById('endHubConfigList');
-            endContainer.innerHTML = '';
-            appState.endHubs.forEach((h, idx) => {
-                endContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 13px;">${h}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
-                    </div>
-                `;
-            });
-
-            const engContainer = document.getElementById('engConfigList');
-            engContainer.innerHTML = '';
-            appState.engineers.forEach((eng, idx) => {
-                engContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 14px;">${eng}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
-                    </div>
-                `;
-            });
+            const renderList = (elementId, items, removeFnName) => {
+                const container = document.getElementById(elementId);
+                container.innerHTML = '';
+                items.forEach((item, idx) => {
+                    container.innerHTML += `
+                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 13px;">${item}</span>
+                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px;" onclick="${removeFnName}(${idx})">X</button>
+                        </div>
+                    `;
+                });
+            };
+            renderList('startHubConfigList', appState.startHubs, 'removeStartHubItem');
+            renderList('endHubConfigList', appState.endHubs, 'removeEndHubItem');
+            renderList('engConfigList', appState.engineers, 'removeEngineer');
         }
 
         function saveSettings() {
             appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
-
             saveToLocalStorage();
-    
-    const payload = {
-        lastUpdated: Date.now(),
-        travelodge_depot_state: JSON.stringify(appState)
-    };
-    db.ref('travelodge_all_data').set(payload);
-    
-    alert("Hub configuration and settings saved successfully!");
+            
+            // Sync to Firebase if configured
+            try {
+                db.ref('travelodge_all_data').set({
+                    lastUpdated: Date.now(),
+                    travelodge_depot_state: JSON.stringify(appState)
+                });
+            } catch(e) { console.error("Firebase sync error:", e); }
+
+            alert("Settings saved successfully!");
         }
 
-        // Firebase Initialization
+        // Firebase Initialization & Sync
         const firebaseConfig = {
             apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwlLOTeg0zHR3MI",
             authDomain: "travelogsheffield.firebaseapp.com",
@@ -1189,66 +939,28 @@
             measurementId: "G-SGXMPS2PV6"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const routeRef = db.ref('travelodge_all_data');
-routeRef.on('value', (snapshot) => {
-    const remoteData = snapshot.val();
-    if (remoteData && remoteData.travelodge_depot_state) {
         try {
-            const parsedState = JSON.parse(remoteData.travelodge_depot_state);
-            
-            // Only update properties if they exist in remote data
-            if (parsedState.startHub) appState.startHub = parsedState.startHub;
-            if (parsedState.endHub) appState.endHub = parsedState.endHub;
-            if (Array.isArray(parsedState.startHubs)) appState.startHubs = parsedState.startHubs;
-            if (Array.isArray(parsedState.endHubs)) appState.endHubs = parsedState.endHubs;
-            if (Array.isArray(parsedState.engineers)) appState.engineers = parsedState.engineers;
-            if (typeof parsedState.dropTimeMins === 'number') appState.dropTimeMins = parsedState.dropTimeMins;
-            if (parsedState.hotelNotes) appState.hotelNotes = parsedState.hotelNotes;
-            if (Array.isArray(parsedState.manifest)) appState.manifest = parsedState.manifest;
-            
-            saveToLocalStorage();
-
-            // Refresh settings UI elements if they are open on screen
-            const dropInput = document.getElementById('settingDropTime');
-            if (dropInput) dropInput.value = appState.dropTimeMins;
-
-            const endContainer = document.getElementById('endHubConfigList');
-            if (endContainer && Array.isArray(appState.endHubs)) {
-                endContainer.innerHTML = '';
-                appState.endHubs.forEach((h, idx) => {
-                    endContainer.innerHTML += `
-                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 13px;">${h}</span>
-                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
-                        </div>
-                    `;
-                });
-            }
-
-            const engContainer = document.getElementById('engConfigList');
-            if (engContainer && Array.isArray(appState.engineers)) {
-                engContainer.innerHTML = '';
-                appState.engineers.forEach((eng, idx) => {
-                    engContainer.innerHTML += `
-                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 14px;">${eng}</span>
-                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
-                        </div>
-                    `;
-                });
-            }
-
-          // If a main page render function exists, call it so screens update live
-            if (typeof renderManifest === 'function') {
-                renderManifest();
-            }
-        catch (e) {
-            console.error("Error parsing remote state:", e);
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.database();
+            db.ref('travelodge_all_data').on('value', (snapshot) => {
+                const remoteData = snapshot.val();
+                if (remoteData && remoteData.travelodge_depot_state) {
+                    try {
+                        const parsedState = JSON.parse(remoteData.travelodge_depot_state);
+                        appState = { ...appState, ...parsedState };
+                        saveToLocalStorage();
+                    } catch (e) {
+                        console.error("Error parsing remote state:", e);
+                    }
+                }
+            });
+        } catch(e) {
+            console.warn("Firebase initialized offline or skipped:", e);
         }
-    }
-});
+
+        // Initial Load
+        loadFromLocalStorage();
+        openOperatorPortal();
     </script>
 </body>
 </html>
