@@ -11,17 +11,17 @@
 
     <style>
         :root {
-            --tl-navy: #002D62;
-            --tl-red: #E31B23;
-            --tl-blue: #00539F;
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border-color: #e5e7eb;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-        }
+        --t1-navy: #002663;     /* Official deep Travelodge blue */
+        --t1-red: #E31B23;      /* Travelodge accent red */
+        --t1-blue: #0072CE;     /* Bright interactive button blue */
+        --bg-color: #f4f6f9;    /* Clean light grey background */
+        --card-bg: #ffffff;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --border-color: #cbd5e1;/* Slightly crisper borders */
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+    }
 
         * {
             box-sizing: border-box;
@@ -37,14 +37,15 @@
         }
 
         header {
-            background-color: var(--tl-navy);
-            color: white;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    background-color: var(--t1-navy);
+    color: white;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #00A3A6; /* Signature Travelodge teal accent strip */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
         header h1 {
             font-size: 18px;
