@@ -1208,18 +1208,41 @@ routeRef.on('value', (snapshot) => {
             
            saveToLocalStorage();
             
-            // Instantly update UI elements if they are currently on screen
-            if (document.getElementById('settingDropTime')) {
-                document.getElementById('settingDropTime').value = appState.dropTimeMins;
+            // 1. Update the Drop Time input box
+            const dropInput = document.getElementById('settingDropTime');
+            if (dropInput) dropInput.value = appState.dropTimeMins;
+
+            // 2. Re-render End Hubs list if on screen
+            const endContainer = document.getElementById('endHubConfigList');
+            if (endContainer && Array.isArray(appState.endHubs)) {
+                endContainer.innerHTML = '';
+                appState.endHubs.forEach((h, idx) => {
+                    endContainer.innerHTML += `
+                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 13px;">${h}</span>
+                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
+                        </div>
+                    `;
+                });
             }
-            if (typeof renderHubConfig === 'function') {
-                renderHubConfig();
+
+            // 3. Re-render Engineers list if on screen
+            const engContainer = document.getElementById('engConfigList');
+            if (engContainer && Array.isArray(appState.engineers)) {
+                engContainer.innerHTML = '';
+                appState.engineers.forEach((eng, idx) => {
+                    engContainer.innerHTML += `
+                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 14px;">${eng}</span>
+                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
+                        </div>
+                    `;
+                });
             }
+
         } catch (e) {
             console.error("Error parsing remote state:", e);
         }
-    }
-});
     </script>
 </body>
 </html>
