@@ -768,10 +768,36 @@
                 publishBtn.removeAttribute('disabled');
                 summaryBox.style.display = 'block';
                 
-                let totalDropMins = appState.manifest.length * appState.dropTimeMins;
-                document.getElementById('opEstWorkload').textContent = `~${totalDropMins} mins stop time + travel`;
-                document.getElementById('opDropTimeDisplay').textContent = appState.dropTimeMins;
+                // Update total estimated workload including transit legs based on start/end hubs and hotel stops
+    let totalDropMins = appState.manifest.length * appState.dropTimeMins;
+    let totalTransitMins = 0;
 
+    if (appState.manifest.length > 0) {
+        let routePoints = [appState.startHub];
+        appState.manifest.forEach(d => routePoints.push(d.hotel));
+        routePoints.push(appState.endHub || appState.startHub);
+
+        for (let i = 0; i < routePoints.length - 1; i++) {
+            let from = routePoints[i];
+            let to = routePoints[i+1];
+            
+            if (from === to) {
+                totalTransitMins += 15;
+            } else if ((from.includes("Sheffield") || to.includes("Sheffield"))) {
+                totalTransitMins += 35;
+            } else {
+                totalTransitMins += 45;
+            }
+        }
+    }
+
+    let grandTotalMins = totalDropMins + totalTransitMins;
+    let hours = Math.floor(grandTotalMins / 60);
+    let mins = grandTotalMins % 60;
+    let workloadText = hours > 0 ? `~${hours} hr ${mins} mins total` : `~${mins} mins total`;
+
+    document.getElementById('opEstWorkload').textContent = workloadText;
+    document.getElementById('opDropTimeDisplay').textContent = appState.dropTimeMins;
                 container.innerHTML = '';
                 appState.manifest.forEach((d, idx) => {
                     let hex = colorHexMap[d.color] || '#ccc';
