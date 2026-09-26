@@ -1206,7 +1206,15 @@ routeRef.on('value', (snapshot) => {
             appState.hotelNotes = (parsedState.hotelNotes && typeof parsedState.hotelNotes === 'object') ? parsedState.hotelNotes : {};
             appState.manifest = Array.isArray(parsedState.manifest) ? parsedState.manifest : [];
             
-            saveToLocalStorage();
+           saveToLocalStorage();
+            
+            // Instantly update UI elements if they are currently on screen
+            if (document.getElementById('settingDropTime')) {
+                document.getElementById('settingDropTime').value = appState.dropTimeMins;
+            }
+            if (typeof renderHubConfig === 'function') {
+                renderHubConfig();
+            }
         } catch (e) {
             console.error("Error parsing remote state:", e);
         }
