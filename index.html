@@ -846,6 +846,14 @@
         }
 
       function publishManifest() {
+    // Convert array to an object so Firebase never strips it
+    const manifestObj = {};
+    if (Array.isArray(appState.manifest)) {
+        appState.manifest.forEach((d, idx) => {
+            manifestObj['drop_' + idx] = d;
+        });
+    }
+
     const payload = {
         startHub: appState.startHub,
         endHub: appState.endHub,
@@ -854,7 +862,7 @@
         engineers: appState.engineers,
         dropTimeMins: appState.dropTimeMins,
         hotelNotes: appState.hotelNotes,
-        manifest: appState.manifest || []
+        manifest: manifestObj
     };
     db.ref('routeData').set(payload);
     alert("Route manifest published successfully! Driver portal updated.");
@@ -1201,15 +1209,11 @@
         const routeRef = db.ref('routeData');
 routeRef.on('value', (snapshot) => {
     const remoteData = snapshot.val();
-    if (remoteData) {
-        appState.startHub = remoteData.startHub || appState.startHub;
-        appState.endHub = remoteData.endHub || appState.endHub;
-        appState.startHubs = Array.isArray(remoteData.startHubs) ? remoteData.startHubs : appState.startHubs;
-        appState.endHubs = Array.isArray(remoteData.endHubs) ? remoteData.endHubs : appState.endHubs;
-        appState.engineers = Array.isArray(remoteData.engineers) ? remoteData.engineers : appState.engineers;
-        appState.dropTimeMins = typeof remoteData.dropTimeMins === 'number' ? remoteData.dropTimeMins : appState.dropTimeMins;
-        appState.hotelNotes = (remoteData.hotelNotes && typeof remoteData.hotelNotes === 'object') ? remoteData.hotelNotes : {};
-        appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : [];
+    if (remoteData.manifest) {
+    appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : Object.values(remoteData.manifest);
+} else {
+    appState.manifest = [];
+}
         
         saveToLocalStorage();
         
