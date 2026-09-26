@@ -240,14 +240,23 @@
 <body>
 
     <header>
-      <div class="header-brand">
-            <!-- Clean inline vector logo mark -->
-            <svg width="36" height="32" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <rect width="40" height="36" rx="4" fill="#E65C00"/>
-                <path d="M10 25V11H14V25H10ZM18 25V11H30V14.5H22V16.5H29V20H22V25H18Z" fill="white"/>
-            </svg>
-            <h1>Sheffield Depot Portal</h1>
-        </div>
+      <div class="header-brand" style="display: flex; align-items: center; gap: 14px;">
+        <!-- Official Style Sleeping Face Icon Graphic -->
+        <svg width="40" height="34" viewBox="0 0 100 85" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); flex-shrink: 0;">
+            <rect width="100" height="85" rx="16" fill="#001a35"/>
+            <path d="M0 45C0 20 20 5 50 5C80 5 100 20 100 45V85H0V45Z" fill="url(#skyGradient)"/>
+            <path d="M25 55C32 55 38 51 40 45C42 42 45 40 48 42C50 43 49 47 45 50C42 52 38 58 30 62C25 65 18 62 18 58C18 56 21 55 25 55Z" fill="#0055a5"/>
+            <path d="M28 50C29 51 31 51 32 50" stroke="#001a35" stroke-width="2" stroke-linecap="round"/>
+            <defs>
+                <linearGradient id="skyGradient" x1="50" y1="5" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#cc1111"/>
+                    <stop offset="0.5" stop-color="#0044aa"/>
+                    <stop offset="1" stop-color="#0099ff"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">Sheffield Depot Portal</h1>
+    </div>
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="openOperatorPortal()">Operator Hub</button>
             <button class="btn btn-accent" onclick="openDriverPortal()">Driver View</button>
