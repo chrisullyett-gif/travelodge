@@ -1,447 +1,239 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travelodge Route & Manifest Portal</title>
-    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js)"></script>
-    <style>
-        :root {
-            --tl-navy: #002D62;
-            --tl-blue: #0047AB;
-            --tl-red: #E31B23;
-            --bg-light: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border-color: #e5e7eb;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            padding: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--tl-navy);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        header h1 {
-            font-size: 18px;
-        }
-
-        .home-btn {
-            background: var(--tl-red);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .active-screen {
-            display: block;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .card h2, .card h3 {
-            color: var(--tl-navy);
-            margin-bottom: 12px;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text-main);
-        }
-
-        input[type="text"], select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        input[type="text"]:focus, select:focus, textarea:focus {
-            border-color: var(--tl-blue);
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            margin-top: 8px;
-        }
-
-        .btn-primary { background: var(--tl-blue); color: white; }
-        .btn-success { background: var(--success-color); color: white; }
-        .btn-danger { background: var(--danger-color); color: white; }
-        .btn-secondary { background: #e5e7eb; color: var(--text-main); }
-
-        .manifest-card {
-            background: #f9fafb;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
-
-        .color-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
-        .eng-checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 6px;
-        }
-
-        .eng-checkbox-label {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            background: #f3f4f6;
-            padding: 6px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .eng-checkbox-label input {
-            margin-right: 6px;
-        }
-
-        .item-photo {
-            width: 100%;
-            max-height: 150px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-top: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        .route-order-controls {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .route-order-controls button {
-            flex: 1;
-        }
-
-        .notes-box {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            padding: 6px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #b45309;
-            margin-top: 6px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            z-index: 1000;
-        }
-
-        .modal-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 400px;
-        }
-    </style>
-</head>
 <body>
 
-    <header id="headerBar" style="display: none;">
-        <h1 id="headerTitle">Travelodge Hub Manager</h1>
-        <button class="home-btn" onclick="returnHome()">🏠 Home</button>
+    <header>
+      <div class="header-brand">
+            <!-- Clean inline vector logo mark -->
+            <svg width="36" height="32" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                <rect width="40" height="36" rx="4" fill="#E65C00"/>
+                <path d="M10 25V11H14V25H10ZM18 25V11H30V14.5H22V16.5H29V20H22V25H18Z" fill="white"/>
+            </svg>
+            <h1>Sheffield Depot Portal</h1>
+        </div>
+      <div class="header-brand" style="display: flex; align-items: center; gap: 14px;">
+        <!-- Official Style Sleeping Face Icon Graphic -->
+        <svg width="40" height="34" viewBox="0 0 100 85" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); flex-shrink: 0;">
+            <rect width="100" height="85" rx="16" fill="#001a35"/>
+            <path d="M0 45C0 20 20 5 50 5C80 5 100 20 100 45V85H0V45Z" fill="url(#skyGradient)"/>
+            <path d="M25 55C32 55 38 51 40 45C42 42 45 40 48 42C50 43 49 47 45 50C42 52 38 58 30 62C25 65 18 62 18 58C18 56 21 55 25 55Z" fill="#0055a5"/>
+            <path d="M28 50C29 51 31 51 32 50" stroke="#001a35" stroke-width="2" stroke-linecap="round"/>
+            <defs>
+                <linearGradient id="skyGradient" x1="50" y1="5" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#cc1111"/>
+                    <stop offset="0.5" stop-color="#0044aa"/>
+                    <stop offset="1" stop-color="#0099ff"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">Sheffield Depot Portal</h1>
+    </div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="openOperatorPortal()">Operator Hub</button>
+            <button class="btn btn-accent" onclick="openDriverPortal()">Driver View</button>
+            <button class="btn btn-secondary" onclick="openSettingsModal()">⚙ Settings</button>
+        </div>
     </header>
 
-    <!-- PORTAL HOME SELECTOR -->
-    <div id="portalHome" class="screen active-screen">
-        <div class="card" style="text-align: center; padding: 30px 20px;">
-            <h2 style="font-size: 22px; color: var(--tl-navy); margin-bottom: 8px;">Travelodge Operations Portal</h2>
-            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Select your workspace view to continue.</p>
-            
-            <button class="btn btn-primary" style="padding: 16px; font-size: 16px; margin-bottom: 12px;" onclick="openOperativePortal()">🏢 Depot Operative (Manifest Builder)</button>
-            <button class="btn btn-success" style="padding: 16px; font-size: 16px; margin-bottom: 12px;" onclick="openDriverPortal()">🚚 Driver Live Navigation Portal</button>
-            <button class="btn btn-secondary" style="padding: 14px; font-size: 15px; background: #e5e7eb; color: var(--text-main);" onclick="openSettingsPortal()">⚙ Hubs & Settings Configuration</button>
-        </div>
-    </div>
+    <div class="container">
 
-    <!-- OPERATIVE PORTAL -->
-    <div id="operativeScreen" class="screen">
-        <div class="card">
-            <h2>Depot Route Builder</h2>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
-                <div class="form-group" style="margin:0;">
-                    <label>Start Hub</label>
-                    <select id="opStartHubSelect" onchange="updateRouteEndpoints()"></select>
+        <!-- OPERATOR PORTAL SCREEN -->
+        <div id="operatorScreen" class="screen active">
+            <div class="card">
+                <h2>Route Manifest & Planning</h2>
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div style="flex: 1;">
+                        <label>Starting Hub</label>
+                        <select id="opStartHub" onchange="appState.startHub = this.value; saveToLocalStorage();"></select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>End Destination</label>
+                        <select id="opEndHub" onchange="appState.endHub = this.value; saveToLocalStorage();"></select>
+                    </div>
                 </div>
-                <div class="form-group" style="margin:0;">
-                    <label>End Destination / Hub</label>
-                    <select id="opEndHubSelect" onchange="updateRouteEndpoints()"></select>
+
+                <div class="form-group">
+                    <label>Add Delivery Stop (Hotel)</label>
+                    <input type="text" id="newHotelInput" placeholder="Enter Travelodge hotel name or location...">
+                </div>
+                <div class="form-group">
+                    <label>Assigned Engineers</label>
+                    <div id="opEngineerCheckboxes" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px;"></div>
+                </div>
+                <div class="form-group">
+                    <label>Sticker Dot Colour</label>
+                    <select id="opColorSelect">
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Green">Green</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Orange">Orange</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="addDropToManifest()">+ Add Drop to Manifest</button>
+                <button class="btn btn-secondary" onclick="launchOpFullRouteMap()">🗺 View Full Route Map</button>
+            </div>
+
+            <div class="card">
+                <h3>Active Manifest Stops</h3>
+                <div id="opManifestList"></div>
+                <div style="margin-top: 16px;">
+                    <button class="btn btn-success" onclick="publishManifest()">Publish Manifest to Driver</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DRIVER PORTAL SCREEN -->
+        <div id="driverScreen" class="screen">
+            <!-- Weekly Shift & Hours Tracker -->
+            <div class="card">
+                <h2>Driver Shift & Weekly Timesheet</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Track your daily hours from Monday to Friday (5 hours standard).</p>
+                <div id="dailyShiftControl" style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+                    <h3 id="currentDayTitle" style="margin-bottom: 8px;">Today's Shift</h3>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn btn-success" onclick="startShiftToday()">▶ Start Shift</button>
+                        <button class="btn btn-danger" onclick="endShiftToday()">⏹ Finish Shift</button>
+                        <span id="todayStatusText" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Status: Not Started</span>
+                    </div>
+                </div>
+
+                <h3>Weekly Summary (Mon - Fri)</h3>
+                <table class="timesheet-table">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Hours Worked</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timesheetTableBody"></tbody>
+                </table>
+                <div style="margin-top: 12px; font-weight: 700; color: var(--tl-navy);">
+                    Total Weekly Hours: <span id="totalWeeklyHours">0.00</span> hrs
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Search Hotel Destination</label>
-                <input type="text" id="opHotelSearch" placeholder="Type hotel name to filter..." oninput="filterOpHotels()">
-            </div>
+            <!-- Route Manifest for Driver -->
+            <div class="card">
+                <h2>Active Delivery Manifest</h2>
+                <p style="font-size: 13px; margin-bottom: 12px;">
+                    <strong>Start Hub:</strong> <span id="driverStartHub"></span><br>
+                    <strong>End Destination:</strong> <span id="driverEndHub"></span>
+                </p>
+                <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                    <button class="btn" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
+                    <button class="btn btn-secondary" onclick="launchCompleteDriverRoute()">🗺 Full Route Overview</button>
+                </div>
+                <div id="driverManifestList"></div>
 
-            <div class="form-group">
-                <label>Select Hotel Drop</label>
-                <select id="opHotelSelect" size="4" style="height: 100px;" onchange="loadHotelNotePreset()"></select>
+                <div id="returnJourneySection" style="display: none; margin-top: 24px; padding-top: 16px; border-top: 2px dashed #e2e8f0;">
+                    <h3>End of Day Return Journey</h3>
+                    <div class="form-group">
+                        <label>Select Return Destination</label>
+                        <select id="driverReturnSelect"></select>
+                    </div>
+                    <button class="btn btn-accent" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
+                    <button class="btn btn-danger" style="margin-left: 8px;" onclick="completeShiftDone()">✓ Complete Shift & Clear Day</button>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label>Assigned Engineers</label>
-                <div id="opEngineerCheckboxes" class="eng-checkbox-group"></div>
-            </div>
-
-            <div class="form-group">
-                <label>Sticker Dot Colour</label>
-                <select id="opColorSelect">
-                    <option value="">-- Select Dot Colour --</option>
-                    <option value="Red">Red</option>
-                    <option value="Blue">Blue</option>
-                    <option value="Green">Green</option>
-                    <option value="Yellow">Yellow</option>
-                    <option value="Orange">Orange</option>
-                    <option value="Purple">Purple</option>
-                    <option value="White">White</option>
-                    <option value="Black">Black</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Hotel Notes / Access Instructions</label>
-                <textarea id="opHotelNotes" rows="2" placeholder="Gate codes, parking restrictions..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Staging Area Photo (Optional)</label>
-                <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 13px;">
-            </div>
-
-            <button class="btn btn-primary" onclick="addManifestDrop()">➕ Add Drop to Manifest</button>
         </div>
 
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3>Active Manifest (<span id="opDropCount">0</span> Drops)</h3>
-            </div>
-            
-            <div id="opRouteSummaryContainer" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; color: #1e40af;">
-                <strong>Estimated Workload:</strong> <span id="opEstWorkload">0 mins</span> (<span id="opDropTimeDisplay">10</span> mins per stop)
-            </div>
+        <!-- SETTINGS SCREEN -->
+        <div id="settingsScreen" class="screen">
+            <div class="card">
+                <h2>Depot & App Settings</h2>
+                <div class="form-group">
+                    <label>Default Drop Time per Stop (Minutes)</label>
+                    <input type="number" id="settingDropTime" value="10">
+                </div>
 
-            <div id="opManifestList">
-                <p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>
-            </div>
+                <h3>Configured Starting Hubs</h3>
+                <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="newStartHubInput" placeholder="Add new start hub address...">
+                    <button class="btn" onclick="addStartHubItem()">Add</button>
+                </div>
 
-            <div style="display: flex; gap: 8px; margin-top: 16px;">
-                <button class="btn btn-secondary" style="margin: 0; background: #e5e7eb;" onclick="launchOpFullRouteMap()">🗺️ Full Route Map</button>
-                <button id="publishBtn" class="btn btn-success" style="margin: 0;" onclick="publishManifest()" disabled>🚀 Publish Manifest</button>
+                <h3>Configured End Destinations</h3>
+                <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="newEndHubInput" placeholder="Add new destination address...">
+                    <button class="btn" onclick="addEndHubItem()">Add</button>
+                </div>
+
+                <h3>Registered Engineers</h3>
+                <div id="engConfigList" style="margin-bottom: 16px;"></div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="newEngInput" placeholder="Add engineer name...">
+                    <button class="btn" onclick="addEngineer()">Add</button>
+                </div>
+
+                <button class="btn btn-success" onclick="saveSettings()">Save All Settings</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PROOF PHOTO MODAL -->
+    <div id="proofPhotoModal" class="modal">
+        <div class="modal-content">
+            <h3>Delivery Handover Photo</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Take or upload a photo to confirm delivery handover.</p>
+            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="margin-bottom: 16px;">
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
+                <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Drop</button>
             </div>
         </div>
     </div>
 
-    <!-- DRIVER PORTAL -->
-    <div id="driverScreen" class="screen">
-        <div class="card" style="background: var(--tl-navy); color: white;">
-            <h2 style="color: white; margin-bottom: 8px;">🚚 Driver Live Manifest</h2>
-            <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
-            
-            <div style="display: flex; gap: 8px;">
-                <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
-                <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
+    <!-- NOTIFICATION MODAL -->
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <h3>Drop Complete!</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Generated confirmation note:</p>
+            <div id="whatsappTextOutput" class="notes-box" style="margin-bottom: 16px; user-select: all;"></div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn" onclick="copyTextAndClose()">Copy Text</button>
+                <button class="btn btn-accent" onclick="continueRouteFromModal()">Continue Route ➔</button>
             </div>
-        </div>
-
-        <div class="card">
-            <h3>Assigned Drops</h3>
-            <div id="driverManifestList">
-                <p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>
-            </div>
-        </div>
-
-        <div class="card" id="returnJourneySection" style="display: none; background: #f0fdf4; border-color: #bbf7d0;">
-            <h3 style="color: #166534;">🏁 End of Route / Return Journey</h3>
-            <p style="font-size: 13px; color: #15803d; margin-bottom: 12px;">All deliveries are completed! Select your return destination.</p>
-            
-            <div class="form-group">
-                <label style="color: #166534;">Return Hub / Destination</label>
-                <select id="driverReturnSelect"></select>
-            </div>
-
-            <button class="btn btn-success" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
-            <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift</button>
-        </div>
-    </div>
-
-    <!-- SETTINGS PORTAL -->
-    <div id="settingsScreen" class="screen">
-        <div class="card">
-            <h2>Hub & Settings Configuration</h2>
-            
-            <div class="form-group">
-                <label>Stop Duration Estimate (Minutes per Hotel Drop)</label>
-                <input type="number" id="settingDropTime" min="1" max="60" value="10">
-            </div>
-
-            <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
-
-            <h3>Starting Hubs</h3>
-            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                <input type="text" id="newStartHubInput" placeholder="Add new starting hub...">
-                <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addStartHubItem()">Add</button>
-            </div>
-            <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
-
-            <h3>End Destinations / Hubs</h3>
-            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                <input type="text" id="newEndHubInput" placeholder="Add end hub destination...">
-                <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEndHubItem()">Add</button>
-            </div>
-            <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
-
-            <h3>Registered Engineers</h3>
-            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                <input type="text" id="newEngInput" placeholder="Add engineer name...">
-                <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEngineer()">Add</button>
-            </div>
-            <div id="engConfigList" style="margin-bottom: 16px;"></div>
-
-            <button class="btn btn-primary" onclick="saveSettings()">💾 Save Hub Settings</button>
-        </div>
-    </div>
-
-    <!-- PROOF OF DELIVERY PHOTO MODAL -->
-    <div id="proofPhotoModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3>📷 Delivery Photo Proof</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Capture or upload a handover photo to confirm delivery.</p>
-            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 16px;">
-            <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Stop</button>
-            <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
-        </div>
-    </div>
-
-    <!-- WHATSAPP SUMMARY MODAL -->
-    <div id="whatsappModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3>💬 Delivery Notification</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Copy text summary for WhatsApp confirmation:</p>
-            <div id="whatsappTextOutput" style="background: #f9fafb; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; word-break: break-all;"></div>
-            <button class="btn btn-primary" onclick="copyTextAndClose()">📋 Copy Text & Continue</button>
-            <button class="btn btn-secondary" onclick="continueRouteFromModal()">Skip & Continue Route</button>
         </div>
     </div>
 
     <script>
-        const hotelDatabase = [
-            "Travelodge Aberdeen Airport", "Travelodge Aberdeen Bucksburn", "Travelodge Aberdeen Central", "Travelodge Aldershot", "Travelodge Alfreton", "Travelodge Alton Four Marks", "Travelodge Altrincham Central", "Travelodge Amesbury Stonehenge", "Travelodge Andover", "Travelodge Arundel Fontwell", "Travelodge Arundel Fontwell Park", "Travelodge Ashbourne", "Travelodge Ashford", "Travelodge Ashford Town Centre", "Travelodge Ashton Under Lyne", "Travelodge Aylesbury", "Travelodge Ayr",
-            "Travelodge Bangor", "Travelodge Barnsley", "Travelodge Barnstaple", "Travelodge Barrow In Furness", "Travelodge Barton Mills", "Travelodge Barton Stacey", "Travelodge Basildon", "Travelodge Basildon Wickford", "Travelodge Basingstoke", "Travelodge Bath Central", "Travelodge Bath City Centre Bath Spa", "Travelodge Bath Waterside", "Travelodge Beaconsfield Central", "Travelodge Beckington", "Travelodge Bedford", "Travelodge Bedford Goldington Road", "Travelodge Bedford Marston Moretaine", "Travelodge Belfast Central", "Travelodge Berwick upon Tweed", "Travelodge Bicester", "Travelodge Bicester Cherwell Valley M40", "Travelodge Billingshurst Five Oaks", "Travelodge Birmingham Airport", "Travelodge Birmingham Castle Bromwich", "Travelodge Birmingham Central", "Travelodge Birmingham Central Broadway Plaza", "Travelodge Birmingham Central Moor Street", "Travelodge Birmingham Central Newhall Street", "Travelodge Birmingham Fort Dunlop", "Travelodge Birmingham Frankley M5 Southbound", "Travelodge Birmingham Halesowen", "Travelodge Birmingham Hilton Park M6 Southbound", "Travelodge Birmingham Kingswinford", "Travelodge Birmingham Maypole", "Travelodge Birmingham Oldbury", "Travelodge Birmingham Perry Barr", "Travelodge Birmingham Sheldon", "Travelodge Birmingham Streetly", "Travelodge Birmingham Sutton Coldfield", "Travelodge Birmingham Yardley", "Travelodge Blackburn M65", "Travelodge Blackpool South Promenade", "Travelodge Blackpool South Shore", "Travelodge Blyth A1 M", "Travelodge Bodmin Roche", "Travelodge Bolton Central River Street", "Travelodge Borehamwood", "Travelodge Borehamwood Studio Way", "Travelodge Boston", "Travelodge Bournemouth", "Travelodge Bournemouth Cooper Dean", "Travelodge Bournemouth Seafront", "Travelodge Bracknell", "Travelodge Bracknell Central", "Travelodge Bradford", "Travelodge Bradford Central", "Travelodge Bradford Shipley", "Travelodge Braintree", "Travelodge Brentwood East Horndon", "Travelodge Bridgwater M5", "Travelodge Brighton", "Travelodge Brighton Seafront", "Travelodge Bristol Abbey Wood", "Travelodge Bristol Avonmouth", "Travelodge Bristol Central", "Travelodge Bristol Central Mitchell Lane", "Travelodge Bristol Cribbs Causeway", "Travelodge Bristol Emersons Green", "Travelodge Bristol Filton", "Travelodge Bristol Severn View M48", "Travelodge Bromborough", "Travelodge Bromsgrove Marlbrook", "Travelodge Buckingham", "Travelodge Burford Cotswolds", "Travelodge Burnley", "Travelodge Burton A38 Northbound", "Travelodge Burton A38 Southbound", "Travelodge Burton M6 Northbound", "Travelodge Burton upon Trent Central", "Travelodge Bury",
-            "Travelodge Caernarfon", "Travelodge Caerphilly", "Travelodge Camberley", "Travelodge Camberley Central", "Travelodge Cambridge Central", "Travelodge Cambridge Fourwentways", "Travelodge Cambridge Orchard Park", "Travelodge Cambridge Swavesey", "Travelodge Canterbury Chaucer Central", "Travelodge Canterbury Whitstable", "Travelodge Cardiff Airport", "Travelodge Cardiff Atlantic Wharf", "Travelodge Cardiff Central", "Travelodge Cardiff Central Queen Street", "Travelodge Cardiff Gate", "Travelodge Cardiff Llanedeyrn", "Travelodge Cardiff M4", "Travelodge Cardiff Whitchurch", "Travelodge Carlisle Central", "Travelodge Carlisle M6", "Travelodge Carlisle Todhills", "Travelodge Caterham Whyteleafe", "Travelodge Chatham Maritime Hotel", "Travelodge Chelmsford", "Travelodge Cheltenham", "Travelodge Chertsey", "Travelodge Cheshire Oaks", "Travelodge Cheshunt", "Travelodge Chester-le-Street", "Travelodge Chester Central", "Travelodge Chester Central Bridge Street", "Travelodge Chesterfield", "Travelodge Chesterfield Town Centre", "Travelodge Chester Northop Hall", "Travelodge Chester Warrington Road", "Travelodge Chichester Central", "Travelodge Chichester Emsworth", "Travelodge Chippenham", "Travelodge Chippenham Leigh Delamere M4 Eastbound", "Travelodge Chippenham Leigh Delamere M4 Westbound", "Travelodge Christchurch", "Travelodge Cirencester", "Travelodge Clacton-on-Sea Central", "Travelodge Cockermouth", "Travelodge Colchester Feering", "Travelodge Colchester Northern Gateway", "Travelodge Colwyn Bay", "Travelodge Coventry Binley", "Travelodge Crewe", "Travelodge Crewe Barthomley", "Travelodge Croydon Central",
-            "Travelodge Darlington", "Travelodge Dartford", "Travelodge Derby Chaddesden", "Travelodge Derby Cricket Ground", "Travelodge Derby Pride Park", "Travelodge Devizes", "Travelodge Doncaster", "Travelodge Doncaster Lakeside", "Travelodge Doncaster M18 M180", "Travelodge Dorking", "Travelodge Dover", "Travelodge Droitwich", "Travelodge Dudley Town Centre", "Travelodge Dumbarton", "Travelodge Dumfries", "Travelodge Dundee Central", "Travelodge Dundee Strathmore Avenue", "Travelodge Dunfermline", "Travelodge Durham",
-            "Travelodge Eastbourne Willingdon Drove", "Travelodge East Grinstead", "Travelodge Eastleigh Central", "Travelodge Edinburgh Airport Ratho Station", "Travelodge Edinburgh Cameron Toll", "Travelodge Edinburgh Central", "Travelodge Edinburgh Central Queen Street", "Travelodge Edinburgh Central Rose Street", "Travelodge Edinburgh Central Waterloo Place", "Travelodge Edinburgh Dreghorn", "Travelodge Edinburgh Haymarket", "Travelodge Edinburgh Park", "Travelodge Elgin", "Travelodge Ely", "Travelodge Exeter M5",
-            "Travelodge Falkirk", "Travelodge Farnborough Central", "Travelodge Fleet", "Travelodge Fort William", "Travelodge Frimley",
-            "Travelodge Gainsborough", "Travelodge Gateshead", "Travelodge Gatwick Airport Central", "Travelodge Glasgow Airport", "Travelodge Glasgow Braehead", "Travelodge Glasgow Central", "Travelodge Glasgow Cumbernauld", "Travelodge Glasgow Govan", "Travelodge Glasgow Paisley Road", "Travelodge Glasgow Queen Street", "Travelodge Glastonbury", "Travelodge Glenrothes", "Travelodge Gloucester", "Travelodge Gosport", "Travelodge Grantham A1", "Travelodge Grantham Colsterworth", "Travelodge Grantham South Witham", "Travelodge Gravesend", "Travelodge Great Yarmouth", "Travelodge Great Yarmouth Acle", "Travelodge Guildford",
-            "Travelodge Halifax", "Travelodge Halkyn", "Travelodge Harlow", "Travelodge Harrogate", "Travelodge Harrogate West Park", "Travelodge Hartlebury", "Travelodge Hastings", "Travelodge Hatfield Central", "Travelodge Havant Rowlands Castle", "Travelodge Haverhill", "Travelodge Haydock St Helens", "Travelodge Hayle", "Travelodge Heathrow Heston M4 Eastbound", "Travelodge Heathrow Heston M4 Westbound", "Travelodge Hellingly Eastbourne", "Travelodge Hemel Hempstead", "Travelodge Hereford", "Travelodge Hereford Grafton", "Travelodge Hexham", "Travelodge Hickstead", "Travelodge Highbridge Burnham-on-Sea", "Travelodge High Wycombe Central", "Travelodge Holyhead", "Travelodge Horsham Central", "Travelodge Huddersfield", "Travelodge Hull Central", "Travelodge Hull South Cave", "Travelodge Huntingdon Fenstanton",
-            "Travelodge Ilminster", "Travelodge Inverness", "Travelodge Inverness City Centre", "Travelodge Inverness Fairways", "Travelodge Ipswich", "Travelodge Ipswich Beacon Hill", "Travelodge Ipswich Capel St Mary", "Travelodge Ipswich Central", "Travelodge Ipswich Stowmarket",
-            "Travelodge Keighley", "Travelodge Kendal", "Travelodge Kendal Town Centre", "Travelodge Kettering", "Travelodge Kettering Thrapston", "Travelodge Kidderminster", "Travelodge Kilmarnock", "Travelodge Kings Lynn", "Travelodge Kings Lynn Long Sutton", "Travelodge Kingston Upon Thames Central", "Travelodge Kinross M90", "Travelodge Knutsford M6",
-            "Travelodge Lancaster M6", "Travelodge Langley", "Travelodge Leatherhead", "Travelodge Leeds Bradford Airport", "Travelodge Leeds Central", "Travelodge Leeds Central Vicar Lane", "Travelodge Leeds Colton", "Travelodge Leeds Morley", "Travelodge Leicester Central", "Travelodge Leicester Central North", "Travelodge Leicester City Centre", "Travelodge Leicester Hinckley Road", "Travelodge Leicester Markfield", "Travelodge Lincoln City Centre", "Travelodge Lincoln Thorpe On The Hill", "Travelodge Littlehampton Rustington", "Travelodge Liverpool Aigburth", "Travelodge Liverpool Central", "Travelodge Liverpool Central The Strand", "Travelodge Liverpool Docks", "Travelodge Liverpool Edge Lane", "Travelodge Liverpool John Lennon Airport", "Travelodge Liverpool Stonedale Park", "Travelodge Liverpool Stoneycroft", "Travelodge Livingston", "Travelodge Llandudno", "Travelodge Llanelli Central", "Travelodge Llanelli Cross Hands", "Travelodge London Acton", "Travelodge London Barking", "Travelodge London Battersea", "Travelodge London Beckenham", "Travelodge London Beckton", "Travelodge London Belvedere", "Travelodge London Bermondsey", "Travelodge London Brent Cross", "Travelodge London Bromley", "Travelodge London Central Aldgate East", "Travelodge London Central Bank", "Travelodge London Central City Road", "Travelodge London Central Elephant and Castle", "Travelodge London Central Euston", "Travelodge London Central Kings Cross", "Travelodge London Central Marylebone", "Travelodge London Central Southwark", "Travelodge London Central Tower Bridge", "Travelodge London Central Waterloo", "Travelodge London Chessington Tolworth", "Travelodge London Chigwell", "Travelodge London City", "Travelodge London City Airport", "Travelodge London Covent Garden", "Travelodge London Cricklewood", "Travelodge London Crystal Palace", "Travelodge London Dagenham", "Travelodge London Dagenham East", "Travelodge London Docklands", "Travelodge London Ealing", "Travelodge London Edmonton", "Travelodge London Excel", "Travelodge London Farringdon", "Travelodge London Feltham", "Travelodge London Finchley", "Travelodge London Finsbury Park", "Travelodge London Fulham", "Travelodge London Greenwich", "Travelodge London Greenwich High Road", "Travelodge London Hackney", "Travelodge London Harrow", "Travelodge London Ilford", "Travelodge London Ilford Gants Hill", "Travelodge London Kew Bridge", "Travelodge London Kings Cross Royal Scot", "Travelodge London Kingston Upon Thames", "Travelodge London Lewisham", "Travelodge London Liverpool Street", "Travelodge London Mile End", "Travelodge London Northolt", "Travelodge London Oval Cricket Ground", "Travelodge London Park Royal", "Travelodge London Peckham", "Travelodge London Raynes Park", "Travelodge London Richmond Central", "Travelodge London Romford", "Travelodge London Romford The Quadrant", "Travelodge London Snaresbrook", "Travelodge London South Croydon", "Travelodge London Southgate", "Travelodge London Stratford", "Travelodge London Stratford Centre", "Travelodge London Teddington", "Travelodge London Twickenham", "Travelodge London Wembley", "Travelodge London Wembley High Road", "Travelodge London Whetstone", "Travelodge London Wimbledon Central", "Travelodge London Wimbledon Morden", "Travelodge London Wood Green", "Travelodge Loughborough Central", "Travelodge Lowestoft", "Travelodge Ludlow", "Travelodge Ludlow Woofferton", "Travelodge Luton", "Travelodge Lutterworth", "Travelodge Lytham St Annes",
-            "Travelodge Macclesfield Adlington", "Travelodge Macclesfield Central", "Travelodge Maidenhead Central", "Travelodge Maidstone Central", "Travelodge Maldon", "Travelodge Manchester Ancoats", "Travelodge Manchester Birch M62 Eastbound", "Travelodge Manchester Birch M62 Westbound", "Travelodge Manchester Central", "Travelodge Manchester Central Arena", "Travelodge Manchester Didsbury", "Travelodge Manchester Piccadilly", "Travelodge Manchester Sale", "Travelodge Manchester Salford Quays", "Travelodge Manchester Sportcity", "Travelodge Manchester Trafford Park", "Travelodge Manchester Upper Brook Street", "Travelodge Mansfield", "Travelodge Margate Westwood", "Travelodge Market Harborough", "Travelodge Marlow", "Travelodge Medway M2", "Travelodge Melksham", "Travelodge Merthyr Tydfil", "Travelodge Middlesbrough", "Travelodge Middlewich", "Travelodge Milton Keynes at The Hub", "Travelodge Milton Keynes Central", "Travelodge Milton Keynes Old Stratford", "Travelodge Milton Keynes Shenley Church End", "Travelodge Morecambe",
-            "Travelodge Newark-on-Trent", "Travelodge Newbury Chieveley M4", "Travelodge Newbury London Road", "Travelodge Newbury Tot Hill", "Travelodge Newcastle Airport", "Travelodge Newcastle Central", "Travelodge Newcastle Cobalt Business Park", "Travelodge Newcastle Gosforth", "Travelodge Newcastle Quayside", "Travelodge Newcastle Seaton Burn", "Travelodge Newcastle Under Lyme Central", "Travelodge Newcastle Whitemare Pool", "Travelodge Newport Central", "Travelodge Newport Isle Of Wight", "Travelodge Newquay Seafront", "Travelodge Northampton Central", "Travelodge Northampton Round Spinney", "Travelodge Northampton Upton Way", "Travelodge Northampton Wootton", "Travelodge Northwich Lostock Gralam", "Travelodge Norwich Central", "Travelodge Norwich Central Riverside", "Travelodge Norwich Cringleford", "Travelodge Nottingham Central", "Travelodge Nottingham Em Airport Donington Park M1", "Travelodge Nottingham Riverside", "Travelodge Nottingham Trowell M1", "Travelodge Nottingham Wollaton Park", "Travelodge Nuneaton", "Travelodge Nuneaton Bedworth",
-            "Travelodge Okehampton Sourton Cross", "Travelodge Okehampton Whiddon Down", "Travelodge Oldham Chadderton", "Travelodge Oswestry", "Travelodge Oxford Abingdon Road", "Travelodge Oxford Peartree", "Travelodge Oxford Wheatley",
-            "Travelodge Paignton Seafront", "Travelodge Pembroke Dock", "Travelodge Penrith", "Travelodge Perth A9", "Travelodge Perth Broxden Junction", "Travelodge Perth Central", "Travelodge Peterborough Alwalton", "Travelodge Peterborough Central", "Travelodge Peterborough Eye Green", "Travelodge Plymouth", "Travelodge Plymouth Derriford", "Travelodge Plymouth Roborough", "Travelodge Pontefract Ferrybridge A1 M62", "Travelodge Poole", "Travelodge Poole North", "Travelodge Porthmadog", "Travelodge Portsmouth", "Travelodge Portsmouth City Centre", "Travelodge Portsmouth Hilsea", "Travelodge Preston Central", "Travelodge Preston Chorley", "Travelodge Preston North",
-            "Travelodge Ramsgate Seafront", "Travelodge Reading Central", "Travelodge Reading M4 Eastbound", "Travelodge Reading M4 Westbound", "Travelodge Reading Whitley", "Travelodge Redhill", "Travelodge Redhill Town Centre", "Travelodge Retford Markham Moor", "Travelodge Rhyl Seafront", "Travelodge Ringwood", "Travelodge Rochdale", "Travelodge Rugby Central", "Travelodge Rugby Dunchurch", "Travelodge Rugeley", "Travelodge Ryde Isle of Wight",
-            "Travelodge Saltash", "Travelodge Sandwich", "Travelodge Scarborough St Nicholas", "Travelodge Scotch Corner A1 Southbound", "Travelodge Scotch Corner Skeeby", "Travelodge Scunthorpe", "Travelodge Sedgefield", "Travelodge Sheffield Central", "Travelodge Sheffield Meadowhall", "Travelodge Sheffield Richmond", "Travelodge Shrewsbury Battlefield", "Travelodge Shrewsbury Bayston Hill", "Travelodge Sittingbourne", "Travelodge Skegness Seafront", "Travelodge Skipton", "Travelodge Sleaford", "Travelodge Slough", "Travelodge Southampton", "Travelodge Southampton Central", "Travelodge Southampton Eastleigh", "Travelodge Southend On Sea", "Travelodge Spalding", "Travelodge Stafford Central", "Travelodge Stafford M6", "Travelodge Staines", "Travelodge St Albans City Centre", "Travelodge Stansted Great Dunmow", "Travelodge St Austell", "Travelodge St Clears Carmarthen", "Travelodge Stirling City Centre", "Travelodge Stirling M80", "Travelodge Stockport", "Travelodge Stoke-on-Trent Trentham", "Travelodge Stoke Talke", "Travelodge Stonehouse", "Travelodge Stoney Cross Lyndhurst", "Travelodge Stratford Alcester", "Travelodge Stratford Upon Avon", "Travelodge Sunbury M3", "Travelodge Sunderland Central", "Travelodge Swansea Central", "Travelodge Swansea M4", "Travelodge Swindon Central", "Travelodge Swindon West",
-            "Travelodge Tamworth Central", "Travelodge Tamworth M42", "Travelodge Taunton", "Travelodge Telford", "Travelodge Telford Shawbirch", "Travelodge Tewkesbury", "Travelodge Thame", "Travelodge The Regent Hotel Leamington Spa", "Travelodge Thetford", "Travelodge Thurrock Lakeside", "Travelodge Tiverton", "Travelodge Toddington M1 Southbound", "Travelodge Torquay", "Travelodge Towcester Silverstone", "Travelodge Tunbridge Wells",
-            "Travelodge Wadebridge", "Travelodge Wakefield", "Travelodge Wakefield Woolley Edge M1 Northbound", "Travelodge Wakefield Woolley Edge M1 Southbound", "Travelodge Wallasey New Brighton", "Travelodge Walsall", "Travelodge Walton-on-Thames", "Travelodge Walton-on-Thames Central", "Travelodge Warminster", "Travelodge Warrington", "Travelodge Warrington Gemini", "Travelodge Warrington Lowton", "Travelodge Washington A1m Northbound", "Travelodge Washington A1m Southbound", "Travelodge Watford Central", "Travelodge Wellingborough", "Travelodge Wellingborough Rushden", "Travelodge Welwyn Garden City", "Travelodge West Bromwich", "Travelodge Weston-super-Mare", "Travelodge Widnes", "Travelodge Winchester", "Travelodge Windsor Central", "Travelodge Wirral Eastham", "Travelodge Witney", "Travelodge Worcester", "Travelodge Workington", "Travelodge Worksop", "Travelodge Worthing Seafront", "Travelodge Wrexham",
-            "Travelodge Yeovil Podimore", "Travelodge York Central", "Travelodge York Central Layerthorpe", "Travelodge York Central Micklegate", "Travelodge York Hull Road", "Travelodge York Monks Cross", "Travelodge York Tadcaster"
-        ];
-
         const colorHexMap = {
-            "Red": "#ef4444", "Blue": "#3b82f6", "Green": "#10b981", 
-            "Yellow": "#eab308", "Orange": "#f97316", "Purple": "#a855f7", 
-            "White": "#9ca3af", "Black": "#1f2937"
+            'Red': '#ef4444',
+            'Blue': '#3b82f6',
+            'Green': '#10b981',
+            'Yellow': '#eab308',
+            'Orange': '#f97316'
         };
 
+        const STORAGE_VERSION = "v2_clean";
         let appState = {
+            version: STORAGE_VERSION,
             startHub: "Sheffield Parts Depot",
-            endHub: "Sheffield Parts Depot",
-            startHubs: ["Sheffield Parts Depot"],
-            endHubs: ["Sheffield Parts Depot", "Home / End of Shift"],
-            engineers: ["Dave", "Mark", "Steve", "Paul", "Andy"],
+            endHub: "Revill Road Langold",
+            startHubs: [
+                "Sheffield Parts Depot",
+                "Revill Road Langold"
+            ],
+            endHubs: [
+                "Revill Road Langold",
+                "Sheffield Parts Depot"
+            ],
+            engineers: ["Mark", "Steve", "Paul", "Andy"],
             dropTimeMins: 10,
             hotelNotes: {},
-            manifest: []
+            manifest: [], // Starts completely empty as requested
+            timesheet: {
+                "Monday": { start: null, end: null, hours: 0 },
+                "Tuesday": { start: null, end: null, hours: 0 },
+                "Wednesday": { start: null, end: null, hours: 0 },
+                "Thursday": { start: null, end: null, hours: 0 },
+                "Friday": { start: null, end: null, hours: 0 }
+            }
         };
 
         function loadFromLocalStorage() {
@@ -449,16 +241,14 @@
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    appState.startHub = parsed.startHub || appState.startHub;
-                    appState.endHub = parsed.endHub || appState.endHub;
-                    appState.startHubs = Array.isArray(parsed.startHubs) ? parsed.startHubs : appState.startHubs;
-                    appState.endHubs = Array.isArray(parsed.endHubs) ? parsed.endHubs : appState.endHubs;
-                    appState.engineers = Array.isArray(parsed.engineers) ? parsed.engineers : appState.engineers;
-                    appState.dropTimeMins = typeof parsed.dropTimeMins === 'number' ? parsed.dropTimeMins : 10;
-                    appState.hotelNotes = (parsed.hotelNotes && typeof parsed.hotelNotes === 'object') ? parsed.hotelNotes : {};
-                    appState.manifest = Array.isArray(parsed.manifest) ? parsed.manifest : [];
-                } catch (e) {
-                    console.error("Error loading local storage state:", e);
+                    if (parsed.version === STORAGE_VERSION) {
+                        appState = { ...appState, ...parsed };
+                    } else {
+                        // Clear out old mismatched version data
+                        saveToLocalStorage();
+                    }
+                } catch(e) {
+                    console.error("Local storage load error:", e);
                 }
             }
         }
@@ -467,44 +257,32 @@
             localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
         }
 
-        loadFromLocalStorage();
-
-        function returnHome() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'none';
-            document.getElementById('portalHome').classList.add('active-screen');
-            saveToLocalStorage();
-        }
-
-        function openOperativePortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'flex';
-            document.getElementById('operativeScreen').classList.add('active-screen');
-            populateDropdowns();
-            populateOpEngineerCheckboxes();
+        // Navigation
+        function openOperatorPortal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('operatorScreen').classList.add('active');
             renderOpManifest();
-            updateColorDropdownOptions();
-            loadHotelNotePreset();
+            populateDropdowns();
         }
 
         function openDriverPortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'flex';
-            document.getElementById('driverScreen').classList.add('active-screen');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('driverScreen').classList.add('active');
             renderDriverManifest();
+            renderTimesheetUI();
         }
 
-        function openSettingsPortal() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('headerBar').style.display = 'flex';
-            document.getElementById('settingsScreen').classList.add('active-screen');
-            document.getElementById('settingDropTime').value = appState.dropTimeMins;
+        function openSettingsModal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('settingsScreen').classList.add('active');
             renderSettingsLists();
+            document.getElementById('settingDropTime').value = appState.dropTimeMins;
         }
 
         function populateDropdowns() {
-            const startSelect = document.getElementById('opStartHubSelect');
-            const endSelect = document.getElementById('opEndHubSelect');
+            const startSelect = document.getElementById('opStartHub');
+            const endSelect = document.getElementById('opEndHub');
+
             startSelect.innerHTML = '';
             appState.startHubs.forEach(h => {
                 let opt = document.createElement('option');
@@ -522,18 +300,451 @@
                 if (h === appState.endHub) opt.selected = true;
                 endSelect.appendChild(opt);
             });
-            populateOpHotels(hotelDatabase);
+
+            populateOpEngineerCheckboxes();
         }
 
-        function updateRouteEndpoints() {
-            appState.startHub = document.getElementById('opStartHubSelect').value;
-            appState.endHub = document.getElementById('opEndHubSelect').value;
+        function populateOpEngineerCheckboxes() {
+            const container = document.getElementById('opEngineerCheckboxes');
+            container.innerHTML = '';
+            appState.engineers.forEach(eng => {
+                container.innerHTML += `
+                    <label style="display: inline-flex; align-items: center; gap: 4px; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" name="opEngCheckbox" value="${eng}"> ${eng}
+                    </label>
+                `;
+            });
+        }
+
+        function addDropToManifest() {
+            const hotelInput = document.getElementById('newHotelInput');
+            const hotel = hotelInput.value.trim();
+            if (!hotel) {
+                alert("Please enter a hotel name.");
+                return;
+            }
+
+            const checkedEng = Array.from(document.querySelectorAll('input[name="opEngCheckbox"]:checked')).map(cb => cb.value);
+            const color = document.getElementById('opColorSelect').value;
+
+            appState.manifest.push({
+                hotel,
+                engineers: checkedEng,
+                color,
+                notes: appState.hotelNotes && appState.hotelNotes[hotel] ? appState.hotelNotes[hotel] : '',
+                completed: false,
+                proofPhoto: ''
+            });
+
+            hotelInput.value = '';
+            saveToLocalStorage();
+            renderOpManifest();
+        }
+
+        function renderOpManifest() {
+            const container = document.getElementById('opManifestList');
+            if (appState.manifest.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No drops added to manifest yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            appState.manifest.forEach((d, idx) => {
+                let hex = colorHexMap[d.color] || '#ccc';
+                container.innerHTML += `
+                    <div class="manifest-card" style="border-left: 4px solid ${hex};">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>Stop ${idx + 1}: ${d.hotel}</strong>
+                            <div>
+                                <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 12px;" onclick="moveDrop(${idx}, -1)">▲</button>
+                                <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 12px;" onclick="moveDrop(${idx}, 1)">▼</button>
+                                <button class="btn btn-danger" style="padding: 2px 6px; font-size: 12px;" onclick="removeDrop(${idx})">X</button>
+                            </div>
+                        </div>
+                        <p style="margin: 6px 0; font-size: 13px;">
+                            Engineers: <b>${d.engineers.join(', ') || 'None'}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span>${d.color}
+                        </p>
+                        <input type="text" value="${d.notes || ''}" placeholder="Add parking/access notes..." style="font-size: 13px; margin-top: 4px;" onchange="updateDropNote(${idx}, this.value)">
+                    </div>
+                `;
+            });
+        }
+
+        function moveDrop(idx, direction) {
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= appState.manifest.length) return;
+            let item = appState.manifest.splice(idx, 1)[0];
+            appState.manifest.splice(newIdx, 0, item);
+            saveToLocalStorage();
+            renderOpManifest();
+        }
+
+        function removeDrop(idx) {
+            appState.manifest.splice(idx, 1);
+            saveToLocalStorage();
+            renderOpManifest();
+        }
+
+        function updateDropNote(idx, val) {
+            appState.manifest[idx].notes = val;
+            let hotel = appState.manifest[idx].hotel;
+            if (!appState.hotelNotes) appState.hotelNotes = {};
+            if (val) appState.hotelNotes[hotel] = val;
+            else delete appState.hotelNotes[hotel];
             saveToLocalStorage();
         }
 
-        function populateOpHotels(hotels) {
-            const select = document.getElementById('opHotelSelect');
-            select.innerHTML = '';
-            hotels.forEach(h => {
+        function publishManifest() {
+            alert("Route manifest published successfully! Driver portal updated.");
+            saveToLocalStorage();
+            openDriverPortal();
+        }
+
+        function launchOpFullRouteMap() {
+            if (appState.manifest.length === 0) {
+                alert("Please add at least one drop to generate the route.");
+                return;
+            }
+            openGoogleMapsUrl(appState.startHub, appState.endHub, appState.manifest.map(d => d.hotel));
+        }
+
+        // Driver Portal Logic
+        function renderDriverManifest() {
+            const container = document.getElementById('driverManifestList');
+            document.getElementById('driverStartHub').textContent = appState.startHub;
+            document.getElementById('driverEndHub').textContent = appState.endHub;
+
+            const returnSelect = document.getElementById('driverReturnSelect');
+            returnSelect.innerHTML = '';
+            appState.endHubs.forEach(h => {
                 let opt = document.createElement('option');
-                opt.value =
+                opt.value = h;
+                opt.textContent = h;
+                if (h === appState.endHub) opt.selected = true;
+                returnSelect.appendChild(opt);
+            });
+
+            let allCompleted = appState.manifest.length > 0 && appState.manifest.every(d => d.completed);
+            document.getElementById('returnJourneySection').style.display = allCompleted ? 'block' : 'none';
+
+            if (appState.manifest.length > 0) {
+                container.innerHTML = '';
+                appState.manifest.forEach((d, idx) => {
+                    let hex = colorHexMap[d.color] || '#ccc';
+                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 600;">✔ Delivered</span>' : '<span style="color: #f59e0b; font-weight: 600;">Pending</span>';
+
+                    container.innerHTML += `
+                        <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="font-size: 15px;">Stop ${idx + 1}: ${d.hotel}</strong>
+                                ${statusBadge}
+                            </div>
+                            <p style="margin: 6px 0; font-size: 13px;">
+                                Engineers: <b>${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b>${d.color}</b>
+                            </p>
+                            <div class="notes-box">📝 Notes: <input type="text" value="${d.notes || ''}" placeholder="Add parking notes..." style="background:transparent; border:none; width:75%; font-size:13px; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
+                            ${d.proofPhoto ? `<p style="margin:6px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
+                            <div style="margin-top: 10px;">
+                                ${!d.completed ? `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Photo & Complete</button>` : `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>`;
+            }
+        }
+
+        function updateDriverDropNote(idx, val) {
+            appState.manifest[idx].notes = val;
+            saveToLocalStorage();
+        }
+
+        let activeDeliveryIndex = null;
+        function promptDeliveryProof(idx) {
+            activeDeliveryIndex = idx;
+            document.getElementById('proofPhotoInput').value = "";
+            document.getElementById('proofPhotoModal').style.display = 'flex';
+        }
+
+        function closeProofModal() {
+            document.getElementById('proofPhotoModal').style.display = 'none';
+            activeDeliveryIndex = null;
+        }
+
+        function submitDeliveryProof() {
+            const fileInput = document.getElementById('proofPhotoInput');
+            let drop = appState.manifest[activeDeliveryIndex];
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    drop.proofPhoto = e.target.result;
+                    finalizeDropCompletion(drop);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                finalizeDropCompletion(drop);
+            }
+        }
+
+        function finalizeDropCompletion(drop) {
+            drop.completed = true;
+            saveToLocalStorage();
+            closeProofModal();
+            renderDriverManifest();
+
+            document.getElementById('whatsappTextOutput').textContent = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
+            document.getElementById('whatsappModal').style.display = 'flex';
+        }
+
+        function undoDelivery(idx) {
+            appState.manifest[idx].completed = false;
+            appState.manifest[idx].proofPhoto = "";
+            saveToLocalStorage();
+            renderDriverManifest();
+        }
+
+        function copyTextAndClose() {
+            const text = document.getElementById('whatsappTextOutput').textContent;
+            navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
+        }
+
+        function continueRouteFromModal() {
+            closeModal();
+            launchLiveGPSRoute();
+        }
+
+        function closeModal() {
+            document.getElementById('whatsappModal').style.display = 'none';
+        }
+
+        function launchLiveGPSRoute() {
+            let pendingStops = appState.manifest.filter(d => !d.completed);
+            if (pendingStops.length === 0) {
+                alert("All stops completed! Check your end of day return journey below.");
+                return;
+            }
+            openGoogleMapsUrl(appState.startHub, pendingStops[0].hotel, pendingStops.slice(1).map(d => d.hotel));
+        }
+
+        function launchCompleteDriverRoute() {
+            openGoogleMapsUrl(appState.startHub, appState.endHub, appState.manifest.map(d => d.hotel));
+        }
+
+        function openGoogleMapsUrl(origin, destination, waypointsArr) {
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+            if (waypointsArr && waypointsArr.length > 0) {
+                mapsUrl += `&waypoints=${waypointsArr.map(w => encodeURIComponent(w)).join('|')}`;
+            }
+            window.open(mapsUrl, '_blank');
+        }
+
+        function launchReturnNavigation() {
+            let returnDest = document.getElementById('driverReturnSelect').value;
+            if (!returnDest) {
+                alert("Please specify a return destination.");
+                return;
+            }
+            let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
+            openGoogleMapsUrl(lastDrop, returnDest, []);
+        }
+
+        function completeShiftDone() {
+            if (confirm("Sign off and complete today's shift? This clears the active manifest.")) {
+                appState.manifest = [];
+                saveToLocalStorage();
+                alert("Shift successfully completed!");
+                openOperatorPortal();
+            }
+        }
+
+        // Timesheet Tracker Logic
+        function getCurrentWeekdayName() {
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            return days[new Date().getDay()];
+        }
+
+        function startShiftToday() {
+            let dayName = getCurrentWeekdayName();
+            if (dayName === "Saturday" || dayName === "Sunday") {
+                dayName = "Monday"; 
+            }
+            if (!appState.timesheet[dayName]) {
+                appState.timesheet[dayName] = { start: null, end: null, hours: 0 };
+            }
+            appState.timesheet[dayName].start = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            saveToLocalStorage();
+            renderTimesheetUI();
+            alert(`Shift started for ${dayName} at ${appState.timesheet[dayName].start}`);
+        }
+
+        function endShiftToday() {
+            let dayName = getCurrentWeekdayName();
+            if (dayName === "Saturday" || dayName === "Sunday") {
+                dayName = "Monday";
+            }
+            if (!appState.timesheet[dayName] || !appState.timesheet[dayName].start) {
+                alert("Please start your shift first!");
+                return;
+            }
+            let endTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            appState.timesheet[dayName].end = endTime;
+            appState.timesheet[dayName].hours = 5.0; // Standard shift length (5 hours Mon-Fri)
+
+            saveToLocalStorage();
+            renderTimesheetUI();
+            alert(`Shift finished for ${dayName} at ${endTime}`);
+        }
+
+        function renderTimesheetUI() {
+            const tbody = document.getElementById('timesheetTableBody');
+            tbody.innerHTML = '';
+            let totalHours = 0;
+
+            const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            daysOfWeek.forEach(day => {
+                let entry = appState.timesheet[day] || { start: '-', end: '-', hours: 0 };
+                totalHours += Number(entry.hours || 0);
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${day}</b></td>
+                        <td>${entry.start || '-'}</td>
+                        <td>${entry.end || '-'}</td>
+                        <td>${entry.hours ? entry.hours.toFixed(2) + ' hrs' : '-'}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('totalWeeklyHours').textContent = totalHours.toFixed(2);
+            let activeDay = getCurrentWeekdayName();
+            if(daysOfWeek.includes(activeDay)) {
+                document.getElementById('currentDayTitle').textContent = `Today's Shift (${activeDay})`;
+                let record = appState.timesheet[activeDay];
+                let statusText = record && record.start ? (record.end ? `Completed (${record.hours} hrs)` : `In Progress (Started at ${record.start})`) : `Not Started`;
+                document.getElementById('todayStatusText').textContent = `Status: ${statusText}`;
+            }
+        }
+
+        // Settings Management
+        function addStartHubItem() {
+            const val = document.getElementById('newStartHubInput').value.trim();
+            if (val) {
+                appState.startHubs.push(val);
+                document.getElementById('newStartHubInput').value = '';
+                saveToLocalStorage();
+                renderSettingsLists();
+            }
+        }
+
+        function removeStartHubItem(idx) {
+            if (appState.startHubs.length <= 1) { alert("Keep at least one starting hub."); return; }
+            appState.startHubs.splice(idx, 1);
+            saveToLocalStorage();
+            renderSettingsLists();
+        }
+
+        function addEndHubItem() {
+            const val = document.getElementById('newEndHubInput').value.trim();
+            if (val) {
+                appState.endHubs.push(val);
+                document.getElementById('newEndHubInput').value = '';
+                saveToLocalStorage();
+                renderSettingsLists();
+            }
+        }
+
+        function removeEndHubItem(idx) {
+            if (appState.endHubs.length <= 1) { alert("Keep at least one end destination."); return; }
+            appState.endHubs.splice(idx, 1);
+            saveToLocalStorage();
+            renderSettingsLists();
+        }
+
+        function addEngineer() {
+            const name = document.getElementById('newEngInput').value.trim();
+            if (name) {
+                appState.engineers.push(name);
+                document.getElementById('newEngInput').value = '';
+                saveToLocalStorage();
+                renderSettingsLists();
+            }
+        }
+
+        function removeEngineer(idx) {
+            appState.engineers.splice(idx, 1);
+            saveToLocalStorage();
+            renderSettingsLists();
+        }
+
+        function renderSettingsLists() {
+            const renderList = (elementId, items, removeFnName) => {
+                const container = document.getElementById(elementId);
+                container.innerHTML = '';
+                items.forEach((item, idx) => {
+                    container.innerHTML += `
+                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 13px;">${item}</span>
+                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px;" onclick="${removeFnName}(${idx})">X</button>
+                        </div>
+                    `;
+                });
+            };
+            renderList('startHubConfigList', appState.startHubs, 'removeStartHubItem');
+            renderList('endHubConfigList', appState.endHubs, 'removeEndHubItem');
+            renderList('engConfigList', appState.engineers, 'removeEngineer');
+        }
+
+        function saveSettings() {
+            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
+            saveToLocalStorage();
+
+            try {
+                db.ref('travelodge_all_data').set({
+                    lastUpdated: Date.now(),
+                    travelodge_depot_state: JSON.stringify(appState)
+                });
+            } catch(e) { console.error("Firebase sync error:", e); }
+
+            alert("Settings saved successfully!");
+        }
+
+        // Firebase Initialization & Sync
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwlLOTeg0zHR3MI",
+            authDomain: "travelogsheffield.firebaseapp.com",
+            projectId: "travelogsheffield",
+            storageBucket: "travelogsheffield.firebasestorage.app",
+            messagingSenderId: "682268814885",
+            appId: "1:682268814885:web:ceb6aa889981163ad399cc",
+            measurementId: "G-SGXMPS2PV6"
+        };
+
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            db.ref('travelodge_all_data').on('value', (snapshot) => {
+                const remoteData = snapshot.val();
+                if (remoteData && remoteData.travelodge_depot_state) {
+                    try {
+                        const parsedState = JSON.parse(remoteData.travelodge_depot_state);
+                        if (parsedState.version === STORAGE_VERSION) {
+                            appState = { ...appState, ...parsedState };
+                            saveToLocalStorage();
+                        }
+                    } catch (e) {
+                        console.error("Error parsing remote state:", e);
+                    }
+                }
+            });
+        } catch(e) {
+            console.warn("Firebase initialized offline or skipped:", e);
+        }
+
+        // Initial Load
+        loadFromLocalStorage();
+        openOperatorPortal();
+    </script>
+</body>
+</html>
