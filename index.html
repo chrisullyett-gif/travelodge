@@ -1166,58 +1166,42 @@
 
         function saveSettings() {
             appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
+
             saveToLocalStorage();
+            db.ref('routeData').set(appState);
             alert("Hub configuration and settings saved successfully!");
             returnHome();
         }
 
         // Firebase Initialization
         const firebaseConfig = {
-    apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwllOTeg0ZHR3MI",
-    authDomain: "travelogsheffield.firebaseapp.com",
-    databaseURL: "https://travelogsheffield-default-rtdb.firebaseio.com",
-    projectId: "travelogsheffield",
-    storageBucket: "travelogsheffield.appspot.com",
-    messagingSenderId: "682268814885",
-    appId: "1:682268814885:web:ceb6aa88981163ad399cc",
-    measurementId: "G-SGXMPS2PV6"
-};
+            apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwlLOTeg0zHR3MI",
+            authDomain: "travelogsheffield.firebaseapp.com",
+            projectId: "travelogsheffield",
+            storageBucket: "travelogsheffield.firebasestorage.app",
+            messagingSenderId: "682268814885",
+            appId: "1:682268814885:web:ceb6aa889981163ad399cc",
+            measurementId: "G-SGXMPS2PV6"
+        };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const routeRef = db.ref('routeData');
-   
-
-</script>
-<script>
-    // Targeted State Sync for Travelodge Depot
-    document.addEventListener("DOMContentLoaded", () => {
-        if (!window.firebase) return;
-        const db = firebase.database();
-        const stateRef = db.ref('travelodge_all_data');
-
-        // Pull changes from Firebase into localStorage
-        stateRef.on('value', (snapshot) => {
+routeRef.on('value', (snapshot) => {
             const remoteData = snapshot.val();
-            if (remoteData && remoteData.travelodge_depot_state) {
-                const localData = localStorage.getItem('travelodge_depot_state');
-                if (localData !== remoteData.travelodge_depot_state) {
-                    localStorage.setItem('travelodge_depot_state', remoteData.travelodge_depot_state);
-                    console.log("Synced down from Firebase!");
-                }
+            if (remoteData) {
+                appState.startHub = remoteData.startHub || appState.startHub;
+                appState.endHub = remoteData.endHub || appState.endHub;
+                appState.startHubs = Array.isArray(remoteData.startHubs) ? remoteData.startHubs : appState.startHubs;
+                appState.endHubs = Array.isArray(remoteData.endHubs) ? remoteData.endHubs : appState.endHubs;
+                appState.engineers = Array.isArray(remoteData.engineers) ? remoteData.engineers : appState.engineers;
+                appState.dropTimeMins = typeof remoteData.dropTimeMins === 'number' ? remoteData.dropTimeMins : appState.dropTimeMins;
+                appState.hotelNotes = (remoteData.hotelNotes && typeof remoteData.hotelNotes === 'object') ? remoteData.hotelNotes : {};
+                appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : [];
+                
+                saveToLocalStorage();
             }
         });
-
-        // Push changes from localStorage to Firebase every 2 seconds
-        setInterval(() => {
-            const currentState = localStorage.getItem('travelodge_depot_state');
-            if (currentState) {
-                stateRef.set({
-                    travelodge_depot_state: currentState,
-                    lastUpdated: Date.now()
-                });
-            }
-        }, 2000);
-    });
-</script>
+    </script>
+</body>
 </html>
