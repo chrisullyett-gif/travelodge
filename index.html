@@ -1060,13 +1060,14 @@
         }
 
         function completeShiftDone() {
-            if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest for the day.")) {
-                appState.manifest = [];
-                saveToLocalStorage();
-                alert("Shift successfully completed! Great driving today.");
-                returnHome();
-            }
-        }
+    if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest for the day.")) {
+        appState.manifest = [];
+        saveToLocalStorage();
+        db.ref('routeData').set(appState);
+        alert("Shift successfully completed! Great driving today.");
+        returnHome();
+    }
+}
 
         function addStartHubItem() {
             const input = document.getElementById('newStartHubInput');
