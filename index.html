@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travelog Sheffield Parts Depot Portal</title>
+    <title>Travelodge Sheffield Parts Depot Portal</title>
     <!-- Firebase App (Core) SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <!-- Firebase Database SDK -->
@@ -15,8 +15,7 @@
         :root {
             --tl-navy: #002D62;
             --tl-red: #E31B23;
-            /* UPDATED: Light blue color based on user request */
-            --tl-blue: #4BACE3; 
+            --tl-blue: #00539F;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #1f2937;
@@ -131,7 +130,7 @@
         select:focus, input:focus {
             outline: none;
             border-color: var(--tl-blue);
-            box-shadow: 0 0 0 3px rgba(75, 172, 227, 0.1);
+            box-shadow: 0 0 0 3px rgba(0,83,159,0.1);
         }
 
         .btn {
@@ -152,7 +151,7 @@
             background-color: var(--tl-blue);
             color: white;
         }
-        .btn-primary:hover { background-color: #3fa5df; } /* Slightly darker blue for hover */
+        .btn-primary:hover { background-color: #003d73; }
 
         .btn-danger {
             background-color: var(--tl-red);
@@ -194,7 +193,7 @@
 
         .split-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(75, 172, 227, 0.15);
+            box-shadow: 0 6px 16px rgba(0,83,159,0.12);
         }
 
         .split-card-top {
@@ -311,8 +310,7 @@
 <body>
 
     <header id="headerBar" style="display: none;">
-        <!-- UPDATED: Logo now says 'Travelog' -->
-        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23ffffff'>Travelog</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelog" class="header-logo" style="height:26px;">
+        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23ffffff'>Travelodge</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelodge" class="header-logo" style="height:26px;">
         <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
     </header>
 
@@ -321,8 +319,7 @@
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
             <div style="text-align: center; margin: 16px 0 24px 0;">
-                <!-- UPDATED: Logo now says 'Travelog' -->
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23002D62'>Travelog</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelog Logo" style="max-width: 220px; height: auto; margin-bottom: 12px;">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23002D62'>Travelodge</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelodge Logo" style="max-width: 220px; height: auto; margin-bottom: 12px;">
                 <h2 style="font-size: 20px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
                 <p style="color: var(--text-muted); font-size: 13px;">Select your workflow mode below</p>
             </div>
@@ -380,7 +377,7 @@
                 <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
 
                 <div class="form-group">
-                    <label>Search Travelog Hotel</label>
+                    <label>Search Travelodge Hotel</label>
                     <input type="text" id="opHotelSearch" placeholder="Type hotel name (e.g., Sheffield, Leeds)..." oninput="filterOpHotels()">
                 </div>
 
@@ -568,7 +565,7 @@
 
                 <div class="form-group">
                     <label>Full Address / Postcode Override</label>
-                    <input type="text" id="settingHotelAddressInput" placeholder="e.g., Travelog Sheffield Central, 1 Curtistreet, Sheffield S1 2DJ">
+                    <input type="text" id="settingHotelAddressInput" placeholder="e.g., Travelodge Sheffield Central, 1 Curtistreet, Sheffield S1 2DJ">
                 </div>
 
                 <button class="btn btn-primary" style="margin-bottom: 16px;" onclick="saveCustomHotelAddress()">💾 Save Hotel Address</button>
@@ -603,10 +600,788 @@
     </div>
 
     <script>
-        // Full Complete UK Travelog Database
+        // Full Complete UK Travelodge Database
         const hotelDatabase = [
-            "Travelog Aberdeen Airport", "Travelog Aberdeen Bucksburn", "Travelog Aberdeen Central", "Travelog Aldershot", "Travelog Alfreton", "Travelog Alton Four Marks", "Travelog Altrincham Central", "Travelog Amesbury Stonehenge", "Travelog Andover", "Travelog Arundel Fontwell", "Travelog Arundel Fontwell Park", "Travelog Ashbourne", "Travelog Ashford", "Travelog Ashford Town Centre", "Travelog Ashton Under Lyne", "Travelog Aylesbury", "Travelog Ayr",
-            "Travelog Bangor", "Travelog Barnsley", "Travelog Barnstaple", "Travelog Barrow In Furness", "Travelog Barton Mills", "Travelog Barton Stacey", "Travelog Basildon", "Travelog Basildon Wickford", "Travelog Basingstoke", "Travelog Bath Central", "Travelog Bath City Centre Bath Spa", "Travelog Bath Waterside", "Travelog Beaconsfield Central", "Travelog Beckington", "Travelog Bedford", "Travelog Bedford Goldington Road", "Travelog Bedford Marston Moretaine", "Travelog Belfast Central", "Travelog Berwick upon Tweed", "Travelog Bicester", "Travelog Bicester Cherwell Valley M40", "Travelog Billingshurst Five Oaks", "Travelog Birmingham Airport", "Travelog Birmingham Castle Bromwich", "Travelog Birmingham Central", "Travelog Birmingham Central Broadway Plaza", "Travelog Birmingham Central Moor Street", "Travelog Birmingham Central Newhall Street", "Travelog Birmingham Fort Dunlop", "Travelog Birmingham Frankley M5 Southbound", "Travelog Birmingham Halesowen", "Travelog Birmingham Hilton Park M6 Southbound", "Travelog Birmingham Kingswinford", "Travelog Birmingham Maypole", "Travelog Birmingham Oldbury", "Travelog Birmingham Perry Barr", "Travelog Birmingham Sheldon", "Travelog Birmingham Streetly", "Travelog Birmingham Sutton Coldfield", "Travelog Birmingham Yardley", "Travelog Blackburn M65", "Travelog Blackpool South Promenade", "Travelog Blackpool South Shore", "Travelog Blyth A1 M", "Travelog Bodmin Roche", "Travelog Bolton Central River Street", "Travelog Borehamwood", "Travelog Borehamwood Studio Way", "Travelog Boston", "Travelog Bournemouth", "Travelog Bournemouth Cooper Dean", "Travelog Bournemouth Seafront", "Travelog Bracknell", "Travelog Bracknell Central", "Travelog Bradford", "Travelog Bradford Central", "Travelog Bradford Shipley", "Travelog Braintree", "Travelog Brentwood East Horndon", "Travelog Bridgwater M5", "Travelog Brighton", "Travelog Brighton Seafront", "Travelog Bristol Abbey Wood", "Travelog Bristol Avonmouth", "Travelog Bristol Central", "Travelog Bristol Central Mitchell Lane", "Travelog Bristol Cribbs Causeway", "Travelog Bristol Emersons Green", "Travelog Bristol Filton", "Travelog Bristol Severn View M48", "Travelog Bromborough", "Travelog Bromsgrove Marlbrook", "Travelog Buckingham", "Travelog Burford Cotswolds", "Travelog Burnley", "Travelog Burton A38 Northbound", "Travelog Burton A38 Southbound", "Travelog Burton M6 Northbound", "Travelog Burton upon Trent Central", "Travelog Bury",
-            "Travelog Caernarfon", "Travelog Caerphilly", "Travelog Camberley", "Travelog Camberley Central", "Travelog Cambridge Central", "Travelog Cambridge Fourwentways", "Travelog Cambridge Orchard Park", "Travelog Cambridge Swavesey", "Travelog Canterbury Chaucer Central", "Travelog Canterbury Whitstable", "Travelog Cardiff Airport", "Travelog Cardiff Atlantic Wharf", "Travelog Cardiff Central", "Travelog Cardiff Central Queen Street", "Travelog Cardiff Gate", "Travelog Cardiff Llanedeyrn", "Travelog Cardiff M4", "Travelog Cardiff Whitchurch", "Travelog Carlisle Central", "Travelog Carlisle M6", "Travelog Carlisle Todhills", "Travelog Caterham Whyteleafe", "Travelog Chatham Maritime Hotel", "Travelog Chelmsford", "Travelog Cheltenham", "Travelog Chertsey", "Travelog Cheshire Oaks", "Travelog Cheshunt", "Travelog Chester-le-Street", "Travelog Chester Central", "Travelog Chester Central Bridge Street", "Travelog Chesterfield", "Travelog Chesterfield Town Centre", "Travelog Chester Northop Hall", "Travelog Chester Warrington Road", "Travelog Chichester Central", "Travelog Chichester Emsworth", "Travelog Chippenham", "Travelog Chippenham Leigh Delamere M4 Eastbound", "Travelog Chippenham Leigh Delamere M4 Westbound", "Travelog Christchurch", "Travelog Cirencester", "Travelog Clacton-on-Sea Central", "Travelog Cockermouth", "Travelog Colchester Feering", "Travelog Colchester Northern Gateway", "Travelog Colwyn Bay", "Travelog Coventry Binley", "Travelog Crewe", "Travelog Crewe Barthomley", "Travelog Croydon Central",
-            "Travelog Darlington", "Travelog Dartford", "Travelog Derby Chaddesden", "Travelog Derby Cricket Ground", "Travelog Derby Pride Park", "Travelog Devizes", "Travelog Doncaster", "Travelog Doncaster Lakeside", "Travelog Doncaster M18 M180", "Travelog Dorking", "Travelog Dover", "Travelog Droitwich", "Travelog Dudley Town Centre", "Travelog Dumbarton", "Travelog Dumfries", "Travelog Dundee Central", "Travelog Dundee Strathmore Avenue", "Travelog Dunfermline", "Travelog Durham",
-            "Travelog Eastbourne Willingdon Drove", "Travelog East Grinstead", "Travelog Eastleigh Central", "Travelog Edinburgh Airport Ratho Station", "Travelog Edinburgh Cameron Toll", "Travelog Edinburgh Central", "Travelog Edinburgh Central Queen Street", "Travelog Edinburgh Central Rose Street", "Travelog Edinburgh Central Waterloo Place", "Travelog Edinburgh Dre
+            "Travelodge Aberdeen Airport", "Travelodge Aberdeen Bucksburn", "Travelodge Aberdeen Central", "Travelodge Aldershot", "Travelodge Alfreton", "Travelodge Alton Four Marks", "Travelodge Altrincham Central", "Travelodge Amesbury Stonehenge", "Travelodge Andover", "Travelodge Arundel Fontwell", "Travelodge Arundel Fontwell Park", "Travelodge Ashbourne", "Travelodge Ashford", "Travelodge Ashford Town Centre", "Travelodge Ashton Under Lyne", "Travelodge Aylesbury", "Travelodge Ayr",
+            "Travelodge Bangor", "Travelodge Barnsley", "Travelodge Barnstaple", "Travelodge Barrow In Furness", "Travelodge Barton Mills", "Travelodge Barton Stacey", "Travelodge Basildon", "Travelodge Basildon Wickford", "Travelodge Basingstoke", "Travelodge Bath Central", "Travelodge Bath City Centre Bath Spa", "Travelodge Bath Waterside", "Travelodge Beaconsfield Central", "Travelodge Beckington", "Travelodge Bedford", "Travelodge Bedford Goldington Road", "Travelodge Bedford Marston Moretaine", "Travelodge Belfast Central", "Travelodge Berwick upon Tweed", "Travelodge Bicester", "Travelodge Bicester Cherwell Valley M40", "Travelodge Billingshurst Five Oaks", "Travelodge Birmingham Airport", "Travelodge Birmingham Castle Bromwich", "Travelodge Birmingham Central", "Travelodge Birmingham Central Broadway Plaza", "Travelodge Birmingham Central Moor Street", "Travelodge Birmingham Central Newhall Street", "Travelodge Birmingham Fort Dunlop", "Travelodge Birmingham Frankley M5 Southbound", "Travelodge Birmingham Halesowen", "Travelodge Birmingham Hilton Park M6 Southbound", "Travelodge Birmingham Kingswinford", "Travelodge Birmingham Maypole", "Travelodge Birmingham Oldbury", "Travelodge Birmingham Perry Barr", "Travelodge Birmingham Sheldon", "Travelodge Birmingham Streetly", "Travelodge Birmingham Sutton Coldfield", "Travelodge Birmingham Yardley", "Travelodge Blackburn M65", "Travelodge Blackpool South Promenade", "Travelodge Blackpool South Shore", "Travelodge Blyth A1 M", "Travelodge Bodmin Roche", "Travelodge Bolton Central River Street", "Travelodge Borehamwood", "Travelodge Borehamwood Studio Way", "Travelodge Boston", "Travelodge Bournemouth", "Travelodge Bournemouth Cooper Dean", "Travelodge Bournemouth Seafront", "Travelodge Bracknell", "Travelodge Bracknell Central", "Travelodge Bradford", "Travelodge Bradford Central", "Travelodge Bradford Shipley", "Travelodge Braintree", "Travelodge Brentwood East Horndon", "Travelodge Bridgwater M5", "Travelodge Brighton", "Travelodge Brighton Seafront", "Travelodge Bristol Abbey Wood", "Travelodge Bristol Avonmouth", "Travelodge Bristol Central", "Travelodge Bristol Central Mitchell Lane", "Travelodge Bristol Cribbs Causeway", "Travelodge Bristol Emersons Green", "Travelodge Bristol Filton", "Travelodge Bristol Severn View M48", "Travelodge Bromborough", "Travelodge Bromsgrove Marlbrook", "Travelodge Buckingham", "Travelodge Burford Cotswolds", "Travelodge Burnley", "Travelodge Burton A38 Northbound", "Travelodge Burton A38 Southbound", "Travelodge Burton M6 Northbound", "Travelodge Burton upon Trent Central", "Travelodge Bury",
+            "Travelodge Caernarfon", "Travelodge Caerphilly", "Travelodge Camberley", "Travelodge Camberley Central", "Travelodge Cambridge Central", "Travelodge Cambridge Fourwentways", "Travelodge Cambridge Orchard Park", "Travelodge Cambridge Swavesey", "Travelodge Canterbury Chaucer Central", "Travelodge Canterbury Whitstable", "Travelodge Cardiff Airport", "Travelodge Cardiff Atlantic Wharf", "Travelodge Cardiff Central", "Travelodge Cardiff Central Queen Street", "Travelodge Cardiff Gate", "Travelodge Cardiff Llanedeyrn", "Travelodge Cardiff M4", "Travelodge Cardiff Whitchurch", "Travelodge Carlisle Central", "Travelodge Carlisle M6", "Travelodge Carlisle Todhills", "Travelodge Caterham Whyteleafe", "Travelodge Chatham Maritime Hotel", "Travelodge Chelmsford", "Travelodge Cheltenham", "Travelodge Chertsey", "Travelodge Cheshire Oaks", "Travelodge Cheshunt", "Travelodge Chester-le-Street", "Travelodge Chester Central", "Travelodge Chester Central Bridge Street", "Travelodge Chesterfield", "Travelodge Chesterfield Town Centre", "Travelodge Chester Northop Hall", "Travelodge Chester Warrington Road", "Travelodge Chichester Central", "Travelodge Chichester Emsworth", "Travelodge Chippenham", "Travelodge Chippenham Leigh Delamere M4 Eastbound", "Travelodge Chippenham Leigh Delamere M4 Westbound", "Travelodge Christchurch", "Travelodge Cirencester", "Travelodge Clacton-on-Sea Central", "Travelodge Cockermouth", "Travelodge Colchester Feering", "Travelodge Colchester Northern Gateway", "Travelodge Colwyn Bay", "Travelodge Coventry Binley", "Travelodge Crewe", "Travelodge Crewe Barthomley", "Travelodge Croydon Central",
+            "Travelodge Darlington", "Travelodge Dartford", "Travelodge Derby Chaddesden", "Travelodge Derby Cricket Ground", "Travelodge Derby Pride Park", "Travelodge Devizes", "Travelodge Doncaster", "Travelodge Doncaster Lakeside", "Travelodge Doncaster M18 M180", "Travelodge Dorking", "Travelodge Dover", "Travelodge Droitwich", "Travelodge Dudley Town Centre", "Travelodge Dumbarton", "Travelodge Dumfries", "Travelodge Dundee Central", "Travelodge Dundee Strathmore Avenue", "Travelodge Dunfermline", "Travelodge Durham",
+            "Travelodge Eastbourne Willingdon Drove", "Travelodge East Grinstead", "Travelodge Eastleigh Central", "Travelodge Edinburgh Airport Ratho Station", "Travelodge Edinburgh Cameron Toll", "Travelodge Edinburgh Central", "Travelodge Edinburgh Central Queen Street", "Travelodge Edinburgh Central Rose Street", "Travelodge Edinburgh Central Waterloo Place", "Travelodge Edinburgh Dreghorn", "Travelodge Edinburgh Haymarket", "Travelodge Edinburgh Park", "Travelodge Elgin", "Travelodge Ely", "Travelodge Exeter M5",
+            "Travelodge Falkirk", "Travelodge Farnborough Central", "Travelodge Fleet", "Travelodge Fort William", "Travelodge Frimley",
+            "Travelodge Gainsborough", "Travelodge Gateshead", "Travelodge Gatwick Airport Central", "Travelodge Glasgow Airport", "Travelodge Glasgow Braehead", "Travelodge Glasgow Central", "Travelodge Glasgow Cumbernauld", "Travelodge Glasgow Govan", "Travelodge Glasgow Paisley Road", "Travelodge Glasgow Queen Street", "Travelodge Glastonbury", "Travelodge Glenrothes", "Travelodge Gloucester", "Travelodge Gosport", "Travelodge Grantham A1", "Travelodge Grantham Colsterworth", "Travelodge Grantham South Witham", "Travelodge Gravesend", "Travelodge Great Yarmouth", "Travelodge Great Yarmouth Acle", "Travelodge Guildford",
+            "Travelodge Halifax", "Travelodge Halkyn", "Travelodge Harlow", "Travelodge Harrogate", "Travelodge Harrogate West Park", "Travelodge Hartlebury", "Travelodge Hastings", "Travelodge Hatfield Central", "Travelodge Havant Rowlands Castle", "Travelodge Haverhill", "Travelodge Haydock St Helens", "Travelodge Hayle", "Travelodge Heathrow Heston M4 Eastbound", "Travelodge Heathrow Heston M4 Westbound", "Travelodge Hellingly Eastbourne", "Travelodge Hemel Hempstead", "Travelodge Hereford", "Travelodge Hereford Grafton", "Travelodge Hexham", "Travelodge Hickstead", "Travelodge Highbridge Burnham-on-Sea", "Travelodge High Wycombe Central", "Travelodge Holyhead", "Travelodge Horsham Central", "Travelodge Huddersfield", "Travelodge Hull Central", "Travelodge Hull South Cave", "Travelodge Huntingdon Fenstanton",
+            "Travelodge Ilminster", "Travelodge Inverness", "Travelodge Inverness City Centre", "Travelodge Inverness Fairways", "Travelodge Ipswich", "Travelodge Ipswich Beacon Hill", "Travelodge Ipswich Capel St Mary", "Travelodge Ipswich Central", "Travelodge Ipswich Stowmarket",
+            "Travelodge Keighley", "Travelodge Kendal", "Travelodge Kendal Town Centre", "Travelodge Kettering", "Travelodge Kettering Thrapston", "Travelodge Kidderminster", "Travelodge Kilmarnock", "Travelodge Kings Lynn", "Travelodge Kings Lynn Long Sutton", "Travelodge Kingston Upon Thames Central", "Travelodge Kinross M90", "Travelodge Knutsford M6",
+            "Travelodge Lancaster M6", "Travelodge Langley", "Travelodge Leatherhead", "Travelodge Leeds Bradford Airport", "Travelodge Leeds Central", "Travelodge Leeds Central Vicar Lane", "Travelodge Leeds Colton", "Travelodge Leeds Morley", "Travelodge Leicester Central", "Travelodge Leicester Central North", "Travelodge Leicester City Centre", "Travelodge Leicester Hinckley Road", "Travelodge Leicester Markfield", "Travelodge Lincoln City Centre", "Travelodge Lincoln Thorpe On The Hill", "Travelodge Littlehampton Rustington", "Travelodge Liverpool Aigburth", "Travelodge Liverpool Central", "Travelodge Liverpool Central The Strand", "Travelodge Liverpool Docks", "Travelodge Liverpool Edge Lane", "Travelodge Liverpool John Lennon Airport", "Travelodge Liverpool Stonedale Park", "Travelodge Liverpool Stoneycroft", "Travelodge Livingston", "Travelodge Llandudno", "Travelodge Llanelli Central", "Travelodge Llanelli Cross Hands", "Travelodge London Acton", "Travelodge London Barking", "Travelodge London Battersea", "Travelodge London Beckenham", "Travelodge London Beckton", "Travelodge London Belvedere", "Travelodge London Bermondsey", "Travelodge London Brent Cross", "Travelodge London Bromley", "Travelodge London Central Aldgate East", "Travelodge London Central Bank", "Travelodge London Central City Road", "Travelodge London Central Elephant and Castle", "Travelodge London Central Euston", "Travelodge London Central Kings Cross", "Travelodge London Central Marylebone", "Travelodge London Central Southwark", "Travelodge London Central Tower Bridge", "Travelodge London Central Waterloo", "Travelodge London Chessington Tolworth", "Travelodge London Chigwell", "Travelodge London City", "Travelodge London City Airport", "Travelodge London Covent Garden", "Travelodge London Cricklewood", "Travelodge London Crystal Palace", "Travelodge London Dagenham", "Travelodge London Dagenham East", "Travelodge London Docklands", "Travelodge London Ealing", "Travelodge London Edmonton", "Travelodge London Excel", "Travelodge London Farringdon", "Travelodge London Feltham", "Travelodge London Finchley", "Travelodge London Finsbury Park", "Travelodge London Fulham", "Travelodge London Greenwich", "Travelodge London Greenwich High Road", "Travelodge London Hackney", "Travelodge London Harrow", "Travelodge London Ilford", "Travelodge London Ilford Gants Hill", "Travelodge London Kew Bridge", "Travelodge London Kings Cross Royal Scot", "Travelodge London Kingston Upon Thames", "Travelodge London Lewisham", "Travelodge London Liverpool Street", "Travelodge London Mile End", "Travelodge London Northolt", "Travelodge London Oval Cricket Ground", "Travelodge London Park Royal", "Travelodge London Peckham", "Travelodge London Raynes Park", "Travelodge London Richmond Central", "Travelodge London Romford", "Travelodge London Romford The Quadrant", "Travelodge London Snaresbrook", "Travelodge London South Croydon", "Travelodge London Southgate", "Travelodge London Stratford", "Travelodge London Stratford Centre", "Travelodge London Teddington", "Travelodge London Twickenham", "Travelodge London Wembley", "Travelodge London Wembley High Road", "Travelodge London Whetstone", "Travelodge London Wimbledon Central", "Travelodge London Wimbledon Morden", "Travelodge London Wood Green", "Travelodge Loughborough Central", "Travelodge Lowestoft", "Travelodge Ludlow", "Travelodge Ludlow Woofferton", "Travelodge Luton", "Travelodge Lutterworth", "Travelodge Lytham St Annes",
+            "Travelodge Macclesfield Adlington", "Travelodge Macclesfield Central", "Travelodge Maidenhead Central", "Travelodge Maidstone Central", "Travelodge Maldon", "Travelodge Manchester Ancoats", "Travelodge Manchester Birch M62 Eastbound", "Travelodge Manchester Birch M62 Westbound", "Travelodge Manchester Central", "Travelodge Manchester Central Arena", "Travelodge Manchester Didsbury", "Travelodge Manchester Piccadilly", "Travelodge Manchester Sale", "Travelodge Manchester Salford Quays", "Travelodge Manchester Sportcity", "Travelodge Manchester Trafford Park", "Travelodge Manchester Upper Brook Street", "Travelodge Mansfield", "Travelodge Margate Westwood", "Travelodge Market Harborough", "Travelodge Marlow", "Travelodge Medway M2", "Travelodge Melksham", "Travelodge Merthyr Tydfil", "Travelodge Middlesbrough", "Travelodge Middlewich", "Travelodge Milton Keynes at The Hub", "Travelodge Milton Keynes Central", "Travelodge Milton Keynes Old Stratford", "Travelodge Milton Keynes Shenley Church End", "Travelodge Morecambe",
+            "Travelodge Newark-on-Trent", "Travelodge Newbury Chieveley M4", "Travelodge Newbury London Road", "Travelodge Newbury Tot Hill", "Travelodge Newcastle Airport", "Travelodge Newcastle Central", "Travelodge Newcastle Cobalt Business Park", "Travelodge Newcastle Gosforth", "Travelodge Newcastle Quayside", "Travelodge Newcastle Seaton Burn", "Travelodge Newcastle Under Lyme Central", "Travelodge Newcastle Whitemare Pool", "Travelodge Newport Central", "Travelodge Newport Isle Of Wight", "Travelodge Newquay Seafront", "Travelodge Northampton Central", "Travelodge Northampton Round Spinney", "Travelodge Northampton Upton Way", "Travelodge Northampton Wootton", "Travelodge Northwich Lostock Gralam", "Travelodge Norwich Central", "Travelodge Norwich Central Riverside", "Travelodge Norwich Cringleford", "Travelodge Nottingham Central", "Travelodge Nottingham Em Airport Donington Park M1", "Travelodge Nottingham Riverside", "Travelodge Nottingham Trowell M1", "Travelodge Nottingham Wollaton Park", "Travelodge Nuneaton", "Travelodge Nuneaton Bedworth",
+            "Travelodge Okehampton Sourton Cross", "Travelodge Okehampton Whiddon Down", "Travelodge Oldham Chadderton", "Travelodge Oswestry", "Travelodge Oxford Abingdon Road", "Travelodge Oxford Peartree", "Travelodge Oxford Wheatley",
+            "Travelodge Paignton Seafront", "Travelodge Pembroke Dock", "Travelodge Penrith", "Travelodge Perth A9", "Travelodge Perth Broxden Junction", "Travelodge Perth Central", "Travelodge Peterborough Alwalton", "Travelodge Peterborough Central", "Travelodge Peterborough Eye Green", "Travelodge Plymouth", "Travelodge Plymouth Derriford", "Travelodge Plymouth Roborough", "Travelodge Pontefract Ferrybridge A1 M62", "Travelodge Poole", "Travelodge Poole North", "Travelodge Porthmadog", "Travelodge Portsmouth", "Travelodge Portsmouth City Centre", "Travelodge Portsmouth Hilsea", "Travelodge Preston Central", "Travelodge Preston Chorley", "Travelodge Preston North",
+            "Travelodge Ramsgate Seafront", "Travelodge Reading Central", "Travelodge Reading M4 Eastbound", "Travelodge Reading M4 Westbound", "Travelodge Reading Whitley", "Travelodge Redhill", "Travelodge Redhill Town Centre", "Travelodge Retford Markham Moor", "Travelodge Rhyl Seafront", "Travelodge Ringwood", "Travelodge Rochdale", "Travelodge Rugby Central", "Travelodge Rugby Dunchurch", "Travelodge Rugeley", "Travelodge Ryde Isle of Wight",
+            "Travelodge Saltash", "Travelodge Sandwich", "Travelodge Scarborough St Nicholas", "Travelodge Scotch Corner A1 Southbound", "Travelodge Scotch Corner Skeeby", "Travelodge Scunthorpe", "Travelodge Sedgefield", "Travelodge Sheffield Central", "Travelodge Sheffield Meadowhall", "Travelodge Sheffield Richmond", "Travelodge Shrewsbury Battlefield", "Travelodge Shrewsbury Bayston Hill", "Travelodge Sittingbourne", "Travelodge Skegness Seafront", "Travelodge Skipton", "Travelodge Sleaford", "Travelodge Slough", "Travelodge Southampton", "Travelodge Southampton Central", "Travelodge Southampton Eastleigh", "Travelodge Southend On Sea", "Travelodge Spalding", "Travelodge Stafford Central", "Travelodge Stafford M6", "Travelodge Staines", "Travelodge St Albans City Centre", "Travelodge Stansted Great Dunmow", "Travelodge St Austell", "Travelodge St Clears Carmarthen", "Travelodge Stirling City Centre", "Travelodge Stirling M80", "Travelodge Stockport", "Travelodge Stoke-on-Trent Trentham", "Travelodge Stoke Talke", "Travelodge Stonehouse", "Travelodge Stoney Cross Lyndhurst", "Travelodge Stratford Alcester", "Travelodge Stratford Upon Avon", "Travelodge Sunbury M3", "Travelodge Sunderland Central", "Travelodge Swansea Central", "Travelodge Swansea M4", "Travelodge Swindon Central", "Travelodge Swindon West",
+            "Travelodge Tamworth Central", "Travelodge Tamworth M42", "Travelodge Taunton", "Travelodge Telford", "Travelodge Telford Shawbirch", "Travelodge Tewkesbury", "Travelodge Thame", "Travelodge The Regent Hotel Leamington Spa", "Travelodge Thetford", "Travelodge Thurrock Lakeside", "Travelodge Tiverton", "Travelodge Toddington M1 Southbound", "Travelodge Torquay", "Travelodge Towcester Silverstone", "Travelodge Tunbridge Wells",
+            "Travelodge Wadebridge", "Travelodge Wakefield", "Travelodge Wakefield Woolley Edge M1 Northbound", "Travelodge Wakefield Woolley Edge M1 Southbound", "Travelodge Wallasey New Brighton", "Travelodge Walsall", "Travelodge Walton-on-Thames", "Travelodge Walton-on-Thames Central", "Travelodge Warminster", "Travelodge Warrington", "Travelodge Warrington Gemini", "Travelodge Warrington Lowton", "Travelodge Washington A1m Northbound", "Travelodge Washington A1m Southbound", "Travelodge Watford Central", "Travelodge Wellingborough", "Travelodge Wellingborough Rushden", "Travelodge Welwyn Garden City", "Travelodge West Bromwich", "Travelodge Weston-super-Mare", "Travelodge Widnes", "Travelodge Winchester", "Travelodge Windsor Central", "Travelodge Wirral Eastham", "Travelodge Witney", "Travelodge Worcester", "Travelodge Workington", "Travelodge Worksop", "Travelodge Worthing Seafront", "Travelodge Wrexham",
+            "Travelodge Yeovil Podimore", "Travelodge York Central", "Travelodge York Central Layerthorpe", "Travelodge York Central Micklegate", "Travelodge York Hull Road", "Travelodge York Monks Cross", "Travelodge York Tadcaster"
+        ];
+
+        // Colour mapping for sticker dots
+        const colorHexMap = {
+            "Red": "#ef4444", "Blue": "#3b82f6", "Green": "#10b981", 
+            "Yellow": "#eab308", "Orange": "#f97316", "Purple": "#a855f7", 
+            "White": "#9ca3af", "Black": "#1f2937"
+        };
+
+        // Initial Application State
+        let appState = {
+            startHub: "Sheffield Parts Depot",
+            endHub: "Sheffield Parts Depot",
+            startHubs: ["Sheffield Parts Depot"],
+            endHubs: ["Sheffield Parts Depot", "Home / End of Shift"],
+            engineers: ["Dave", "Mark", "Steve", "Paul", "Andy"],
+            dropTimeMins: 10,
+            hotelNotes: {},
+            hotelAddresses: {}, 
+            manifest: [],
+            driverName: "Sheffield Driver",
+            currentWeekHours: { Monday: 0, Tuesday: 0, Wednesday: 0, Thursday: 0, Friday: 0 },
+            shiftTimes: {},
+            archivedWeeks: []
+        };
+
+        function getMappedHotelAddress(hotelName) {
+            if (appState.hotelAddresses && appState.hotelAddresses[hotelName]) {
+                return appState.hotelAddresses[hotelName];
+            }
+            return hotelName + ", UK";
+        }
+
+        function compressImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600;
+                    const MAX_HEIGHT = 600;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    } else {
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
+                    callback(compressedDataUrl);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('travelodge_depot_state');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    appState.startHub = parsed.startHub || appState.startHub;
+                    appState.endHub = parsed.endHub || appState.endHub;
+                    appState.startHubs = Array.isArray(parsed.startHubs) ? parsed.startHubs : appState.startHubs;
+                    appState.endHubs = Array.isArray(parsed.endHubs) ? parsed.endHubs : appState.endHubs;
+                    appState.engineers = Array.isArray(parsed.engineers) ? parsed.engineers : appState.engineers;
+                    appState.dropTimeMins = typeof parsed.dropTimeMins === 'number' ? parsed.dropTimeMins : 10;
+                    appState.hotelNotes = (parsed.hotelNotes && typeof parsed.hotelNotes === 'object') ? parsed.hotelNotes : {};
+                    appState.hotelAddresses = (parsed.hotelAddresses && typeof parsed.hotelAddresses === 'object') ? parsed.hotelAddresses : {};
+                    appState.manifest = Array.isArray(parsed.manifest) ? parsed.manifest : [];
+                    appState.driverName = parsed.driverName || appState.driverName;
+                    appState.currentWeekHours = parsed.currentWeekHours || appState.currentWeekHours;
+                    appState.shiftTimes = parsed.shiftTimes || appState.shiftTimes;
+                    appState.archivedWeeks = Array.isArray(parsed.archivedWeeks) ? parsed.archivedWeeks : [];
+                } catch (e) {
+                    console.error("Error loading local storage state:", e);
+                }
+            }
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
+            } catch (e) {
+                console.error("Error saving to local storage:", e);
+            }
+        }
+
+        loadFromLocalStorage();
+
+        function returnHome() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById('headerBar').style.display = 'none';
+            document.getElementById('portalHome').classList.add('active-screen');
+            saveToLocalStorage();
+        }
+
+        function openOperativePortal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById('headerBar').style.display = 'flex';
+            document.getElementById('operativeScreen').classList.add('active-screen');
+            populateDropdowns();
+            populateOpEngineerCheckboxes();
+            renderOpManifest();
+            updateColorDropdownOptions();
+            loadHotelNotePreset();
+        }
+
+        function openDriverPortal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById('headerBar').style.display = 'flex';
+            document.getElementById('driverScreen').classList.add('active-screen');
+            renderDriverManifest();
+        }
+
+        function openDriverDetailsPortal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById('headerBar').style.display = 'flex';
+            document.getElementById('driverDetailsScreen').classList.add('active-screen');
+            
+            document.getElementById('driverDetailsNameInput').value = appState.driverName;
+            
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            document.getElementById('currentDayDisplay').textContent = days[new Date().getDay()];
+
+            const todayKey = new Date().toISOString().split('T')[0];
+            if (appState.shiftTimes[todayKey]) {
+                document.getElementById('shiftStartTimeInput').value = appState.shiftTimes[todayKey].start || "";
+                document.getElementById('shiftEndTimeInput').value = appState.shiftTimes[todayKey].finish || "";
+            } else {
+                document.getElementById('shiftStartTimeInput').value = "";
+                document.getElementById('shiftEndTimeInput').value = "";
+            }
+
+            renderWeeklyHoursView();
+            renderHistoricalWeeks();
+        }
+
+        function openSettingsPortal() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById('headerBar').style.display = 'flex';
+            document.getElementById('settingsScreen').classList.add('active-screen');
+            document.getElementById('settingDropTime').value = appState.dropTimeMins;
+            populateSettingsHotelDropdown();
+            renderSettingsLists();
+        }
+
+        function setNowTime(elementId) {
+            const now = new Date();
+            document.getElementById(elementId).value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        }
+
+        function saveTodayShiftHours() {
+            const start = document.getElementById('shiftStartTimeInput').value;
+            const finish = document.getElementById('shiftEndTimeInput').value;
+            appState.driverName = document.getElementById('driverDetailsNameInput').value.trim() || "Sheffield Driver";
+
+            if (!start || !finish) {
+                alert("Please enter both a start time and a finish time.");
+                return;
+            }
+
+            let startMinutes = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]);
+            let finishMinutes = parseInt(finish.split(':')[0]) * 60 + parseInt(finish.split(':')[1]);
+            let diffMins = finishMinutes - startMinutes;
+
+            if (diffMins <= 0) {
+                alert("Finish time must be after start time.");
+                return;
+            }
+
+            let hoursWorked = parseFloat((diffMins / 60).toFixed(2));
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const todayName = days[new Date().getDay()];
+            const todayKey = new Date().toISOString().split('T')[0];
+
+            if (todayName !== "Saturday" && todayName !== "Sunday") {
+                appState.currentWeekHours[todayName] = hoursWorked;
+            }
+
+            appState.shiftTimes[todayKey] = { start, finish, hours: hoursWorked };
+            saveToLocalStorage();
+            db.ref('routeData').set(appState).catch(err => console.warn(err));
+
+            alert("Shift hours saved successfully (" + hoursWorked + " hours)!");
+            renderWeeklyHoursView();
+        }
+
+        function renderWeeklyHoursView() {
+            const container = document.getElementById('weeklyHoursBreakdownList');
+            container.innerHTML = '';
+            const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            let totalWeekly = 0;
+
+            weekdays.forEach(day => {
+                let hrs = appState.currentWeekHours[day] || 0;
+                totalWeekly += hrs;
+                container.innerHTML += `
+                    <div class="manifest-card" style="padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px; font-weight:600; color:var(--tl-navy);">${day}</span>
+                        <span style="font-size: 14px; color:var(--text-main);">${hrs} hrs</span>
+                    </div>
+                `;
+            });
+            document.getElementById('totalWeeklyHoursDisplay').textContent = totalWeekly.toFixed(2);
+        }
+
+        function lockAndArchiveWeek() {
+            if (confirm("Are you sure you want to finalise and archive this week's hours?")) {
+                let totalWeekly = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].reduce((acc, day) => acc + (appState.currentWeekHours[day] || 0), 0);
+                const weekEndingDate = new Date().toLocaleDateString('en-GB');
+
+                if (!Array.isArray(appState.archivedWeeks)) appState.archivedWeeks = [];
+                appState.archivedWeeks.unshift({
+                    dateRange: `Week ending: ${weekEndingDate}`,
+                    driverName: appState.driverName,
+                    totalHours: totalWeekly.toFixed(2),
+                    breakdown: {...appState.currentWeekHours}
+                });
+
+                if (appState.archivedWeeks.length > 4) appState.archivedWeeks = appState.archivedWeeks.slice(0, 4);
+                appState.currentWeekHours = { Monday: 0, Tuesday: 0, Wednesday: 0, Thursday: 0, Friday: 0 };
+
+                saveToLocalStorage();
+                db.ref('routeData').set(appState).catch(err => console.warn(err));
+                alert("Week successfully archived!");
+                renderWeeklyHoursView();
+                renderHistoricalWeeks();
+            }
+        }
+
+        function renderHistoricalWeeks() {
+            const container = document.getElementById('historicalWeeksList');
+            container.innerHTML = '';
+            if (!appState.archivedWeeks || appState.archivedWeeks.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No archived weeks saved yet.</p>`;
+                return;
+            }
+            appState.archivedWeeks.forEach((week, idx) => {
+                container.innerHTML += `
+                    <div class="manifest-card" style="background:#f9fafb; margin-bottom:10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="font-size: 14px; color:var(--tl-navy);">Week ${idx + 1} (${week.dateRange})</strong>
+                            <span style="font-size: 13px; font-weight:600; color:var(--success-color);">${week.totalHours} hrs</span>
+                        </div>
+                        <p style="font-size: 12px; color:var(--text-muted); margin-top:4px;">Driver: ${week.driverName}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function populateDropdowns() {
+            const startSelect = document.getElementById('opStartHubSelect');
+            const endSelect = document.getElementById('opEndHubSelect');
+            
+            startSelect.innerHTML = '';
+            appState.startHubs.forEach(h => {
+                let opt = document.createElement('option');
+                opt.value = h; opt.textContent = h;
+                if (h === appState.startHub) opt.selected = true;
+                startSelect.appendChild(opt);
+            });
+
+            endSelect.innerHTML = '';
+            appState.endHubs.forEach(h => {
+                let opt = document.createElement('option');
+                opt.value = h; opt.textContent = h;
+                if (h === appState.endHub) opt.selected = true;
+                endSelect.appendChild(opt);
+            });
+            populateOpHotels(hotelDatabase);
+        }
+
+        function updateRouteEndpoints() {
+            appState.startHub = document.getElementById('opStartHubSelect').value;
+            appState.endHub = document.getElementById('opEndHubSelect').value;
+            saveToLocalStorage();
+        }
+
+        function populateOpHotels(hotels) {
+            const select = document.getElementById('opHotelSelect');
+            select.innerHTML = '';
+            hotels.forEach(h => {
+                let opt = document.createElement('option');
+                opt.value = h; opt.textContent = h;
+                select.appendChild(opt);
+            });
+            loadHotelNotePreset();
+        }
+
+        function filterOpHotels() {
+            const query = document.getElementById('opHotelSearch').value.toLowerCase().trim();
+            const filtered = hotelDatabase.filter(h => query === "" || h.replace("Travelodge ", "").toLowerCase().includes(query));
+            populateOpHotels(filtered);
+        }
+
+        function loadHotelNotePreset() {
+            const hotel = document.getElementById('opHotelSelect').value;
+            const notesField = document.getElementById('opHotelNotes');
+            notesField.value = (hotel && appState.hotelNotes && appState.hotelNotes[hotel]) ? appState.hotelNotes[hotel] : "";
+        }
+
+        function populateOpEngineerCheckboxes() {
+            const container = document.getElementById('opEngineerCheckboxes');
+            container.innerHTML = '';
+            if (!appState.engineers || appState.engineers.length === 0) {
+                container.innerHTML = `<span style="font-size:13px; color:var(--text-muted);">No engineers configured.</span>`;
+                return;
+            }
+            appState.engineers.forEach(eng => {
+                container.innerHTML += `
+                    <label class="eng-checkbox-label">
+                        <input type="checkbox" name="opEngineer" value="${eng}"> ${eng}
+                    </label>
+                `;
+            });
+        }
+
+        function updateColorDropdownOptions() {
+            const usedColors = appState.manifest.map(d => d.color);
+            const colorSelect = document.getElementById('opColorSelect');
+            for (let i = 0; i < colorSelect.options.length; i++) {
+                let opt = colorSelect.options[i];
+                if (opt.value === "") continue;
+                if (usedColors.includes(opt.value)) {
+                    opt.disabled = true; opt.text = opt.value + " (Already used)";
+                } else {
+                    opt.disabled = false; opt.text = opt.value;
+                }
+            }
+        }
+
+        function addManifestDrop() {
+            const hotel = document.getElementById('opHotelSelect').value;
+            const colour = document.getElementById('opColorSelect').value;
+            const notes = document.getElementById('opHotelNotes').value.trim();
+            const photoInput = document.getElementById('opPhotoInput');
+
+            const checkedEngs = [];
+            document.querySelectorAll('input[name="opEngineer"]:checked').forEach(cb => checkedEngs.push(cb.value));
+
+            if (!hotel) { alert("Please select a hotel destination."); return; }
+            if (checkedEngs.length === 0) { alert("Please select at least one engineer."); return; }
+            if (!colour) { alert("Please select a sticker dot colour."); return; }
+
+            if (!appState.hotelNotes) appState.hotelNotes = {};
+            if (notes) appState.hotelNotes[hotel] = notes; else delete appState.hotelNotes[hotel];
+
+            if (photoInput.files && photoInput.files[0]) {
+                compressImage(photoInput.files[0], function(compressedUrl) {
+                    pushDrop(hotel, checkedEngs, colour, notes, compressedUrl);
+                });
+            } else {
+                pushDrop(hotel, checkedEngs, colour, notes, "");
+            }
+        }
+
+        function pushDrop(hotel, engineers, colour, notes, photoUrl) {
+            appState.manifest.push({ id: Date.now(), hotel, engineers, color: colour, notes, stagingPhoto: photoUrl, proofPhoto: "", completed: false });
+            document.getElementById('opHotelSearch').value = "";
+            populateOpHotels(hotelDatabase);
+            document.querySelectorAll('input[name="opEngineer"]').forEach(cb => cb.checked = false);
+            document.getElementById('opColorSelect').value = "";
+            document.getElementById('opPhotoInput').value = "";
+            document.getElementById('opHotelNotes').value = "";
+
+            saveToLocalStorage();
+            renderOpManifest();
+            updateColorDropdownOptions();
+        }
+
+        function renderOpManifest() {
+            const container = document.getElementById('opManifestList');
+            document.getElementById('opDropCount').textContent = appState.manifest.length;
+            const publishBtn = document.getElementById('publishBtn');
+            const summaryBox = document.getElementById('opRouteSummaryContainer');
+            updateRouteEndpoints();
+
+            if (appState.manifest.length > 0) {
+                publishBtn.removeAttribute('disabled');
+                summaryBox.style.display = 'block';
+                document.getElementById('opEstWorkload').textContent = `~${appState.manifest.length * appState.dropTimeMins} mins stop time + travel`;
+                document.getElementById('opDropTimeDisplay').textContent = appState.dropTimeMins;
+
+                container.innerHTML = '';
+                appState.manifest.forEach((d, idx) => {
+                    let hex = colorHexMap[d.color] || '#ccc';
+                    let mappedAddr = getMappedHotelAddress(d.hotel);
+                    container.innerHTML += `
+                        <div class="manifest-card" style="border-left: 4px solid ${hex};">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong>Stop ${idx + 1}: ${d.hotel}</strong>
+                                <button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeDrop(${idx})">Remove</button>
+                            </div>
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
+                            <p style="margin: 8px 0; font-size: 13px; color: var(--text-muted);">
+                                Engineers: <b style="color: var(--tl-navy);">${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b style="color: var(--tl-navy);">${d.color}</b>
+                            </p>
+                            ${d.notes ? `<div class="notes-box">📝 Notes: <input type="text" value="${d.notes}" style="background:transparent; border:none; width:80\%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDropNote(${idx}, this.value)"></div>` : ''}
+                            ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
+                            <div class="route-order-controls">
+                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Move Up</button>
+                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Move Down</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                publishBtn.setAttribute('disabled', 'true');
+                summaryBox.style.display = 'none';
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>`;
+            }
+        }
+
+        function launchOpFullRouteMap() {
+            if (appState.manifest.length === 0) { alert("Please add at least one drop."); return; }
+            let waypointsArr = appState.manifest.map(d => encodeURIComponent(getMappedHotelAddress(d.hotel)));
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(appState.startHub)}&destination=${encodeURIComponent(appState.endHub)}`;
+            if (waypointsArr.length > 0) mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        function updateDropNote(idx, val) {
+            appState.manifest[idx].notes = val;
+            let hotel = appState.manifest[idx].hotel;
+            if (!appState.hotelNotes) appState.hotelNotes = {};
+            if (val) appState.hotelNotes[hotel] = val; else delete appState.hotelNotes[hotel];
+            saveToLocalStorage();
+        }
+
+        function moveDrop(idx, direction) {
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= appState.manifest.length) return;
+            let item = appState.manifest.splice(idx, 1)[0];
+            appState.manifest.splice(newIdx, 0, item);
+            saveToLocalStorage();
+            renderOpManifest();
+        }
+
+        function removeDrop(idx) {
+            appState.manifest.splice(idx, 1);
+            saveToLocalStorage();
+            renderOpManifest();
+            updateColorDropdownOptions();
+        }
+
+        function publishManifest() {
+            const payload = { ...appState };
+            db.ref('routeData').set(payload).catch(err => console.warn(err));
+            alert("Route manifest published successfully!");
+            saveToLocalStorage();
+            openDriverPortal();
+        }
+
+        function renderDriverManifest() {
+            const container = document.getElementById('driverManifestList');
+            document.getElementById('driverStartHub').textContent = appState.startHub;
+            document.getElementById('driverEndHub').textContent = appState.endHub;
+
+            const returnSelect = document.getElementById('driverReturnSelect');
+            returnSelect.innerHTML = '';
+            appState.endHubs.forEach(h => {
+                let opt = document.createElement('option');
+                opt.value = h; opt.textContent = h;
+                if (h === appState.endHub) opt.selected = true;
+                returnSelect.appendChild(opt);
+            });
+
+            let allCompleted = appState.manifest.length > 0 && appState.manifest.every(d => d.completed);
+            document.getElementById('returnJourneySection').style.display = allCompleted ? 'block' : 'none';
+
+            if (appState.manifest.length > 0) {
+                container.innerHTML = '';
+                appState.manifest.forEach((d, idx) => {
+                    let hex = colorHexMap[d.color] || '#ccc';
+                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 600;">✔ Delivered</span>' : '<span style="color: #f59e0b; font-weight: 600;">Pending</span>';
+                    let mappedAddr = getMappedHotelAddress(d.hotel);
+
+                    container.innerHTML += `
+                        <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="font-size: 16px;">Stop ${idx + 1}: ${d.hotel}</strong>
+                                ${statusBadge}
+                            </div>
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
+                            <p style="margin: 8px 0; font-size: 14px;">
+                                Engineers: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
+                                Sticker Dot: <span class="color-dot" style="background-color: ${hex};"></span><b style="color:var(--tl-navy);">${d.color}</b>
+                            </p>
+                            <div class="notes-box">📝 Notes: <input type="text" value="${d.notes || ''}" style="background:transparent; border:none; width:70%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
+                            ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
+                            ${d.proofPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
+                            <div style="margin-top: 12px;">
+                                ${!d.completed ? `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Delivery Photo & Complete</button>` : `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>`;
+            }
+        }
+
+        function updateDriverDropNote(idx, val) {
+            appState.manifest[idx].notes = val;
+            let hotel = appState.manifest[idx].hotel;
+            if (!appState.hotelNotes) appState.hotelNotes = {};
+            if (val) appState.hotelNotes[hotel] = val; else delete appState.hotelNotes[hotel];
+            saveToLocalStorage();
+        }
+
+        let activeDeliveryIndex = null;
+        function promptDeliveryProof(idx) {
+            activeDeliveryIndex = idx;
+            document.getElementById('proofPhotoInput').value = "";
+            document.getElementById('proofPhotoModal').style.display = 'flex';
+        }
+
+        function closeProofModal() {
+            document.getElementById('proofPhotoModal').style.display = 'none';
+            activeDeliveryIndex = null;
+        }
+
+        function submitDeliveryProof() {
+            const fileInput = document.getElementById('proofPhotoInput');
+            let drop = appState.manifest[activeDeliveryIndex];
+            if (fileInput.files && fileInput.files[0]) {
+                compressImage(fileInput.files[0], function(compressedUrl) {
+                    drop.proofPhoto = compressedUrl;
+                    finalizeDropCompletion(drop);
+                });
+            } else {
+                finalizeDropCompletion(drop);
+            }
+        }
+
+        function finalizeDropCompletion(drop) {
+            drop.completed = true;
+            saveToLocalStorage();
+            closeProofModal();
+            renderDriverManifest();
+            document.getElementById('whatsappTextOutput').textContent = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
+            document.getElementById('whatsappModal').style.display = 'flex';
+        }
+
+        function undoDelivery(idx) {
+            appState.manifest[idx].completed = false;
+            appState.manifest[idx].proofPhoto = "";
+            saveToLocalStorage();
+            renderDriverManifest();
+        }
+
+        function copyTextAndClose() {
+            navigator.clipboard.writeText(document.getElementById('whatsappTextOutput').textContent).then(() => alert("Text copied!"));
+        }
+
+        function continueRouteFromModal() {
+            document.getElementById('whatsappModal').style.display = 'none';
+            launchLiveGPSRoute();
+        }
+
+        function launchLiveGPSRoute() {
+            let pendingStops = appState.manifest.filter(d => !d.completed);
+            if (pendingStops.length === 0) { alert("All stops completed!"); return; }
+            let destination = getMappedHotelAddress(pendingStops[0].hotel);
+            let waypointsArr = pendingStops.slice(1).map(d => getMappedHotelAddress(d.hotel));
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    openGoogleMapsUrl(`${pos.coords.latitude},${pos.coords.longitude}`, destination, waypointsArr);
+                }, () => openGoogleMapsUrl(appState.startHub, destination, waypointsArr), { timeout: 10000 });
+            } else {
+                openGoogleMapsUrl(appState.startHub, destination, waypointsArr);
+            }
+        }
+
+        function launchCompleteDriverRoute() {
+            let waypointsArr = appState.manifest.map(d => encodeURIComponent(getMappedHotelAddress(d.hotel)));
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(appState.startHub)}&destination=${encodeURIComponent(appState.endHub)}`;
+            if (waypointsArr.length > 0) mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        function openGoogleMapsUrl(origin, destination, waypointsArr) {
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+            if (waypointsArr.length > 0) mapsUrl += `&waypoints=${waypointsArr.map(w => encodeURIComponent(w)).join('|')}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        function launchReturnNavigation() {
+            let returnDest = document.getElementById('driverReturnSelect').value;
+            if (!returnDest) return;
+            let lastDrop = appState.manifest.length > 0 ? getMappedHotelAddress(appState.manifest[appState.manifest.length - 1].hotel) : appState.startHub;
+            window.open(`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`, '_blank');
+        }
+
+        function completeShiftDone() {
+            if (confirm("Sign off and complete today's shift? Clears active manifest & photos.")) {
+                appState.manifest = [];
+                saveToLocalStorage();
+                db.ref('routeData').set(appState).catch(err => console.warn(err));
+                returnHome();
+            }
+        }
+
+        function addStartHubItem() {
+            const input = document.getElementById('newStartHubInput');
+            if (input.value.trim()) { appState.startHubs.push(input.value.trim()); input.value = ''; saveToLocalStorage(); renderSettingsLists(); }
+        }
+
+        function removeStartHubItem(idx) {
+            if (appState.startHubs.length <= 1) { alert("Must keep at least one starting hub."); return; }
+            appState.startHubs.splice(idx, 1); saveToLocalStorage(); renderSettingsLists();
+        }
+
+        function addEndHubItem() {
+            const input = document.getElementById('newEndHubInput');
+            if (input.value.trim()) { appState.endHubs.push(input.value.trim()); input.value = ''; saveToLocalStorage(); renderSettingsLists(); }
+        }
+
+        function removeEndHubItem(idx) {
+            if (appState.endHubs.length <= 1) { alert("Must keep at least one end hub."); return; }
+            appState.endHubs.splice(idx, 1); saveToLocalStorage(); renderSettingsLists();
+        }
+
+        function addEngineer() {
+            const input = document.getElementById('newEngInput');
+            if (input.value.trim()) { appState.engineers.push(input.value.trim()); input.value = ''; saveToLocalStorage(); renderSettingsLists(); populateOpEngineerCheckboxes(); }
+        }
+
+        function removeEngineer(idx) {
+            appState.engineers.splice(idx, 1); saveToLocalStorage(); renderSettingsLists(); populateOpEngineerCheckboxes();
+        }
+
+        function populateSettingsHotelDropdown() {
+            const select = document.getElementById('settingHotelSelect');
+            select.innerHTML = '';
+            hotelDatabase.forEach(h => {
+                let opt = document.createElement('option'); opt.value = h; opt.textContent = h; select.appendChild(opt);
+            });
+            select.onchange = function() {
+                document.getElementById('settingHotelAddressInput').value = (appState.hotelAddresses && appState.hotelAddresses[this.value]) ? appState.hotelAddresses[this.value] : "";
+            };
+            document.getElementById('settingHotelAddressInput').value = appState.hotelAddresses[hotelDatabase[0]] || "";
+        }
+
+        function saveCustomHotelAddress() {
+            const hotel = document.getElementById('settingHotelSelect').value;
+            const address = document.getElementById('settingHotelAddressInput').value.trim();
+            if (!hotel) return;
+            if (!appState.hotelAddresses) appState.hotelAddresses = {};
+            if (address) appState.hotelAddresses[hotel] = address; else delete appState.hotelAddresses[hotel];
+            saveToLocalStorage();
+            renderSettingsLists();
+            alert(`Address saved for ${hotel}!`);
+        }
+
+        function removeCustomHotelAddress(hotelName) {
+            if (appState.hotelAddresses && appState.hotelAddresses[hotelName]) {
+                delete appState.hotelAddresses[hotelName];
+                saveToLocalStorage();
+                renderSettingsLists();
+                populateSettingsHotelDropdown();
+            }
+        }
+
+        function renderSettingsLists() {
+            const startContainer = document.getElementById('startHubConfigList');
+            startContainer.innerHTML = '';
+            appState.startHubs.forEach((h, idx) => {
+                startContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button></div>`;
+            });
+
+            const endContainer = document.getElementById('endHubConfigList');
+            endContainer.innerHTML = '';
+            appState.endHubs.forEach((h, idx) => {
+                endContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button></div>`;
+            });
+
+            const engContainer = document.getElementById('engConfigList');
+            engContainer.innerHTML = '';
+            appState.engineers.forEach((eng, idx) => {
+                engContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 14px;">${eng}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button></div>`;
+            });
+
+            const addressContainer = document.getElementById('customAddressesList');
+            addressContainer.innerHTML = '';
+            const overriddenHotels = Object.keys(appState.hotelAddresses || {});
+            if (overriddenHotels.length > 0) {
+                addressContainer.innerHTML = `<h4 style="font-size: 14px; color: var(--tl-navy); margin-bottom: 8px;">Active Overrides (${overriddenHotels.length}):</h4>`;
+                overriddenHotels.forEach(hotelName => {
+                    addressContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><div style="font-size: 12px;"><strong>${hotelName}</strong><br><span style="color: var(--text-muted);">${appState.hotelAddresses[hotelName]}</span></div><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')">X</button></div>`;
+                });
+            }
+        }
+
+        function saveSettings() {
+            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
+            saveToLocalStorage();
+            db.ref('routeData').set(appState).catch(err => console.warn(err));
+            alert("Settings saved successfully!");
+            returnHome();
+        }
+
+        // Initialize Lucide Icons
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+        });
+
+        // Firebase Initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6Ich6r3021Lqrp-1hWwlLOTeg0zHR3MI",
+            authDomain: "travelogsheffield.firebaseapp.com",
+            projectId: "travelogsheffield",
+            storageBucket: "travelogsheffield.firebasestorage.app",
+            messagingSenderId: "682268814885",
+            appId: "1:682268814885:web:ceb6aa889981163ad399cc",
+            measurementId: "G-SGXMPS2PV6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        db.ref('routeData').on('value', (snapshot) => {
+            const remoteData = snapshot.val();
+            if (remoteData) {
+                appState.startHub = remoteData.startHub || appState.startHub;
+                appState.endHub = remoteData.endHub || appState.endHub;
+                appState.startHubs = Array.isArray(remoteData.startHubs) ? remoteData.startHubs : appState.startHubs;
+                appState.endHubs = Array.isArray(remoteData.endHubs) ? remoteData.endHubs : appState.endHubs;
+                appState.engineers = Array.isArray(remoteData.engineers) ? remoteData.engineers : appState.engineers;
+                appState.dropTimeMins = typeof remoteData.dropTimeMins === 'number' ? remoteData.dropTimeMins : appState.dropTimeMins;
+                appState.hotelNotes = (remoteData.hotelNotes && typeof remoteData.hotelNotes === 'object') ? remoteData.hotelNotes : {};
+                appState.hotelAddresses = (remoteData.hotelAddresses && typeof remoteData.hotelAddresses === 'object') ? remoteData.hotelAddresses : {};
+                appState.driverName = remoteData.driverName || appState.driverName;
+                appState.currentWeekHours = remoteData.currentWeekHours || appState.currentWeekHours;
+                appState.shiftTimes = remoteData.shiftTimes || appState.shiftTimes;
+                appState.archivedWeeks = Array.isArray(remoteData.archivedWeeks) ? remoteData.archivedWeeks : [];
+                
+                // Fixed robust array conversion for Firebase JSON arrays
+                if (remoteData.manifest) {
+                    if (Array.isArray(remoteData.manifest)) {
+                        appState.manifest = remoteData.manifest;
+                    } else {
+                        appState.manifest = Object.values(remoteData.manifest).filter(item => item !== null && typeof item === 'object');
+                    }
+                } else {
+                    appState.manifest = [];
+                }
+            }
+            saveToLocalStorage();
+            if (typeof renderOpManifest === 'function') renderOpManifest();
+            if (typeof renderDriverManifest === 'function') renderDriverManifest();
+        });
+    </script>
+</body>
+</html>
