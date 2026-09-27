@@ -314,7 +314,7 @@
 
                 <div class="menu-tile" onclick="openSettingsPortal()">
                     <h3>⚙️ Hub & Driver Settings</h3>
-                    <p>Configure starting hubs, end destinations, registered engineers, and estimated drop durations.</p>
+                    <p>Configure starting hubs, end destinations, registered engineers, drop durations, and custom hotel addresses.</p>
                 </div>
             </div>
         </div>
@@ -464,7 +464,25 @@
                 </div>
                 <div id="engConfigList" style="margin-bottom: 16px;"></div>
 
-                <button class="btn btn-primary" onclick="saveSettings()">💾 Save Hub Settings</button>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
+
+                <h3>🏨 Custom Hotel Address Overrides</h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Select any hotel and assign a full street address, town, or postcode to ensure Google Maps navigates accurately every time.</p>
+                
+                <div class="form-group">
+                    <label>Select Hotel</label>
+                    <select id="settingHotelSelect"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Address / Postcode Override</label>
+                    <input type="text" id="settingHotelAddressInput" placeholder="e.g., Travelodge Sheffield Central, 1 Curtistreet, Sheffield S1 2DJ">
+                </div>
+
+                <button class="btn btn-primary" style="margin-bottom: 16px;" onclick="saveCustomHotelAddress()">💾 Save Hotel Address</button>
+                <div id="customAddressesList"></div>
+
+                <button class="btn btn-primary" style="margin-top: 20px;" onclick="saveSettings()">💾 Save All Hub Settings</button>
             </div>
         </div>
 
@@ -533,8 +551,18 @@
             engineers: ["Dave", "Mark", "Steve", "Paul", "Andy"],
             dropTimeMins: 10,
             hotelNotes: {},
+            hotelAddresses: {}, // Custom address overrides
             manifest: []
         };
+
+        // Helper to resolve hotel name to override address if available
+        function getMappedHotelAddress(hotelName) {
+            if (appState.hotelAddresses && appState.hotelAddresses[hotelName]) {
+                return appState.hotelAddresses[hotelName];
+            }
+            // Fallback: append UK if no override exists to help maps locate it better
+            return hotelName + ", UK";
+        }
 
         // Image compression helper to prevent localStorage quota overflows
         function compressImage(file, callback) {
@@ -586,6 +614,7 @@
                     appState.engineers = Array.isArray(parsed.engineers) ? parsed.engineers : appState.engineers;
                     appState.dropTimeMins = typeof parsed.dropTimeMins === 'number' ? parsed.dropTimeMins : 10;
                     appState.hotelNotes = (parsed.hotelNotes && typeof parsed.hotelNotes === 'object') ? parsed.hotelNotes : {};
+                    appState.hotelAddresses = (parsed.hotelAddresses && typeof parsed.hotelAddresses === 'object') ? parsed.hotelAddresses : {};
                     appState.manifest = Array.isArray(parsed.manifest) ? parsed.manifest : [];
                 } catch (e) {
                     console.error("Error loading local storage state:", e);
@@ -637,6 +666,7 @@
             document.getElementById('headerBar').style.display = 'flex';
             document.getElementById('settingsScreen').classList.add('active-screen');
             document.getElementById('settingDropTime').value = appState.dropTimeMins;
+            populateSettingsHotelDropdown();
             renderSettingsLists();
         }
 
@@ -818,12 +848,14 @@
                 container.innerHTML = '';
                 appState.manifest.forEach((d, idx) => {
                     let hex = colorHexMap[d.color] || '#ccc';
+                    let mappedAddr = getMappedHotelAddress(d.hotel);
                     container.innerHTML += `
                         <div class="manifest-card" style="border-left: 4px solid ${hex};">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <strong>Stop ${idx + 1}: ${d.hotel}</strong>
                                 <button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeDrop(${idx})">Remove</button>
                             </div>
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
                             <p style="margin: 8px 0; font-size: 13px; color: var(--text-muted);">
                                 Engineers: <b style="color: var(--tl-navy);">${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b style="color: var(--tl-navy);">${d.color}</b>
                             </p>
@@ -851,7 +883,7 @@
             }
             let origin = encodeURIComponent(appState.startHub);
             let destination = encodeURIComponent(appState.endHub);
-            let waypointsArr = appState.manifest.map(d => encodeURIComponent(d.hotel));
+            let waypointsArr = appState.manifest.map(d => encodeURIComponent(getMappedHotelAddress(d.hotel)));
             
             let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
             if (waypointsArr.length > 0) {
@@ -904,10 +936,10 @@
                 engineers: appState.engineers,
                 dropTimeMins: appState.dropTimeMins,
                 hotelNotes: appState.hotelNotes,
+                hotelAddresses: appState.hotelAddresses,
                 manifest: manifestObj
             };
 
-            // Wrapped with .catch() so Firebase rule/connection errors don't block the UI
             db.ref('routeData').set(payload).then(() => {
                 console.log("Firebase sync successful");
             }).catch(err => {
@@ -947,6 +979,7 @@
                 appState.manifest.forEach((d, idx) => {
                     let hex = colorHexMap[d.color] || '#ccc';
                     let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 600;">✔ Delivered</span>' : '<span style="color: #f59e0b; font-weight: 600;">Pending</span>';
+                    let mappedAddr = getMappedHotelAddress(d.hotel);
 
                     container.innerHTML += `
                         <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
@@ -954,6 +987,7 @@
                                 <strong style="font-size: 16px;">Stop ${idx + 1}: ${d.hotel}</strong>
                                 ${statusBadge}
                             </div>
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
                             <p style="margin: 8px 0; font-size: 14px;">
                                 Engineers: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
                                 Sticker Dot: <span class="color-dot" style="background-color: ${hex};"></span><b style="color:var(--tl-navy);">${d.color}</b>
@@ -1058,8 +1092,8 @@
                 return;
             }
 
-            let destination = pendingStops[0].hotel;
-            let waypointsArr = pendingStops.slice(1).map(d => d.hotel);
+            let destination = getMappedHotelAddress(pendingStops[0].hotel);
+            let waypointsArr = pendingStops.slice(1).map(d => getMappedHotelAddress(d.hotel));
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
@@ -1080,7 +1114,7 @@
         function launchCompleteDriverRoute() {
             let origin = encodeURIComponent(appState.startHub);
             let destination = encodeURIComponent(appState.endHub);
-            let waypointsArr = appState.manifest.map(d => encodeURIComponent(d.hotel));
+            let waypointsArr = appState.manifest.map(d => encodeURIComponent(getMappedHotelAddress(d.hotel)));
 
             let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
             if (waypointsArr.length > 0) {
@@ -1114,12 +1148,12 @@
                     let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(returnDest)}`;
                     window.open(mapsUrl, '_blank');
                 }, error => {
-                    let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
+                    let lastDrop = appState.manifest.length > 0 ? getMappedHotelAddress(appState.manifest[appState.manifest.length - 1].hotel) : appState.startHub;
                     let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
                     window.open(mapsUrl, '_blank');
                 });
             } else {
-                let lastDrop = appState.manifest.length > 0 ? appState.manifest[appState.manifest.length - 1].hotel : appState.startHub;
+                let lastDrop = appState.manifest.length > 0 ? getMappedHotelAddress(appState.manifest[appState.manifest.length - 1].hotel) : appState.startHub;
                 let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
                 window.open(mapsUrl, '_blank');
             }
@@ -1196,6 +1230,57 @@
             populateOpEngineerCheckboxes();
         }
 
+        function populateSettingsHotelDropdown() {
+            const select = document.getElementById('settingHotelSelect');
+            select.innerHTML = '';
+            hotelDatabase.forEach(h => {
+                let opt = document.createElement('option');
+                opt.value = h;
+                opt.textContent = h;
+                select.appendChild(opt);
+            });
+            select.onchange = function() {
+                const selectedHotel = this.value;
+                const addressInput = document.getElementById('settingHotelAddressInput');
+                if (appState.hotelAddresses && appState.hotelAddresses[selectedHotel]) {
+                    addressInput.value = appState.hotelAddresses[selectedHotel];
+                } else {
+                    addressInput.value = "";
+                }
+            };
+            // Trigger initial load for first option
+            if (hotelDatabase.length > 0) {
+                document.getElementById('settingHotelAddressInput').value = appState.hotelAddresses[hotelDatabase[0]] || "";
+            }
+        }
+
+        function saveCustomHotelAddress() {
+            const hotel = document.getElementById('settingHotelSelect').value;
+            const address = document.getElementById('settingHotelAddressInput').value.trim();
+
+            if (!hotel) return;
+
+            if (!appState.hotelAddresses) appState.hotelAddresses = {};
+            if (address) {
+                appState.hotelAddresses[hotel] = address;
+            } else {
+                delete appState.hotelAddresses[hotel];
+            }
+
+            saveToLocalStorage();
+            renderSettingsLists();
+            alert(`Address saved for ${hotel}!`);
+        }
+
+        function removeCustomHotelAddress(hotelName) {
+            if (appState.hotelAddresses && appState.hotelAddresses[hotelName]) {
+                delete appState.hotelAddresses[hotelName];
+                saveToLocalStorage();
+                renderSettingsLists();
+                populateSettingsHotelDropdown();
+            }
+        }
+
         function renderSettingsLists() {
             const startContainer = document.getElementById('startHubConfigList');
             startContainer.innerHTML = '';
@@ -1229,6 +1314,21 @@
                     </div>
                 `;
             });
+
+            const addressContainer = document.getElementById('customAddressesList');
+            addressContainer.innerHTML = '';
+            const overriddenHotels = Object.keys(appState.hotelAddresses || {});
+            if (overriddenHotels.length > 0) {
+                addressContainer.innerHTML = `<h4 style="font-size: 14px; color: var(--tl-navy); margin-bottom: 8px;">Active Overrides (${overriddenHotels.length}):</h4>`;
+                overriddenHotels.forEach(hotelName => {
+                    addressContainer.innerHTML += `
+                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 12px;"><strong>${hotelName}</strong><br><span style="color: var(--text-muted);">${appState.hotelAddresses[hotelName]}</span></div>
+                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')">X</button>
+                        </div>
+                    `;
+                });
+            }
         }
 
         function saveSettings() {
@@ -1264,6 +1364,7 @@
                 appState.engineers = Array.isArray(remoteData.engineers) ? remoteData.engineers : appState.engineers;
                 appState.dropTimeMins = typeof remoteData.dropTimeMins === 'number' ? remoteData.dropTimeMins : appState.dropTimeMins;
                 appState.hotelNotes = (remoteData.hotelNotes && typeof remoteData.hotelNotes === 'object') ? remoteData.hotelNotes : {};
+                appState.hotelAddresses = (remoteData.hotelAddresses && typeof remoteData.hotelAddresses === 'object') ? remoteData.hotelAddresses : {};
                 
                 if (remoteData.manifest) {
                     appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : Object.values(remoteData.manifest);
