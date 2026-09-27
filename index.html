@@ -8,15 +8,13 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <!-- Firebase Database SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-    <!-- Lucide Icons Library -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root {
             --tl-navy: #002D62;
             --tl-red: #E31B23;
             --tl-blue: #00539F;
-            --bg-color: #f4f6f9;
+            --bg-color: #f0f4f8; /* Even lighter blue-tinted background */
             --card-bg: #ffffff;
             --text-main: #1f2937;
             --text-muted: #6b7280;
@@ -48,10 +46,10 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .header-logo {
-            height: 32px;
-            width: auto;
-            object-fit: contain;
+        header h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .header-btn {
@@ -171,57 +169,37 @@
         }
         .btn-secondary:hover { background-color: #d1d5db; }
 
-        /* Split-Card Grid Layout (2 columns matching work app style) */
         .home-menu-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 16px;
             margin-top: 20px;
         }
 
-        .split-card {
+        .menu-tile {
             background: white;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
+            transition: all 0.2s;
         }
 
-        .split-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,83,159,0.12);
+        .menu-tile:hover {
+            border-color: var(--tl-blue);
+            box-shadow: 0 4px 12px rgba(0,83,159,0.08);
         }
 
-        .split-card-top {
-            background-color: var(--tl-navy);
-            padding: 28px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            min-height: 110px;
+        .menu-tile h3 {
+            font-size: 18px;
+            color: var(--tl-navy);
+            margin-bottom: 6px;
         }
 
-        .split-card-top svg {
-            width: 38px;
-            height: 38px;
-            stroke: white;
-            stroke-width: 1.75;
-        }
-
-        .split-card-bottom {
-            background-color: var(--tl-blue);
-            color: white;
-            padding: 12px 10px;
-            text-align: center;
+        .menu-tile p {
             font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
+            color: var(--text-muted);
         }
 
         .checkbox-group {
@@ -310,7 +288,7 @@
 <body>
 
     <header id="headerBar" style="display: none;">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAAZCAYAAAC0n8VFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iV3VNbnBlTlzheilpOWSVmvcUhDNyprogramm..." alt="Travelodge" class="header-logo" style="height:26px;">
+        <h1>Travelodge Sheffield Depot Portal</h1>
         <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
     </header>
 
@@ -318,43 +296,39 @@
 
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
-            <div style="text-align: center; margin: 16px 0 24px 0;">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAAZCAYAAAC0n8VFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iV3VNbnBlTlzheilpOWSVmvcUhDNyprogramm..." alt="Travelodge Logo" style="max-width: 220px; height: auto; margin-bottom: 12px;">
-                <h2 style="font-size: 20px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
-                <p style="color: var(--text-muted); font-size: 13px;">Select your workflow mode below</p>
+            <div style="text-align: center; margin: 20px 0 30px 0;">
+                <!-- Fixed Logo using reliable Wikimedia/Public Travelodge SVG brand asset -->
+                <div style="margin-bottom: 12px;">
+                    <svg height="32" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 10 H30 V15 H15 V20 H28 V25 H15 V30 H30 V35 H10 Z" fill="#002D62"/>
+                        <text x="42" y="27" font-family="Arial, sans-serif" font-weight="bold" font-size="22" fill="#002D62">Travelodge</text>
+                    </svg>
+                </div>
+                <!-- Updated Title layout: Hub Portal with Sheffield under it -->
+                <h2 style="font-size: 24px; color: var(--tl-navy); margin-bottom: 2px;">Hub Portal</h2>
+                <h3 style="font-size: 16px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Sheffield</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">Select your workflow mode below</p>
             </div>
 
             <div class="home-menu-grid">
-                <!-- Operative Tile -->
-                <div class="split-card" onclick="openOperativePortal()">
-                    <div class="split-card-top">
-                        <i data-lucide="clipboard-list"></i>
-                    </div>
-                    <div class="split-card-bottom">Operative Staging</div>
+                <div class="menu-tile" onclick="openOperativePortal()">
+                    <h3>📋 Operative / Staging Mode</h3>
+                    <p>Build daily delivery manifests, allocate parts to engineers, map sticker dots, and preview routes.</p>
                 </div>
 
-                <!-- Driver Portal Tile -->
-                <div class="split-card" onclick="openDriverPortal()">
-                    <div class="split-card-top">
-                        <i data-lucide="truck"></i>
-                    </div>
-                    <div class="split-card-bottom">Driver Portal</div>
+                <div class="menu-tile" onclick="openDriverPortal()">
+                    <h3>🚚 Driver & Delivery Portal</h3>
+                    <p>View active route, update drop-off notes, capture delivery photo proof, and trigger live GPS maps.</p>
                 </div>
 
-                <!-- Driver Details & Hours Tile -->
-                <div class="split-card" onclick="openDriverDetailsPortal()">
-                    <div class="split-card-top">
-                        <i data-lucide="clock"></i>
-                    </div>
-                    <div class="split-card-bottom">Driver Details</div>
+                <div class="menu-tile" onclick="openDriverDetailsPortal()">
+                    <h3>👤 Driver Details & Hours</h3>
+                    <p>Track daily shift start/finish times, calculate weekly hours, and view 4-week historical logs.</p>
                 </div>
 
-                <!-- Settings Tile -->
-                <div class="split-card" onclick="openSettingsPortal()">
-                    <div class="split-card-top">
-                        <i data-lucide="settings"></i>
-                    </div>
-                    <div class="split-card-bottom">Hub Settings</div>
+                <div class="menu-tile" onclick="openSettingsPortal()">
+                    <h3>⚙️ Hub & Driver Settings</h3>
+                    <p>Configure starting hubs, end destinations, registered engineers, drop durations, and custom hotel addresses.</p>
                 </div>
             </div>
         </div>
@@ -504,7 +478,9 @@
                 <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
 
                 <h3>📅 This Week's Hours (Mon - Fri)</h3>
-                <div id="weeklyHoursBreakdownList" style="margin-bottom: 16px;"></div>
+                <div id="weeklyHoursBreakdownList" style="margin-bottom: 16px;">
+                    <!-- Populated dynamically -->
+                </div>
                 <div class="notes-box" style="background:#f0fdf4; border-color:#bbf7d0; color:#166534;">
                     <strong>Total Hours This Week:</strong> <span id="totalWeeklyHoursDisplay">0.0</span> hrs
                 </div>
@@ -640,14 +616,21 @@
             engineers: ["Dave", "Mark", "Steve", "Paul", "Andy"],
             dropTimeMins: 10,
             hotelNotes: {},
-            hotelAddresses: {}, 
+            hotelAddresses: {}, // Custom address overrides
             manifest: [],
             driverName: "Sheffield Driver",
-            currentWeekHours: { Monday: 0, Tuesday: 0, Wednesday: 0, Thursday: 0, Friday: 0 },
+            currentWeekHours: {
+                Monday: 0,
+                Tuesday: 0,
+                Wednesday: 0,
+                Thursday: 0,
+                Friday: 0
+            },
             shiftTimes: {},
             archivedWeeks: []
         };
 
+        // Helper to resolve hotel name to override address if available
         function getMappedHotelAddress(hotelName) {
             if (appState.hotelAddresses && appState.hotelAddresses[hotelName]) {
                 return appState.hotelAddresses[hotelName];
@@ -655,6 +638,7 @@
             return hotelName + ", UK";
         }
 
+        // Heavy Image compression helper to shrink photos to tiny footprints (under ~50KB)
         function compressImage(file, callback) {
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -667,15 +651,23 @@
                     let height = img.height;
 
                     if (width > height) {
-                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
                     } else {
-                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
                     }
 
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Compress heavily with 0.5 quality JPEG
                     const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
                     callback(compressedDataUrl);
                 };
@@ -684,6 +676,7 @@
             reader.readAsDataURL(file);
         }
 
+        // Load state from local storage on boot
         function loadFromLocalStorage() {
             const saved = localStorage.getItem('travelodge_depot_state');
             if (saved) {
@@ -712,7 +705,11 @@
             try {
                 localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
             } catch (e) {
-                console.error("Error saving to local storage:", e);
+                if (e.name === 'QuotaExceededError') {
+                    alert("Storage limit reached! Photos are too large. Try completing your shift or removing older items.");
+                } else {
+                    console.error("Error saving to local storage:", e);
+                }
             }
         }
 
@@ -751,7 +748,8 @@
             document.getElementById('driverDetailsNameInput').value = appState.driverName;
             
             const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            document.getElementById('currentDayDisplay').textContent = days[new Date().getDay()];
+            const todayName = days[new Date().getDay()];
+            document.getElementById('currentDayDisplay').textContent = todayName;
 
             const todayKey = new Date().toISOString().split('T')[0];
             if (appState.shiftTimes[todayKey]) {
@@ -777,7 +775,8 @@
 
         function setNowTime(elementId) {
             const now = new Date();
-            document.getElementById(elementId).value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            document.getElementById(elementId).value = timeString;
         }
 
         function saveTodayShiftHours() {
@@ -790,25 +789,32 @@
                 return;
             }
 
-            let startMinutes = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]);
-            let finishMinutes = parseInt(finish.split(':')[0]) * 60 + parseInt(finish.split(':')[1]);
+            const [startH, startM] = start.split(':').map(Number);
+            const [finishH, finishM] = finish.split(':').map(Number);
+            
+            let startMinutes = startH * 60 + startM;
+            let finishMinutes = finishH * 60 + finishM;
+            
             let diffMins = finishMinutes - startMinutes;
-
             if (diffMins <= 0) {
                 alert("Finish time must be after start time.");
                 return;
             }
 
             let hoursWorked = parseFloat((diffMins / 60).toFixed(2));
+
             const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             const todayName = days[new Date().getDay()];
             const todayKey = new Date().toISOString().split('T')[0];
 
-            if (todayName !== "Saturday" && todayName !== "Sunday") {
+            if (todayName === "Saturday" || todayName === "Sunday") {
+                alert("Note: Today is a weekend, but your shift hours have been calculated (" + hoursWorked + " hrs).");
+            } else {
                 appState.currentWeekHours[todayName] = hoursWorked;
             }
 
             appState.shiftTimes[todayKey] = { start, finish, hours: hoursWorked };
+
             saveToLocalStorage();
             db.ref('routeData').set(appState).catch(err => console.warn(err));
 
@@ -819,6 +825,7 @@
         function renderWeeklyHoursView() {
             const container = document.getElementById('weeklyHoursBreakdownList');
             container.innerHTML = '';
+
             const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
             let totalWeekly = 0;
 
@@ -832,15 +839,19 @@
                     </div>
                 `;
             });
+
             document.getElementById('totalWeeklyHoursDisplay').textContent = totalWeekly.toFixed(2);
         }
 
         function lockAndArchiveWeek() {
-            if (confirm("Are you sure you want to finalise and archive this week's hours?")) {
-                let totalWeekly = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].reduce((acc, day) => acc + (appState.currentWeekHours[day] || 0), 0);
+            if (confirm("Are you sure you want to finalise and archive this week's hours? This saves the total to history and resets the current week.")) {
+                const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+                let totalWeekly = weekdays.reduce((acc, day) => acc + (appState.currentWeekHours[day] || 0), 0);
+                
                 const weekEndingDate = new Date().toLocaleDateString('en-GB');
 
                 if (!Array.isArray(appState.archivedWeeks)) appState.archivedWeeks = [];
+                
                 appState.archivedWeeks.unshift({
                     dateRange: `Week ending: ${weekEndingDate}`,
                     driverName: appState.driverName,
@@ -848,12 +859,18 @@
                     breakdown: {...appState.currentWeekHours}
                 });
 
-                if (appState.archivedWeeks.length > 4) appState.archivedWeeks = appState.archivedWeeks.slice(0, 4);
+                // Keep only the last 4 weeks (delete 5th week onwards)
+                if (appState.archivedWeeks.length > 4) {
+                    appState.archivedWeeks = appState.archivedWeeks.slice(0, 4);
+                }
+
+                // Reset current week
                 appState.currentWeekHours = { Monday: 0, Tuesday: 0, Wednesday: 0, Thursday: 0, Friday: 0 };
 
                 saveToLocalStorage();
                 db.ref('routeData').set(appState).catch(err => console.warn(err));
-                alert("Week successfully archived!");
+
+                alert("Week successfully archived! Stored in historical logs.");
                 renderWeeklyHoursView();
                 renderHistoricalWeeks();
             }
@@ -862,10 +879,12 @@
         function renderHistoricalWeeks() {
             const container = document.getElementById('historicalWeeksList');
             container.innerHTML = '';
+
             if (!appState.archivedWeeks || appState.archivedWeeks.length === 0) {
                 container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No archived weeks saved yet.</p>`;
                 return;
             }
+
             appState.archivedWeeks.forEach((week, idx) => {
                 container.innerHTML += `
                     <div class="manifest-card" style="background:#f9fafb; margin-bottom:10px;">
@@ -886,7 +905,8 @@
             startSelect.innerHTML = '';
             appState.startHubs.forEach(h => {
                 let opt = document.createElement('option');
-                opt.value = h; opt.textContent = h;
+                opt.value = h;
+                opt.textContent = h;
                 if (h === appState.startHub) opt.selected = true;
                 startSelect.appendChild(opt);
             });
@@ -894,7 +914,8 @@
             endSelect.innerHTML = '';
             appState.endHubs.forEach(h => {
                 let opt = document.createElement('option');
-                opt.value = h; opt.textContent = h;
+                opt.value = h;
+                opt.textContent = h;
                 if (h === appState.endHub) opt.selected = true;
                 endSelect.appendChild(opt);
             });
@@ -912,7 +933,8 @@
             select.innerHTML = '';
             hotels.forEach(h => {
                 let opt = document.createElement('option');
-                opt.value = h; opt.textContent = h;
+                opt.value = h;
+                opt.textContent = h;
                 select.appendChild(opt);
             });
             loadHotelNotePreset();
@@ -920,21 +942,29 @@
 
         function filterOpHotels() {
             const query = document.getElementById('opHotelSearch').value.toLowerCase().trim();
-            const filtered = hotelDatabase.filter(h => query === "" || h.replace("Travelodge ", "").toLowerCase().includes(query));
+            const filtered = hotelDatabase.filter(h => {
+                if (query === "") return true;
+                let cleanName = h.replace("Travelodge ", "").toLowerCase();
+                return cleanName.includes(query);
+            });
             populateOpHotels(filtered);
         }
 
         function loadHotelNotePreset() {
             const hotel = document.getElementById('opHotelSelect').value;
             const notesField = document.getElementById('opHotelNotes');
-            notesField.value = (hotel && appState.hotelNotes && appState.hotelNotes[hotel]) ? appState.hotelNotes[hotel] : "";
+            if (hotel && appState.hotelNotes && appState.hotelNotes[hotel]) {
+                notesField.value = appState.hotelNotes[hotel];
+            } else {
+                notesField.value = "";
+            }
         }
 
         function populateOpEngineerCheckboxes() {
             const container = document.getElementById('opEngineerCheckboxes');
             container.innerHTML = '';
             if (!appState.engineers || appState.engineers.length === 0) {
-                container.innerHTML = `<span style="font-size:13px; color:var(--text-muted);">No engineers configured.</span>`;
+                container.innerHTML = `<span style="font-size:13px; color:var(--text-muted);">No engineers configured in settings.</span>`;
                 return;
             }
             appState.engineers.forEach(eng => {
@@ -949,13 +979,16 @@
         function updateColorDropdownOptions() {
             const usedColors = appState.manifest.map(d => d.color);
             const colorSelect = document.getElementById('opColorSelect');
+            
             for (let i = 0; i < colorSelect.options.length; i++) {
                 let opt = colorSelect.options[i];
                 if (opt.value === "") continue;
                 if (usedColors.includes(opt.value)) {
-                    opt.disabled = true; opt.text = opt.value + " (Already used)";
+                    opt.disabled = true;
+                    opt.text = opt.value + " (Already used)";
                 } else {
-                    opt.disabled = false; opt.text = opt.value;
+                    opt.disabled = false;
+                    opt.text = opt.value;
                 }
             }
         }
@@ -967,14 +1000,29 @@
             const photoInput = document.getElementById('opPhotoInput');
 
             const checkedEngs = [];
-            document.querySelectorAll('input[name="opEngineer"]:checked').forEach(cb => checkedEngs.push(cb.value));
+            document.querySelectorAll('input[name="opEngineer"]:checked').forEach(cb => {
+                checkedEngs.push(cb.value);
+            });
 
-            if (!hotel) { alert("Please select a hotel destination."); return; }
-            if (checkedEngs.length === 0) { alert("Please select at least one engineer."); return; }
-            if (!colour) { alert("Please select a sticker dot colour."); return; }
+            if (!hotel) {
+                alert("Please select a hotel destination.");
+                return;
+            }
+            if (checkedEngs.length === 0) {
+                alert("Please select at least one engineer.");
+                return;
+            }
+            if (!colour) {
+                alert("Please select a sticker dot colour.");
+                return;
+            }
 
             if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (notes) appState.hotelNotes[hotel] = notes; else delete appState.hotelNotes[hotel];
+            if (notes) {
+                appState.hotelNotes[hotel] = notes;
+            } else {
+                delete appState.hotelNotes[hotel];
+            }
 
             if (photoInput.files && photoInput.files[0]) {
                 compressImage(photoInput.files[0], function(compressedUrl) {
@@ -986,7 +1034,17 @@
         }
 
         function pushDrop(hotel, engineers, colour, notes, photoUrl) {
-            appState.manifest.push({ id: Date.now(), hotel, engineers, color: colour, notes, stagingPhoto: photoUrl, proofPhoto: "", completed: false });
+            appState.manifest.push({
+                id: Date.now(),
+                hotel,
+                engineers,
+                color: colour,
+                notes,
+                stagingPhoto: photoUrl,
+                proofPhoto: "",
+                completed: false
+            });
+
             document.getElementById('opHotelSearch').value = "";
             populateOpHotels(hotelDatabase);
             document.querySelectorAll('input[name="opEngineer"]').forEach(cb => cb.checked = false);
@@ -1004,12 +1062,15 @@
             document.getElementById('opDropCount').textContent = appState.manifest.length;
             const publishBtn = document.getElementById('publishBtn');
             const summaryBox = document.getElementById('opRouteSummaryContainer');
+            
             updateRouteEndpoints();
 
             if (appState.manifest.length > 0) {
                 publishBtn.removeAttribute('disabled');
                 summaryBox.style.display = 'block';
-                document.getElementById('opEstWorkload').textContent = `~${appState.manifest.length * appState.dropTimeMins} mins stop time + travel`;
+                
+                let totalDropMins = appState.manifest.length * appState.dropTimeMins;
+                document.getElementById('opEstWorkload').textContent = `~${totalDropMins} mins stop time + travel`;
                 document.getElementById('opDropTimeDisplay').textContent = appState.dropTimeMins;
 
                 container.innerHTML = '';
@@ -1028,6 +1089,7 @@
                             </p>
                             ${d.notes ? `<div class="notes-box">📝 Notes: <input type="text" value="${d.notes}" style="background:transparent; border:none; width:80\%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDropNote(${idx}, this.value)"></div>` : ''}
                             ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
+                            
                             <div class="route-order-controls">
                                 <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Move Up</button>
                                 <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Move Down</button>
@@ -1043,10 +1105,18 @@
         }
 
         function launchOpFullRouteMap() {
-            if (appState.manifest.length === 0) { alert("Please add at least one drop."); return; }
+            if (appState.manifest.length === 0) {
+                alert("Please add at least one drop to generate the route.");
+                return;
+            }
+            let origin = encodeURIComponent(appState.startHub);
+            let destination = encodeURIComponent(appState.endHub);
             let waypointsArr = appState.manifest.map(d => encodeURIComponent(getMappedHotelAddress(d.hotel)));
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(appState.startHub)}&destination=${encodeURIComponent(appState.endHub)}`;
-            if (waypointsArr.length > 0) mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
+            
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+            if (waypointsArr.length > 0) {
+                mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
+            }
             window.open(mapsUrl, '_blank');
         }
 
@@ -1054,7 +1124,11 @@
             appState.manifest[idx].notes = val;
             let hotel = appState.manifest[idx].hotel;
             if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (val) appState.hotelNotes[hotel] = val; else delete appState.hotelNotes[hotel];
+            if (val) {
+                appState.hotelNotes[hotel] = val;
+            } else {
+                delete appState.hotelNotes[hotel];
+            }
             saveToLocalStorage();
         }
 
@@ -1076,11 +1150,35 @@
 
         function publishManifest() {
             const manifestObj = {};
-            appState.manifest.forEach((d, idx) => { manifestObj['drop_' + idx] = d; });
-            const payload = { ...appState, manifest: manifestObj };
+            if (Array.isArray(appState.manifest)) {
+                appState.manifest.forEach((d, idx) => {
+                    manifestObj['drop_' + idx] = d;
+                });
+            }
 
-            db.ref('routeData').set(payload).catch(err => console.warn(err));
-            alert("Route manifest published successfully!");
+            const payload = {
+                startHub: appState.startHub,
+                endHub: appState.endHub,
+                startHubs: appState.startHubs,
+                endHubs: appState.endHubs,
+                engineers: appState.engineers,
+                dropTimeMins: appState.dropTimeMins,
+                hotelNotes: appState.hotelNotes,
+                hotelAddresses: appState.hotelAddresses,
+                manifest: manifestObj,
+                driverName: appState.driverName,
+                currentWeekHours: appState.currentWeekHours,
+                shiftTimes: appState.shiftTimes,
+                archivedWeeks: appState.archivedWeeks
+            };
+
+            db.ref('routeData').set(payload).then(() => {
+                console.log("Firebase sync successful");
+            }).catch(err => {
+                console.warn("Firebase sync failed, working offline:", err);
+            });
+
+            alert("Route manifest published successfully! Driver portal updated.");
             saveToLocalStorage();
             openDriverPortal();
         }
@@ -1094,13 +1192,19 @@
             returnSelect.innerHTML = '';
             appState.endHubs.forEach(h => {
                 let opt = document.createElement('option');
-                opt.value = h; opt.textContent = h;
+                opt.value = h;
+                opt.textContent = h;
                 if (h === appState.endHub) opt.selected = true;
                 returnSelect.appendChild(opt);
             });
 
             let allCompleted = appState.manifest.length > 0 && appState.manifest.every(d => d.completed);
-            document.getElementById('returnJourneySection').style.display = allCompleted ? 'block' : 'none';
+            const returnSection = document.getElementById('returnJourneySection');
+            if (allCompleted) {
+                returnSection.style.display = 'block';
+            } else {
+                returnSection.style.display = 'none';
+            }
 
             if (appState.manifest.length > 0) {
                 container.innerHTML = '';
@@ -1120,11 +1224,15 @@
                                 Engineers: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
                                 Sticker Dot: <span class="color-dot" style="background-color: ${hex};"></span><b style="color:var(--tl-navy);">${d.color}</b>
                             </p>
-                            <div class="notes-box">📝 Notes: <input type="text" value="${d.notes || ''}" style="background:transparent; border:none; width:70%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
-                            ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
+                            <div class="notes-box">📝 Hotel / Parking Notes (Editable): <input type="text" value="${d.notes || ''}" placeholder="Add parking or access notes..." style="background:transparent; border:none; width:70%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
+                            ${d.stagingPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--text-muted);">Drop Staging Photo:</p><img src="${d.stagingPhoto}" class="item-photo">` : ''}
                             ${d.proofPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
+                            
                             <div style="margin-top: 12px;">
-                                ${!d.completed ? `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Delivery Photo & Complete</button>` : `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`}
+                                ${!d.completed ? 
+                                    `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Delivery Photo & Complete</button>` : 
+                                    `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`
+                                }
                             </div>
                         </div>
                     `;
@@ -1138,7 +1246,11 @@
             appState.manifest[idx].notes = val;
             let hotel = appState.manifest[idx].hotel;
             if (!appState.hotelNotes) appState.hotelNotes = {};
-            if (val) appState.hotelNotes[hotel] = val; else delete appState.hotelNotes[hotel];
+            if (val) {
+                appState.hotelNotes[hotel] = val;
+            } else {
+                delete appState.hotelNotes[hotel];
+            }
             saveToLocalStorage();
         }
 
@@ -1157,6 +1269,7 @@
         function submitDeliveryProof() {
             const fileInput = document.getElementById('proofPhotoInput');
             let drop = appState.manifest[activeDeliveryIndex];
+            
             if (fileInput.files && fileInput.files[0]) {
                 compressImage(fileInput.files[0], function(compressedUrl) {
                     drop.proofPhoto = compressedUrl;
@@ -1172,7 +1285,9 @@
             saveToLocalStorage();
             closeProofModal();
             renderDriverManifest();
-            document.getElementById('whatsappTextOutput').textContent = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
+
+            let generatedText = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
+            document.getElementById('whatsappTextOutput').textContent = generatedText;
             document.getElementById('whatsappModal').style.display = 'flex';
         }
 
@@ -1184,105 +1299,205 @@
         }
 
         function copyTextAndClose() {
-            navigator.clipboard.writeText(document.getElementById('whatsappTextOutput').textContent).then(() => alert("Text copied!"));
+            const text = document.getElementById('whatsappTextOutput').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Text copied to clipboard!");
+            }).catch(err => {
+                alert("Failed to copy text automatically.");
+            });
         }
 
         function continueRouteFromModal() {
-            document.getElementById('whatsappModal').style.display = 'none';
+            closeModal();
             launchLiveGPSRoute();
+        }
+
+        function closeModal() {
+            document.getElementById('whatsappModal').style.display = 'none';
         }
 
         function launchLiveGPSRoute() {
             let pendingStops = appState.manifest.filter(d => !d.completed);
-            if (pendingStops.length === 0) { alert("All stops completed!"); return; }
+
+            if (pendingStops.length === 0) {
+                alert("All stops on this manifest have been completed! Check your end of day return journey below.");
+                return;
+            }
+
             let destination = getMappedHotelAddress(pendingStops[0].hotel);
             let waypointsArr = pendingStops.slice(1).map(d => getMappedHotelAddress(d.hotel));
 
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    openGoogleMapsUrl(`${pos.coords.latitude},${pos.coords.longitude}`, destination, waypointsArr);
-                }, () => openGoogleMapsUrl(appState.startHub, destination, waypointsArr), { timeout: 10000 });
+                navigator.geolocation.getCurrentPosition(position => {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+                    let origin = `${lat},${lng}`;
+                    openGoogleMapsUrl(origin, destination, waypointsArr);
+                }, error => {
+                    let origin = appState.startHub;
+                    openGoogleMapsUrl(origin, destination, waypointsArr);
+                }, { timeout: 10000 });
             } else {
-                openGoogleMapsUrl(appState.startHub, destination, waypointsArr);
+                let origin = appState.startHub;
+                openGoogleMapsUrl(origin, destination, waypointsArr);
             }
         }
 
         function launchCompleteDriverRoute() {
+            let origin = encodeURIComponent(appState.startHub);
+            let destination = encodeURIComponent(appState.endHub);
             let waypointsArr = appState.manifest.map(d => encodeURIComponent(getMappedHotelAddress(d.hotel)));
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(appState.startHub)}&destination=${encodeURIComponent(appState.endHub)}`;
-            if (waypointsArr.length > 0) mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
+
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+            if (waypointsArr.length > 0) {
+                mapsUrl += `&waypoints=${waypointsArr.join('|')}`;
+            }
             window.open(mapsUrl, '_blank');
         }
 
         function openGoogleMapsUrl(origin, destination, waypointsArr) {
-            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
-            if (waypointsArr.length > 0) mapsUrl += `&waypoints=${waypointsArr.map(w => encodeURIComponent(w)).join('|')}`;
+            let encodedOrigin = encodeURIComponent(origin);
+            let encodedDest = encodeURIComponent(destination);
+            let encodedWaypoints = waypointsArr.length > 0 ? waypointsArr.map(w => encodeURIComponent(w)).join('|') : '';
+
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodedOrigin}&destination=${encodedDest}`;
+            if (encodedWaypoints) {
+                mapsUrl += `&waypoints=${encodedWaypoints}`;
+            }
             window.open(mapsUrl, '_blank');
         }
 
         function launchReturnNavigation() {
             let returnDest = document.getElementById('driverReturnSelect').value;
-            if (!returnDest) return;
-            let lastDrop = appState.manifest.length > 0 ? getMappedHotelAddress(appState.manifest[appState.manifest.length - 1].hotel) : appState.startHub;
-            window.open(`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`, '_blank');
+            if (!returnDest) {
+                alert("Please specify a return destination.");
+                return;
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    let origin = `${position.coords.latitude},${position.coords.longitude}`;
+                    let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(returnDest)}`;
+                    window.open(mapsUrl, '_blank');
+                }, error => {
+                    let lastDrop = appState.manifest.length > 0 ? getMappedHotelAddress(appState.manifest[appState.manifest.length - 1].hotel) : appState.startHub;
+                    let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
+                    window.open(mapsUrl, '_blank');
+                });
+            } else {
+                let lastDrop = appState.manifest.length > 0 ? getMappedHotelAddress(appState.manifest[appState.manifest.length - 1].hotel) : appState.startHub;
+                let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(lastDrop)}&destination=${encodeURIComponent(returnDest)}`;
+                window.open(mapsUrl, '_blank');
+            }
         }
 
         function completeShiftDone() {
-            if (confirm("Sign off and complete today's shift? Clears active manifest & photos.")) {
+            if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest and delete today's photos to free up memory.")) {
                 appState.manifest = [];
                 saveToLocalStorage();
                 db.ref('routeData').set(appState).catch(err => console.warn(err));
+                alert("Shift successfully completed and photos cleared! Ready for the next run.");
                 returnHome();
             }
         }
 
         function addStartHubItem() {
             const input = document.getElementById('newStartHubInput');
-            if (input.value.trim()) { appState.startHubs.push(input.value.trim()); input.value = ''; saveToLocalStorage(); renderSettingsLists(); }
+            const val = input.value.trim();
+            if (val) {
+                appState.startHubs.push(val);
+                input.value = '';
+                saveToLocalStorage();
+                renderSettingsLists();
+            }
         }
 
         function removeStartHubItem(idx) {
-            if (appState.startHubs.length <= 1) { alert("Must keep at least one starting hub."); return; }
-            appState.startHubs.splice(idx, 1); saveToLocalStorage(); renderSettingsLists();
+            if (appState.startHubs.length <= 1) {
+                alert("You must keep at least one starting hub.");
+                return;
+            }
+            appState.startHubs.splice(idx, 1);
+            saveToLocalStorage();
+            renderSettingsLists();
         }
 
         function addEndHubItem() {
             const input = document.getElementById('newEndHubInput');
-            if (input.value.trim()) { appState.endHubs.push(input.value.trim()); input.value = ''; saveToLocalStorage(); renderSettingsLists(); }
+            const val = input.value.trim();
+            if (val) {
+                appState.endHubs.push(val);
+                input.value = '';
+                saveToLocalStorage();
+                renderSettingsLists();
+            }
         }
 
         function removeEndHubItem(idx) {
-            if (appState.endHubs.length <= 1) { alert("Must keep at least one end hub."); return; }
-            appState.endHubs.splice(idx, 1); saveToLocalStorage(); renderSettingsLists();
+            if (appState.endHubs.length <= 1) {
+                alert("You must keep at least one end destination.");
+                return;
+            }
+            appState.endHubs.splice(idx, 1);
+            saveToLocalStorage();
+            renderSettingsLists();
         }
 
         function addEngineer() {
             const input = document.getElementById('newEngInput');
-            if (input.value.trim()) { appState.engineers.push(input.value.trim()); input.value = ''; saveToLocalStorage(); renderSettingsLists(); populateOpEngineerCheckboxes(); }
+            const name = input.value.trim();
+            if (name) {
+                appState.engineers.push(name);
+                input.value = '';
+                saveToLocalStorage();
+                renderSettingsLists();
+                populateOpEngineerCheckboxes();
+            }
         }
 
         function removeEngineer(idx) {
-            appState.engineers.splice(idx, 1); saveToLocalStorage(); renderSettingsLists(); populateOpEngineerCheckboxes();
+            appState.engineers.splice(idx, 1);
+            saveToLocalStorage();
+            renderSettingsLists();
+            populateOpEngineerCheckboxes();
         }
 
         function populateSettingsHotelDropdown() {
             const select = document.getElementById('settingHotelSelect');
             select.innerHTML = '';
             hotelDatabase.forEach(h => {
-                let opt = document.createElement('option'); opt.value = h; opt.textContent = h; select.appendChild(opt);
+                let opt = document.createElement('option');
+                opt.value = h;
+                opt.textContent = h;
+                select.appendChild(opt);
             });
             select.onchange = function() {
-                document.getElementById('settingHotelAddressInput').value = (appState.hotelAddresses && appState.hotelAddresses[this.value]) ? appState.hotelAddresses[this.value] : "";
+                const selectedHotel = this.value;
+                const addressInput = document.getElementById('settingHotelAddressInput');
+                if (appState.hotelAddresses && appState.hotelAddresses[selectedHotel]) {
+                    addressInput.value = appState.hotelAddresses[selectedHotel];
+                } else {
+                    addressInput.value = "";
+                }
             };
-            document.getElementById('settingHotelAddressInput').value = appState.hotelAddresses[hotelDatabase[0]] || "";
+            if (hotelDatabase.length > 0) {
+                document.getElementById('settingHotelAddressInput').value = appState.hotelAddresses[hotelDatabase[0]] || "";
+            }
         }
 
         function saveCustomHotelAddress() {
             const hotel = document.getElementById('settingHotelSelect').value;
             const address = document.getElementById('settingHotelAddressInput').value.trim();
+
             if (!hotel) return;
+
             if (!appState.hotelAddresses) appState.hotelAddresses = {};
-            if (address) appState.hotelAddresses[hotel] = address; else delete appState.hotelAddresses[hotel];
+            if (address) {
+                appState.hotelAddresses[hotel] = address;
+            } else {
+                delete appState.hotelAddresses[hotel];
+            }
+
             saveToLocalStorage();
             renderSettingsLists();
             alert(`Address saved for ${hotel}!`);
@@ -1301,19 +1516,34 @@
             const startContainer = document.getElementById('startHubConfigList');
             startContainer.innerHTML = '';
             appState.startHubs.forEach((h, idx) => {
-                startContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button></div>`;
+                startContainer.innerHTML += `
+                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px;">${h}</span>
+                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button>
+                    </div>
+                `;
             });
 
             const endContainer = document.getElementById('endHubConfigList');
             endContainer.innerHTML = '';
             appState.endHubs.forEach((h, idx) => {
-                endContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button></div>`;
+                endContainer.innerHTML += `
+                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px;">${h}</span>
+                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
+                    </div>
+                `;
             });
 
             const engContainer = document.getElementById('engConfigList');
             engContainer.innerHTML = '';
             appState.engineers.forEach((eng, idx) => {
-                engContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 14px;">${eng}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button></div>`;
+                engContainer.innerHTML += `
+                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px;">${eng}</span>
+                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
+                    </div>
+                `;
             });
 
             const addressContainer = document.getElementById('customAddressesList');
@@ -1322,23 +1552,23 @@
             if (overriddenHotels.length > 0) {
                 addressContainer.innerHTML = `<h4 style="font-size: 14px; color: var(--tl-navy); margin-bottom: 8px;">Active Overrides (${overriddenHotels.length}):</h4>`;
                 overriddenHotels.forEach(hotelName => {
-                    addressContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><div style="font-size: 12px;"><strong>${hotelName}</strong><br><span style="color: var(--text-muted);">${appState.hotelAddresses[hotelName]}</span></div><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')">X</button></div>`;
+                    addressContainer.innerHTML += `
+                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 12px;"><strong>${hotelName}</strong><br><span style="color: var(--text-muted);">${appState.hotelAddresses[hotelName]}</span></div>
+                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')">X</button>
+                        </div>
+                    `;
                 });
             }
         }
 
         function saveSettings() {
-            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
+            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) | 10;
             saveToLocalStorage();
             db.ref('routeData').set(appState).catch(err => console.warn(err));
-            alert("Settings saved successfully!");
+            alert("Hub configuration and settings saved successfully!");
             returnHome();
         }
-
-        // Initialize Lucide Icons
-        document.addEventListener("DOMContentLoaded", () => {
-            lucide.createIcons();
-        });
 
         // Firebase Initialization
         const firebaseConfig = {
@@ -1353,8 +1583,9 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const routeRef = db.ref('routeData');
         
-        db.ref('routeData').on('value', (snapshot) => {
+        routeRef.on('value', (snapshot) => {
             const remoteData = snapshot.val();
             if (remoteData) {
                 appState.startHub = remoteData.startHub || appState.startHub;
@@ -1369,9 +1600,16 @@
                 appState.currentWeekHours = remoteData.currentWeekHours || appState.currentWeekHours;
                 appState.shiftTimes = remoteData.shiftTimes || appState.shiftTimes;
                 appState.archivedWeeks = Array.isArray(remoteData.archivedWeeks) ? remoteData.archivedWeeks : [];
-                appState.manifest = remoteData.manifest ? (Array.isArray(remoteData.manifest) ? remoteData.manifest : Object.values(remoteData.manifest)) : [];
+                
+                if (remoteData.manifest) {
+                    appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : Object.values(remoteData.manifest);
+                } else {
+                    appState.manifest = [];
+                }
             }
+
             saveToLocalStorage();
+
             if (typeof renderOpManifest === 'function') renderOpManifest();
             if (typeof renderDriverManifest === 'function') renderDriverManifest();
         });
