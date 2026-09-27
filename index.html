@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travelodge Sheffield Parts Depot Portal</title>
+    <title>Travelog Sheffield Parts Depot Portal</title>
     <!-- Firebase App (Core) SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <!-- Firebase Database SDK -->
@@ -48,17 +48,10 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Clean Vector Logo Styling */
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .brand-logo svg {
-            height: 28px;
+        .header-logo {
+            height: 32px;
             width: auto;
+            object-fit: contain;
         }
 
         .header-btn {
@@ -317,14 +310,7 @@
 <body>
 
     <header id="headerBar" style="display: none;">
-        <!-- Clean vector Travelodge logo for header -->
-        <div class="brand-logo">
-            <svg viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="36" height="36" rx="6" fill="#E31B23"/>
-                <path d="M10 26V10H14V22H22V26H10Z" fill="white"/>
-                <text x="44" y="24" fill="white" font-family="system-ui, sans-serif" font-weight="800" font-size="18" letter-spacing="-0.5">Travelodge</text>
-            </svg>
-        </div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjAgNDAiPgogIDxkZWZzPgogICAgPGxpbmVhcmdyYWRpZW50IGlkPSJibHVlQmciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0jMDA1MzlGLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDAzRDczIi8+CiAgICA8L2xpbmVhcmdyYWRpZW50PgogICAgPGxpbmVhcmdyYWRpZW50IGlkPSJyZWRCbG9jayIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeDI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRTMxQjIzIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0MxMTQxQiIvPgogICAgPC9saW5lYXJncmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9InVybCgjbHVlQmcpIi8+CiAgPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjI4IiBoZWZnaHQ9IjI4IiByeD0iNiIgZmlsbD0idXJsKCNyZWRCbG9jaykiLz4KICA8cGF0aCBkPSJNMTEgMjUgQzExIDIyIDE0IDIxIDIwIDIxIEwyNiAyMSBDMjYgMjEgMjggMjIgMjggMjQgQzI4IDI2IDI2IDI3IDIyIDI3IEwxNSAyNyBDMTMgMjcgMTEgMjYgMTEgMjUgWiIgZmlsbD0iI2Y0ZjZmOSIvPgogIDxwYXRoIGQ9Ik0xMiAxOCBDMTIgMTYgMTQgMTUgMTcgMTUgTDIyIDE1IEMyNCAxNSAyNSAxNiAyNSAxNyBMMjUgMTggWiIgZmlsbD0id2hpdGUiLz4KICA8cmVjdCB4PSI5IiB5PSIyMyIgd2lkdGg9IjMiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0id2hpdGUiLz4KICA8cmVjdCB4PSIyNiIgeT0iMjMiIHdpZHRoPSIzIiBoZWZnaHQ9IjMiIHng9IjEuNSIgZmlsbD0id2hpdGUiLz4KICA8dGV4dCB4PSI0MiIgeT0iMjYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWkiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE5IiBmaWxsPSJ3aGl0ZSI+VHJhdmVsb2c8L3RleHQ+Cjwvc3ZnPg==" alt="Travelog" class="header-logo" style="height:26px;">
         <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
     </header>
 
@@ -333,14 +319,7 @@
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
             <div style="text-align: center; margin: 16px 0 24px 0;">
-                <!-- Larger Clean Vector Logo for Home Screen -->
-                <div style="display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
-                    <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 48px; width: auto;">
-                        <rect width="44" height="44" rx="8" fill="#E31B23"/>
-                        <path d="M12 32V12H17V27H28V32H12Z" fill="white"/>
-                        <text x="54" y="30" fill="#002D62" font-family="system-ui, sans-serif" font-weight="800" font-size="24" letter-spacing="-0.5">Travelodge</text>
-                    </svg>
-                </div>
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjAgNDAiPgogIDxkZWZzPgogICAgPGxpbmVhcmdyYWRpZW50IGlkPSJibHVlQmciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0jMDA1MzlGLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDAzRDczIi8+CiAgICA8L2xpbmVhcmdyYWRpZW50PgogICAgPGxpbmVhcmdyYWRpZW50IGlkPSJyZWRCbG9jayIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeDI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRTMxQjIzIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0MxMTQxQiIvPgogICAgPC9saW5lYXJncmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9InVybCgjbHVlQmcpIi8+CiAgPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjI4IiBoZWZnaHQ9IjI4IiByeD0iNiIgZmlsbD0idXJsKCNyZWRCbG9jaykiLz4KICA8cGF0aCBkPSJNMTEgMjUgQzExIDIyIDE0IDIxIDIwIDIxIEwyNiAyMSBDMjYgMjEgMjggMjIgMjggMjQgQzI4IDI2IDI2IDI3IDIyIDI3IEwxNSAyNyBDMTMgMjcgMTEgMjYgMTEgMjUgWiIgZmlsbD0iI2Y0ZjZmOSIvPgogIDxwYXRoIGQ9Ik0xMiAxOCBDMTIgMTYgMTQgMTUgMTcgMTUgTDIyIDE1IEMyNCAxNSAyNSAxNiAyNSAxNyBMMjUgMTggWiIgZmlsbD0id2hpdGUiLz4KICA8cmVjdCB4PSI5IiB5PSIyMyIgd2lkdGg9IjMiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0id2hpdGUiLz4KICA8cmVjdCB4PSIyNiIgeT0iMjMiIHdpZHRoPSIzIiBoZWZnaHQ9IjMiIHng9IjEuNSIgZmlsbD0id2hpdGUiLz4KICA8dGV4dCB4PSI0MiIgeT0iMjYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWkiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE5IiBmaWxsPSJ3aGl0ZSI+VHJhdmVsb2c8L3RleHQ+Cjwvc3ZnPg==" alt="Travelog Logo" style="max-width: 220px; height: auto; margin-bottom: 12px;">
                 <h2 style="font-size: 20px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
                 <p style="color: var(--text-muted); font-size: 13px;">Select your workflow mode below</p>
             </div>
