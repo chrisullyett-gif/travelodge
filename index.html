@@ -493,7 +493,7 @@
     </div>
 
     <script>
-        // Full Complete UK Travelodge Database (Restored from your list)
+        // Full Complete UK Travelodge Database
         const hotelDatabase = [
             "Travelodge Aberdeen Airport", "Travelodge Aberdeen Bucksburn", "Travelodge Aberdeen Central", "Travelodge Aldershot", "Travelodge Alfreton", "Travelodge Alton Four Marks", "Travelodge Altrincham Central", "Travelodge Amesbury Stonehenge", "Travelodge Andover", "Travelodge Arundel Fontwell", "Travelodge Arundel Fontwell Park", "Travelodge Ashbourne", "Travelodge Ashford", "Travelodge Ashford Town Centre", "Travelodge Ashton Under Lyne", "Travelodge Aylesbury", "Travelodge Ayr",
             "Travelodge Bangor", "Travelodge Barnsley", "Travelodge Barnstaple", "Travelodge Barrow In Furness", "Travelodge Barton Mills", "Travelodge Barton Stacey", "Travelodge Basildon", "Travelodge Basildon Wickford", "Travelodge Basingstoke", "Travelodge Bath Central", "Travelodge Bath City Centre Bath Spa", "Travelodge Bath Waterside", "Travelodge Beaconsfield Central", "Travelodge Beckington", "Travelodge Bedford", "Travelodge Bedford Goldington Road", "Travelodge Bedford Marston Moretaine", "Travelodge Belfast Central", "Travelodge Berwick upon Tweed", "Travelodge Bicester", "Travelodge Bicester Cherwell Valley M40", "Travelodge Billingshurst Five Oaks", "Travelodge Birmingham Airport", "Travelodge Birmingham Castle Bromwich", "Travelodge Birmingham Central", "Travelodge Birmingham Central Broadway Plaza", "Travelodge Birmingham Central Moor Street", "Travelodge Birmingham Central Newhall Street", "Travelodge Birmingham Fort Dunlop", "Travelodge Birmingham Frankley M5 Southbound", "Travelodge Birmingham Halesowen", "Travelodge Birmingham Hilton Park M6 Southbound", "Travelodge Birmingham Kingswinford", "Travelodge Birmingham Maypole", "Travelodge Birmingham Oldbury", "Travelodge Birmingham Perry Barr", "Travelodge Birmingham Sheldon", "Travelodge Birmingham Streetly", "Travelodge Birmingham Sutton Coldfield", "Travelodge Birmingham Yardley", "Travelodge Blackburn M65", "Travelodge Blackpool South Promenade", "Travelodge Blackpool South Shore", "Travelodge Blyth A1 M", "Travelodge Bodmin Roche", "Travelodge Bolton Central River Street", "Travelodge Borehamwood", "Travelodge Borehamwood Studio Way", "Travelodge Boston", "Travelodge Bournemouth", "Travelodge Bournemouth Cooper Dean", "Travelodge Bournemouth Seafront", "Travelodge Bracknell", "Travelodge Bracknell Central", "Travelodge Bradford", "Travelodge Bradford Central", "Travelodge Bradford Shipley", "Travelodge Braintree", "Travelodge Brentwood East Horndon", "Travelodge Bridgwater M5", "Travelodge Brighton", "Travelodge Brighton Seafront", "Travelodge Bristol Abbey Wood", "Travelodge Bristol Avonmouth", "Travelodge Bristol Central", "Travelodge Bristol Central Mitchell Lane", "Travelodge Bristol Cribbs Causeway", "Travelodge Bristol Emersons Green", "Travelodge Bristol Filton", "Travelodge Bristol Severn View M48", "Travelodge Bromborough", "Travelodge Bromsgrove Marlbrook", "Travelodge Buckingham", "Travelodge Burford Cotswolds", "Travelodge Burnley", "Travelodge Burton A38 Northbound", "Travelodge Burton A38 Southbound", "Travelodge Burton M6 Northbound", "Travelodge Burton upon Trent Central", "Travelodge Bury",
@@ -536,6 +536,43 @@
             manifest: []
         };
 
+        // Image compression helper to prevent localStorage quota overflows
+        function compressImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    callback(compressedDataUrl);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         // Load state from local storage on boot
         function loadFromLocalStorage() {
             const saved = localStorage.getItem('travelodge_depot_state');
@@ -557,7 +594,15 @@
         }
 
         function saveToLocalStorage() {
-            localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
+            try {
+                localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    alert("Storage limit reached! Photos are too large. Try removing older drops or uploading smaller images.");
+                } else {
+                    console.error("Error saving to local storage:", e);
+                }
+            }
         }
 
         loadFromLocalStorage();
@@ -722,11 +767,9 @@
             }
 
             if (photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    pushDrop(hotel, checkedEngs, colour, notes, e.target.result);
-                };
-                reader.readAsDataURL(photoInput.files[0]);
+                compressImage(photoInput.files[0], function(compressedUrl) {
+                    pushDrop(hotel, checkedEngs, colour, notes, compressedUrl);
+                });
             } else {
                 pushDrop(hotel, checkedEngs, colour, notes, "");
             }
@@ -845,30 +888,36 @@
             updateColorDropdownOptions();
         }
 
-      function publishManifest() {
-    // Convert array to an object so Firebase never strips it
-    const manifestObj = {};
-    if (Array.isArray(appState.manifest)) {
-        appState.manifest.forEach((d, idx) => {
-            manifestObj['drop_' + idx] = d;
-        });
-    }
+        function publishManifest() {
+            const manifestObj = {};
+            if (Array.isArray(appState.manifest)) {
+                appState.manifest.forEach((d, idx) => {
+                    manifestObj['drop_' + idx] = d;
+                });
+            }
 
-    const payload = {
-        startHub: appState.startHub,
-        endHub: appState.endHub,
-        startHubs: appState.startHubs,
-        endHubs: appState.endHubs,
-        engineers: appState.engineers,
-        dropTimeMins: appState.dropTimeMins,
-        hotelNotes: appState.hotelNotes,
-        manifest: manifestObj
-    };
-    db.ref('routeData').set(payload);
-    alert("Route manifest published successfully! Driver portal updated.");
-    saveToLocalStorage();
-    openDriverPortal();
-}
+            const payload = {
+                startHub: appState.startHub,
+                endHub: appState.endHub,
+                startHubs: appState.startHubs,
+                endHubs: appState.endHubs,
+                engineers: appState.engineers,
+                dropTimeMins: appState.dropTimeMins,
+                hotelNotes: appState.hotelNotes,
+                manifest: manifestObj
+            };
+
+            // Wrapped with .catch() so Firebase rule/connection errors don't block the UI
+            db.ref('routeData').set(payload).then(() => {
+                console.log("Firebase sync successful");
+            }).catch(err => {
+                console.warn("Firebase sync failed, working offline:", err);
+            });
+
+            alert("Route manifest published successfully! Driver portal updated.");
+            saveToLocalStorage();
+            openDriverPortal();
+        }
 
         function renderDriverManifest() {
             const container = document.getElementById('driverManifestList');
@@ -956,12 +1005,10 @@
             let drop = appState.manifest[activeDeliveryIndex];
             
             if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    drop.proofPhoto = e.target.result;
+                compressImage(fileInput.files[0], function(compressedUrl) {
+                    drop.proofPhoto = compressedUrl;
                     finalizeDropCompletion(drop);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
+                });
             } else {
                 finalizeDropCompletion(drop);
             }
@@ -1079,14 +1126,14 @@
         }
 
         function completeShiftDone() {
-    if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest for the day.")) {
-        appState.manifest = [];
-        saveToLocalStorage();
-        db.ref('routeData').set(appState);
-        alert("Shift successfully completed! Great driving today.");
-        returnHome();
-    }
-}
+            if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest for the day.")) {
+                appState.manifest = [];
+                saveToLocalStorage();
+                db.ref('routeData').set(appState).catch(err => console.warn(err));
+                alert("Shift successfully completed! Great driving today.");
+                returnHome();
+            }
+        }
 
         function addStartHubItem() {
             const input = document.getElementById('newStartHubInput');
@@ -1186,9 +1233,8 @@
 
         function saveSettings() {
             appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
-
             saveToLocalStorage();
-            db.ref('routeData').set(appState);
+            db.ref('routeData').set(appState).catch(err => console.warn(err));
             alert("Hub configuration and settings saved successfully!");
             returnHome();
         }
@@ -1207,30 +1253,30 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const routeRef = db.ref('routeData');
-routeRef.on('value', (snapshot) => {
-    const remoteData = snapshot.val();
-    if (remoteData) {
-        appState.startHub = remoteData.startHub || appState.startHub;
-        appState.endHub = remoteData.endHub || appState.endHub;
-        appState.startHubs = Array.isArray(remoteData.startHubs) ? remoteData.startHubs : appState.startHubs;
-        appState.endHubs = Array.isArray(remoteData.endHubs) ? remoteData.endHubs : appState.endHubs;
-        appState.engineers = Array.isArray(remoteData.engineers) ? remoteData.engineers : appState.engineers;
-        appState.dropTimeMins = typeof remoteData.dropTimeMins === 'number' ? remoteData.dropTimeMins : appState.dropTimeMins;
-        appState.hotelNotes = (remoteData.hotelNotes && typeof remoteData.hotelNotes === 'object') ? remoteData.hotelNotes : {};
         
-        if (remoteData.manifest) {
-            appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : Object.values(remoteData.manifest);
-        } else {
-            appState.manifest = [];
-        }
-    }
+        routeRef.on('value', (snapshot) => {
+            const remoteData = snapshot.val();
+            if (remoteData) {
+                appState.startHub = remoteData.startHub || appState.startHub;
+                appState.endHub = remoteData.endHub || appState.endHub;
+                appState.startHubs = Array.isArray(remoteData.startHubs) ? remoteData.startHubs : appState.startHubs;
+                appState.endHubs = Array.isArray(remoteData.endHubs) ? remoteData.endHubs : appState.endHubs;
+                appState.engineers = Array.isArray(remoteData.engineers) ? remoteData.engineers : appState.engineers;
+                appState.dropTimeMins = typeof remoteData.dropTimeMins === 'number' ? remoteData.dropTimeMins : appState.dropTimeMins;
+                appState.hotelNotes = (remoteData.hotelNotes && typeof remoteData.hotelNotes === 'object') ? remoteData.hotelNotes : {};
+                
+                if (remoteData.manifest) {
+                    appState.manifest = Array.isArray(remoteData.manifest) ? remoteData.manifest : Object.values(remoteData.manifest);
+                } else {
+                    appState.manifest = [];
+                }
+            }
 
-    saveToLocalStorage();
+            saveToLocalStorage();
 
-    // Refresh the UI so the screen updates automatically
-    if (typeof renderOpManifest === 'function') renderOpManifest();
-    if (typeof renderDriverManifest === 'function') renderDriverManifest();
-});
+            if (typeof renderOpManifest === 'function') renderOpManifest();
+            if (typeof renderDriverManifest === 'function') renderDriverManifest();
+        });
     </script>
 </body>
 </html>
