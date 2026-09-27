@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travelodge Sheffield Parts Depot Portal</title>
+    <title>Travelog Sheffield Parts Depot Portal</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
     <!-- Firebase App (Core) SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <!-- Firebase Database SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <!-- Lucide Icons Library -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti for Shift Completion -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
             --tl-navy: #002D62;
             --tl-red: #E31B23;
-            --tl-blue: #00539F;
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
+            /* Updated Light Blue Hex to user specification */
+            --tl-light-blue: #4BACE3; 
+            
+            --bg-color: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.95);
             --text-main: #1f2937;
             --text-muted: #6b7280;
             --border-color: #e5e7eb;
@@ -29,299 +36,410 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
+            background: radial-gradient(circle at top left, #ffffff, var(--bg-color));
             color: var(--text-main);
-            padding-bottom: 40px;
+            padding-bottom: 60px;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* Modernized Header */
         header {
-            background-color: var(--tl-navy);
+            background: linear-gradient(135deg, var(--tl-navy), #001a3a);
             color: white;
-            padding: 16px 20px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 45, 98, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-logo {
             height: 32px;
             width: auto;
             object-fit: contain;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));
         }
 
         .header-btn {
-            background: rgba(255,255,255,0.15);
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
             color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
             font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .header-btn:hover {
-            background: rgba(255,255,255,0.25);
+            background: var(--tl-light-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(75, 172, 227, 0.4);
         }
 
         .container {
             max-width: 600px;
-            margin: 20px auto;
+            margin: 24px auto;
             padding: 0 16px;
         }
 
+        /* Screen Transitions */
         .screen {
             display: none;
+            animation: fadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .active-screen {
             display: block;
         }
 
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Upgraded Cards with Glassmorphism hints */
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
         }
 
         h2 {
-            font-size: 20px;
+            font-size: 22px;
+            font-weight: 700;
             color: var(--tl-navy);
             margin-bottom: 16px;
+            letter-spacing: -0.5px;
         }
 
         h3 {
-            font-size: 16px;
+            font-size: 17px;
+            font-weight: 600;
             color: var(--tl-navy);
             margin-bottom: 12px;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--tl-light-blue);
+            margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
+        /* Modern Inputs */
         select, input[type="text"], input[type="number"], input[type="time"], textarea {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             font-size: 15px;
             background: #fff;
             color: var(--text-main);
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        select:focus, input:focus {
+        select:focus, input:focus, textarea:focus {
             outline: none;
-            border-color: var(--tl-blue);
-            box-shadow: 0 0 0 3px rgba(0,83,159,0.1);
+            border-color: var(--tl-light-blue);
+            box-shadow: 0 0 0 4px rgba(75, 172, 227, 0.15);
+            transform: translateY(-1px);
         }
 
+        /* Fancy Buttons */
         .btn {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
-            margin-top: 10px;
-            transition: background 0.2s;
+            margin-top: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
         }
+
+        .btn:active { transform: scale(0.97); }
 
         .btn-primary {
-            background-color: var(--tl-blue);
+            background: linear-gradient(135deg, var(--tl-light-blue), #3a9bd0);
             color: white;
+            box-shadow: 0 4px 15px rgba(75, 172, 227, 0.3);
         }
-        .btn-primary:hover { background-color: #003d73; }
+        .btn-primary:hover { 
+            background: linear-gradient(135deg, #3a9bd0, #2c8bc0);
+            box-shadow: 0 6px 20px rgba(75, 172, 227, 0.4);
+            transform: translateY(-2px);
+        }
 
         .btn-danger {
-            background-color: var(--tl-red);
+            background: linear-gradient(135deg, var(--tl-red), #c5141b);
             color: white;
         }
-        .btn-danger:hover { background-color: #c5141b; }
 
         .btn-success {
-            background-color: var(--success-color);
+            background: linear-gradient(135deg, var(--success-color), #059669);
             color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
-        .btn-success:hover { background-color: #059669; }
 
         .btn-secondary {
-            background-color: #e5e7eb;
+            background-color: #f3f4f6;
             color: var(--text-main);
+            border: 1px solid var(--border-color);
         }
-        .btn-secondary:hover { background-color: #d1d5db; }
+        .btn-secondary:hover { background-color: #e5e7eb; }
 
-        /* Split-Card Grid Layout (2 columns matching work app style) */
+        /* Split-Card Grid Layout Makeover */
         .home-menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-top: 20px;
+            gap: 20px;
+            margin-top: 24px;
         }
 
         .split-card {
             background: white;
-            border-radius: 14px;
+            border-radius: 18px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
+            border: 2px solid transparent;
         }
 
         .split-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,83,159,0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(75, 172, 227, 0.2);
+            border-color: var(--tl-light-blue);
         }
 
         .split-card-top {
-            background-color: var(--tl-navy);
-            padding: 28px 16px;
+            background: linear-gradient(135deg, var(--tl-navy), #001a3a);
+            padding: 32px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
-            min-height: 110px;
+            min-height: 120px;
         }
 
         .split-card-top svg {
-            width: 38px;
-            height: 38px;
-            stroke: white;
-            stroke-width: 1.75;
+            width: 44px;
+            height: 44px;
+            stroke: var(--tl-light-blue);
+            stroke-width: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .split-card:hover .split-card-top svg {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .split-card-bottom {
-            background-color: var(--tl-blue);
-            color: white;
-            padding: 12px 10px;
+            background-color: white;
+            color: var(--tl-navy);
+            padding: 16px 10px;
             text-align: center;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
-            letter-spacing: 0.3px;
         }
 
         .checkbox-group {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 6px;
+            gap: 12px;
+            margin-top: 8px;
         }
 
         .eng-checkbox-label {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: #f9fafb;
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            gap: 10px;
+            background: #fff;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
             font-size: 14px;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .eng-checkbox-label:hover {
+            border-color: var(--tl-light-blue);
+            background: rgba(75, 172, 227, 0.05);
+        }
+
+        .eng-checkbox-label input[type="checkbox"] {
+            accent-color: var(--tl-light-blue);
+            width: 18px;
+            height: 18px;
         }
 
         .manifest-card {
             background: white;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 12px;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 16px;
             position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
         }
 
-        .color-dot {
+        .manifest-card:hover {
+            transform: scale(1.01);
+        }
+
+        .colour-dot {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            margin-right: 4px;
+            margin-right: 6px;
             vertical-align: middle;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .notes-box {
-            background: #fffbeb;
-            border: 1px solid #fef3c7;
-            padding: 8px;
-            border-radius: 6px;
+            background: rgba(75, 172, 227, 0.1);
+            border: 1px solid rgba(75, 172, 227, 0.3);
+            padding: 12px;
+            border-radius: 10px;
             font-size: 13px;
-            color: #b45309;
-            margin-top: 8px;
+            color: var(--tl-navy);
+            margin-top: 12px;
+            font-weight: 500;
         }
 
         .item-photo {
             width: 100%;
-            height: 120px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 6px;
-            margin-top: 8px;
-            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-top: 12px;
+            border: 2px solid var(--border-color);
         }
 
+        /* Smooth Overlay */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,45,98,0.6);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 16px;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-card {
             background: white;
             width: 100%;
-            max-width: 400px;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 420px;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(0);
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .route-order-controls {
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Full Screen Animated Overlay for Publish Event */
+        #publishAnimationOverlay {
+            position: fixed;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--tl-navy), #001a3a);
+            z-index: 9999;
             display: flex;
-            gap: 8px;
-            margin-top: 8px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: left 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .publish-text {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-shadow: 0 4px 15px var(--tl-light-blue);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease 0.4s;
+        }
+
+        .publish-active .publish-text {
+            opacity: 1;
+            transform: scale(1);
         }
     </style>
 </head>
 <body>
 
+    <!-- Publishing Animation Overlay -->
+    <div id="publishAnimationOverlay">
+        <i data-lucide="rocket" style="color: var(--tl-light-blue); width: 80px; height: 80px; margin-bottom: 20px;"></i>
+        <h1 class="publish-text">MANIFEST PUBLISHED</h1>
+    </div>
+
     <header id="headerBar" style="display: none;">
-        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23ffffff'>Travelodge</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelodge" class="header-logo" style="height:26px;">
-        <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
+        <!-- Travelog SVG Logo -->
+        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='Poppins,sans-serif' font-weight='900' font-size='22' letter-spacing='-1' fill='%23ffffff'>Travelog</text><circle cx='115' cy='16' r='4' fill='%234BACE3'/></svg>" alt="Travelog" class="header-logo">
+        <button class="header-btn" onclick="returnHome()">🏠 Menu</button>
     </header>
 
     <div class="container">
 
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
-            <div style="text-align: center; margin: 16px 0 24px 0;">
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23002D62'>Travelodge</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelodge Logo" style="max-width: 220px; height: auto; margin-bottom: 12px;">
-                <h2 style="font-size: 20px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
-                <p style="color: var(--text-muted); font-size: 13px;">Select your workflow mode below</p>
+            <div style="text-align: center; margin: 30px 0 40px 0; animation: fadeSlideIn 0.6s ease;">
+                <!-- Main Travelog Logo -->
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='Poppins,sans-serif' font-weight='900' font-size='24' letter-spacing='-1' fill='%23002D62'>Travelog</text><circle cx='124' cy='16' r='5' fill='%234BACE3'/></svg>" alt="Travelog Logo" style="max-width: 240px; height: auto; margin-bottom: 16px;">
+                <h2 style="font-size: 24px; color: var(--tl-navy);">Sheffield Parts Hub</h2>
+                <p style="color: var(--text-muted); font-size: 14px; font-weight: 500;">Select your workflow mode below</p>
             </div>
 
             <div class="home-menu-grid">
@@ -374,10 +492,10 @@
                     <select id="opEndHubSelect" onchange="updateRouteEndpoints()"></select>
                 </div>
 
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
+                <hr style="border:0; border-top:2px dashed var(--border-color); margin: 24px 0;">
 
                 <div class="form-group">
-                    <label>Search Travelodge Hotel</label>
+                    <label>Search Travelog Hotel</label>
                     <input type="text" id="opHotelSearch" placeholder="Type hotel name (e.g., Sheffield, Leeds)..." oninput="filterOpHotels()">
                 </div>
 
@@ -387,7 +505,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Assign Engineers (Check all applicable)</label>
+                    <label>Assign Engineers</label>
                     <div id="opEngineerCheckboxes" class="checkbox-group"></div>
                 </div>
 
@@ -412,110 +530,114 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Staging Photo (Optional - Auto Compressed)</label>
-                    <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 14px;">
+                    <label>Staging Photo</label>
+                    <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; padding: 8px;">
                 </div>
 
-                <button class="btn btn-primary" onclick="addManifestDrop()">➕ Add Drop to Manifest</button>
+                <button class="btn btn-primary" onclick="addManifestDrop()"><i data-lucide="plus-circle" style="width: 18px;"></i> Add Drop to Manifest</button>
             </div>
 
             <div class="card">
                 <h3>Current Route Manifest (<span id="opDropCount">0</span> Stops)</h3>
                 
-                <div id="opRouteSummaryContainer" style="margin-bottom: 12px; display: none;">
-                    <div class="notes-box" style="background:#eff6ff; border-color:#dbeafe; color:#1e40af;">
+                <div id="opRouteSummaryContainer" style="margin-bottom: 20px; display: none;">
+                    <div class="notes-box">
                         ⏱️ <strong>Estimated Workload:</strong> <span id="opEstWorkload">0 mins</span><br>
-                        <span style="font-size:12px; color:var(--text-muted);">Based on <span id="opDropTimeDisplay">10</span> mins per stop + transit time.</span>
+                        <span style="font-size:12px; opacity:0.8;">Based on <span id="opDropTimeDisplay">10</span> mins per stop + transit time.</span>
                     </div>
-                    <button class="btn btn-secondary" style="margin-top: 8px;" onclick="launchOpFullRouteMap()">🗺️ Open Full Route in Google Maps</button>
+                    <button class="btn btn-secondary" style="margin-top: 12px;" onclick="launchOpFullRouteMap()"><i data-lucide="map" style="width: 16px;"></i> Open Full Route in Maps</button>
                 </div>
 
                 <div id="opManifestList">
-                    <p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>
+                    <p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No drops added for today yet.</p>
                 </div>
 
-                <button id="publishBtn" class="btn btn-success" style="margin-top: 16px;" onclick="publishManifest()" disabled>🚀 Publish Manifest to Driver</button>
+                <button id="publishBtn" class="btn btn-success" style="margin-top: 24px; font-size: 16px; padding: 16px;" onclick="publishManifest()" disabled><i data-lucide="send" style="width: 20px;"></i> Publish Manifest to Driver</button>
             </div>
         </div>
 
         <!-- DRIVER PORTAL -->
         <div id="driverScreen" class="screen">
-            <div class="card" style="background: var(--tl-navy); color: white;">
-                <h2 style="color: white; margin-bottom: 8px;">🚚 Driver Live Manifest</h2>
-                <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
+            <div class="card" style="background: linear-gradient(135deg, var(--tl-navy), #001a3a); color: white; border: none;">
+                <h2 style="color: white; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i data-lucide="truck"></i> Driver Live Manifest</h2>
+                <p style="font-size: 13px; color: var(--tl-light-blue); margin-bottom: 16px;">Start: <strong id="driverStartHub" style="color:white;">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub" style="color:white;">Sheffield Parts Depot</strong></p>
                 
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
-                    <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-primary" style="margin: 0;" onclick="launchLiveGPSRoute()"><i data-lucide="navigation" style="width: 16px;"></i> Next Stop</button>
+                    <button class="btn btn-secondary" style="margin: 0; background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.2);" onclick="launchCompleteDriverRoute()"><i data-lucide="map" style="width: 16px;"></i> Full Map</button>
                 </div>
             </div>
 
             <div class="card">
                 <h3>Assigned Drops</h3>
                 <div id="driverManifestList">
-                    <p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>
+                    <p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No active route manifest available yet.</p>
                 </div>
             </div>
 
-            <div class="card" id="returnJourneySection" style="display: none; background: #f0fdf4; border-color: #bbf7d0;">
-                <h3 style="color: #166534;">🏁 End of Route / Return Journey</h3>
-                <p style="font-size: 13px; color: #15803d; margin-bottom: 12px;">All deliveries are completed! Select your return destination.</p>
+            <div class="card" id="returnJourneySection" style="display: none; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
+                <h3 style="color: #065f46; display: flex; align-items: center; gap: 8px;"><i data-lucide="flag"></i> End of Route Journey</h3>
+                <p style="font-size: 13px; color: #047857; margin-bottom: 16px;">All deliveries are completed! Select your return destination.</p>
                 
                 <div class="form-group">
-                    <label style="color: #166534;">Return Hub / Destination</label>
-                    <select id="driverReturnSelect"></select>
+                    <label style="color: #065f46;">Return Hub / Destination</label>
+                    <select id="driverReturnSelect" style="border-color: #a7f3d0; background: white;"></select>
                 </div>
 
-                <button class="btn btn-success" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
-                <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift (Clears Photos)</button>
+                <button class="btn btn-success" onclick="launchReturnNavigation()"><i data-lucide="navigation" style="width: 18px;"></i> Navigate Return Journey</button>
+                <button class="btn btn-secondary" style="margin-top: 12px; background: white; color: #065f46; border-color: #86efac;" onclick="completeShiftDone()"><i data-lucide="check-circle" style="width: 18px;"></i> Sign Off & Complete Shift</button>
             </div>
         </div>
 
         <!-- DRIVER DETAILS & HOURS SCREEN -->
         <div id="driverDetailsScreen" class="screen">
             <div class="card">
-                <h2>👤 Driver Details & Hours Tracking</h2>
+                <h2><i data-lucide="user" style="vertical-align: text-bottom; margin-right: 6px;"></i> Driver Details & Hours</h2>
                 
                 <div class="form-group">
                     <label>Driver Name</label>
                     <input type="text" id="driverDetailsNameInput" value="Sheffield Driver" placeholder="Enter driver name...">
                 </div>
 
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
+                <hr style="border:0; border-top:2px dashed var(--border-color); margin: 24px 0;">
 
                 <h3>⏱️ Today's Shift Log (<span id="currentDayDisplay">Today</span>)</h3>
                 
-                <div id="activeShiftLoggingBox">
+                <div id="activeShiftLoggingBox" style="background: #f9fafb; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color);">
                     <div class="form-group">
-                        <label>Shift Start Time (Before First Drop)</label>
-                        <input type="time" id="shiftStartTimeInput">
-                        <button class="btn btn-secondary" style="margin-top: 6px; padding: 6px; font-size: 12px;" onclick="setNowTime('shiftStartTimeInput')">⏱️ Set to Current Time</button>
+                        <label>Shift Start Time</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="time" id="shiftStartTimeInput">
+                            <button class="btn btn-secondary" style="margin-top: 0; width: auto; padding: 0 16px;" onclick="setNowTime('shiftStartTimeInput')">Now</button>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Shift Finish Time (At End of Shift)</label>
-                        <input type="time" id="shiftEndTimeInput">
-                        <button class="btn btn-secondary" style="margin-top: 6px; padding: 6px; font-size: 12px;" onclick="setNowTime('shiftEndTimeInput')">⏱️ Set to Current Time</button>
+                        <label>Shift Finish Time</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="time" id="shiftEndTimeInput">
+                            <button class="btn btn-secondary" style="margin-top: 0; width: auto; padding: 0 16px;" onclick="setNowTime('shiftEndTimeInput')">Now</button>
+                        </div>
                     </div>
 
-                    <button class="btn btn-primary" onclick="saveTodayShiftHours()">💾 Save Today's Shift Hours</button>
+                    <button class="btn btn-primary" onclick="saveTodayShiftHours()"><i data-lucide="save" style="width: 16px;"></i> Save Today's Hours</button>
                 </div>
 
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
+                <hr style="border:0; border-top:2px dashed var(--border-color); margin: 24px 0;">
 
-                <h3>📅 This Week's Hours (Mon - Fri)</h3>
+                <h3>📅 This Week's Hours</h3>
                 <div id="weeklyHoursBreakdownList" style="margin-bottom: 16px;"></div>
-                <div class="notes-box" style="background:#f0fdf4; border-color:#bbf7d0; color:#166534;">
-                    <strong>Total Hours This Week:</strong> <span id="totalWeeklyHoursDisplay">0.0</span> hrs
+                <div class="notes-box" style="background: linear-gradient(135deg, var(--tl-light-blue), #3a9bd0); color: white; border: none; font-size: 15px;">
+                    <strong>Total Hours This Week:</strong> <span id="totalWeeklyHoursDisplay" style="font-size: 18px;">0.0</span> hrs
                 </div>
 
-                <button class="btn btn-success" style="margin-top: 16px;" onclick="lockAndArchiveWeek()">🔒 Finalise & Archive Week (Friday End)</button>
+                <button class="btn btn-success" style="margin-top: 20px;" onclick="lockAndArchiveWeek()"><i data-lucide="lock" style="width: 16px;"></i> Finalise & Archive Week</button>
             </div>
 
             <div class="card">
                 <h3>📚 Historical Logs (Past 4 Weeks)</h3>
                 <div id="historicalWeeksList">
-                    <p style="color: var(--text-muted); font-size: 14px;">No archived weeks saved yet.</p>
+                    <p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 10px 0;">No archived weeks saved yet.</p>
                 </div>
             </div>
         </div>
@@ -523,40 +645,40 @@
         <!-- SETTINGS PORTAL -->
         <div id="settingsScreen" class="screen">
             <div class="card">
-                <h2>Hub & Settings Configuration</h2>
+                <h2><i data-lucide="settings" style="vertical-align: text-bottom; margin-right: 6px;"></i> Hub Configuration</h2>
                 
                 <div class="form-group">
-                    <label>Stop Duration Estimate (Minutes per Hotel Drop)</label>
+                    <label>Stop Duration Estimate (Mins)</label>
                     <input type="number" id="settingDropTime" min="1" max="60" value="10">
                 </div>
 
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
+                <hr style="border:0; border-top:2px dashed var(--border-color); margin: 24px 0;">
 
                 <h3>Starting Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                     <input type="text" id="newStartHubInput" placeholder="Add new starting hub...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addStartHubItem()">Add</button>
+                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 20px;" onclick="addStartHubItem()">Add</button>
                 </div>
-                <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
+                <div id="startHubConfigList" style="margin-bottom: 24px;"></div>
 
                 <h3>End Destinations / Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                     <input type="text" id="newEndHubInput" placeholder="Add end hub destination...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEndHubItem()">Add</button>
+                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 20px;" onclick="addEndHubItem()">Add</button>
                 </div>
-                <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
+                <div id="endHubConfigList" style="margin-bottom: 24px;"></div>
 
                 <h3>Registered Engineers</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                     <input type="text" id="newEngInput" placeholder="Add engineer name...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEngineer()">Add</button>
+                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 20px;" onclick="addEngineer()">Add</button>
                 </div>
-                <div id="engConfigList" style="margin-bottom: 16px;"></div>
+                <div id="engConfigList" style="margin-bottom: 24px;"></div>
 
-                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
+                <hr style="border:0; border-top:2px dashed var(--border-color); margin: 24px 0;">
 
                 <h3>🏨 Custom Hotel Address Overrides</h3>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Select any hotel and assign a full street address, town, or postcode to ensure Google Maps navigates accurately every time.</p>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Select any hotel and assign a full street address, town, or postcode to ensure Maps navigates accurately.</p>
                 
                 <div class="form-group">
                     <label>Select Hotel</label>
@@ -564,14 +686,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Full Address / Postcode Override</label>
-                    <input type="text" id="settingHotelAddressInput" placeholder="e.g., Travelodge Sheffield Central, 1 Curtistreet, Sheffield S1 2DJ">
+                    <label>Full Address / Postcode</label>
+                    <input type="text" id="settingHotelAddressInput" placeholder="e.g., Travelog Sheffield Central, S1 2DJ">
                 </div>
 
-                <button class="btn btn-primary" style="margin-bottom: 16px;" onclick="saveCustomHotelAddress()">💾 Save Hotel Address</button>
+                <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="saveCustomHotelAddress()">💾 Save Hotel Address</button>
                 <div id="customAddressesList"></div>
 
-                <button class="btn btn-primary" style="margin-top: 20px;" onclick="saveSettings()">💾 Save All Hub Settings</button>
+                <button class="btn btn-success" style="margin-top: 30px; padding: 16px; font-size: 16px;" onclick="saveSettings()"><i data-lucide="check" style="width: 20px;"></i> Save All Settings</button>
             </div>
         </div>
 
@@ -580,10 +702,10 @@
     <!-- PROOF OF DELIVERY PHOTO MODAL -->
     <div id="proofPhotoModal" class="modal-overlay">
         <div class="modal-card">
-            <h3>📷 Delivery Photo Proof</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Capture or upload a handover photo (automatically compressed for memory safety).</p>
-            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 16px;">
-            <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Stop</button>
+            <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="camera" style="color: var(--tl-light-blue);"></i> Delivery Proof</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Capture or upload a handover photo.</p>
+            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 20px; border: 1px solid var(--border-color); padding: 8px; border-radius: 8px; width: 100%;">
+            <button class="btn btn-success" onclick="submitDeliveryProof()"><i data-lucide="check-circle"></i> Confirm Drop</button>
             <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
         </div>
     </div>
@@ -591,42 +713,97 @@
     <!-- WHATSAPP SUMMARY MODAL -->
     <div id="whatsappModal" class="modal-overlay">
         <div class="modal-card">
-            <h3>💬 Delivery Notification</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Copy text summary for WhatsApp confirmation:</p>
-            <div id="whatsappTextOutput" style="background: #f9fafb; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; word-break: break-all;"></div>
-            <button class="btn btn-primary" onclick="copyTextAndClose()">📋 Copy Text & Continue</button>
-            <button class="btn btn-secondary" onclick="continueRouteFromModal()">Skip & Continue Route</button>
+            <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="message-circle" style="color: var(--success-color);"></i> Notification</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Copy text summary for confirmation:</p>
+            <div id="whatsappTextOutput" style="background: #f9fafb; border: 2px solid var(--border-color); padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 500; margin-bottom: 20px; word-break: break-all;"></div>
+            <button class="btn btn-primary" onclick="copyTextAndClose()"><i data-lucide="copy"></i> Copy Text</button>
+            <button class="btn btn-secondary" onclick="continueRouteFromModal()">Skip</button>
         </div>
     </div>
 
     <script>
-        // Full Complete UK Travelodge Database
+        // Web Audio API Context setup for synthesized sounds
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playCinematicPublish() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            // Cinematic deep bass sweep (Zimmer style)
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+            
+            // Layered with a high shimmer tone
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc2.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 1.5);
+            gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+
+            osc.start();
+            osc2.start();
+            osc.stop(audioCtx.currentTime + 1.5);
+            osc2.stop(audioCtx.currentTime + 1.5);
+        }
+
+        function playSuccessChime() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            // Uplifting modern chime
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.type = 'triangle';
+            
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+            osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.25); // G5
+
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1.2);
+        }
+
+        // Full Complete UK Travelog Database (Replaced Travelodge with Travelog)
         const hotelDatabase = [
-            "Travelodge Aberdeen Airport", "Travelodge Aberdeen Bucksburn", "Travelodge Aberdeen Central", "Travelodge Aldershot", "Travelodge Alfreton", "Travelodge Alton Four Marks", "Travelodge Altrincham Central", "Travelodge Amesbury Stonehenge", "Travelodge Andover", "Travelodge Arundel Fontwell", "Travelodge Arundel Fontwell Park", "Travelodge Ashbourne", "Travelodge Ashford", "Travelodge Ashford Town Centre", "Travelodge Ashton Under Lyne", "Travelodge Aylesbury", "Travelodge Ayr",
-            "Travelodge Bangor", "Travelodge Barnsley", "Travelodge Barnstaple", "Travelodge Barrow In Furness", "Travelodge Barton Mills", "Travelodge Barton Stacey", "Travelodge Basildon", "Travelodge Basildon Wickford", "Travelodge Basingstoke", "Travelodge Bath Central", "Travelodge Bath City Centre Bath Spa", "Travelodge Bath Waterside", "Travelodge Beaconsfield Central", "Travelodge Beckington", "Travelodge Bedford", "Travelodge Bedford Goldington Road", "Travelodge Bedford Marston Moretaine", "Travelodge Belfast Central", "Travelodge Berwick upon Tweed", "Travelodge Bicester", "Travelodge Bicester Cherwell Valley M40", "Travelodge Billingshurst Five Oaks", "Travelodge Birmingham Airport", "Travelodge Birmingham Castle Bromwich", "Travelodge Birmingham Central", "Travelodge Birmingham Central Broadway Plaza", "Travelodge Birmingham Central Moor Street", "Travelodge Birmingham Central Newhall Street", "Travelodge Birmingham Fort Dunlop", "Travelodge Birmingham Frankley M5 Southbound", "Travelodge Birmingham Halesowen", "Travelodge Birmingham Hilton Park M6 Southbound", "Travelodge Birmingham Kingswinford", "Travelodge Birmingham Maypole", "Travelodge Birmingham Oldbury", "Travelodge Birmingham Perry Barr", "Travelodge Birmingham Sheldon", "Travelodge Birmingham Streetly", "Travelodge Birmingham Sutton Coldfield", "Travelodge Birmingham Yardley", "Travelodge Blackburn M65", "Travelodge Blackpool South Promenade", "Travelodge Blackpool South Shore", "Travelodge Blyth A1 M", "Travelodge Bodmin Roche", "Travelodge Bolton Central River Street", "Travelodge Borehamwood", "Travelodge Borehamwood Studio Way", "Travelodge Boston", "Travelodge Bournemouth", "Travelodge Bournemouth Cooper Dean", "Travelodge Bournemouth Seafront", "Travelodge Bracknell", "Travelodge Bracknell Central", "Travelodge Bradford", "Travelodge Bradford Central", "Travelodge Bradford Shipley", "Travelodge Braintree", "Travelodge Brentwood East Horndon", "Travelodge Bridgwater M5", "Travelodge Brighton", "Travelodge Brighton Seafront", "Travelodge Bristol Abbey Wood", "Travelodge Bristol Avonmouth", "Travelodge Bristol Central", "Travelodge Bristol Central Mitchell Lane", "Travelodge Bristol Cribbs Causeway", "Travelodge Bristol Emersons Green", "Travelodge Bristol Filton", "Travelodge Bristol Severn View M48", "Travelodge Bromborough", "Travelodge Bromsgrove Marlbrook", "Travelodge Buckingham", "Travelodge Burford Cotswolds", "Travelodge Burnley", "Travelodge Burton A38 Northbound", "Travelodge Burton A38 Southbound", "Travelodge Burton M6 Northbound", "Travelodge Burton upon Trent Central", "Travelodge Bury",
-            "Travelodge Caernarfon", "Travelodge Caerphilly", "Travelodge Camberley", "Travelodge Camberley Central", "Travelodge Cambridge Central", "Travelodge Cambridge Fourwentways", "Travelodge Cambridge Orchard Park", "Travelodge Cambridge Swavesey", "Travelodge Canterbury Chaucer Central", "Travelodge Canterbury Whitstable", "Travelodge Cardiff Airport", "Travelodge Cardiff Atlantic Wharf", "Travelodge Cardiff Central", "Travelodge Cardiff Central Queen Street", "Travelodge Cardiff Gate", "Travelodge Cardiff Llanedeyrn", "Travelodge Cardiff M4", "Travelodge Cardiff Whitchurch", "Travelodge Carlisle Central", "Travelodge Carlisle M6", "Travelodge Carlisle Todhills", "Travelodge Caterham Whyteleafe", "Travelodge Chatham Maritime Hotel", "Travelodge Chelmsford", "Travelodge Cheltenham", "Travelodge Chertsey", "Travelodge Cheshire Oaks", "Travelodge Cheshunt", "Travelodge Chester-le-Street", "Travelodge Chester Central", "Travelodge Chester Central Bridge Street", "Travelodge Chesterfield", "Travelodge Chesterfield Town Centre", "Travelodge Chester Northop Hall", "Travelodge Chester Warrington Road", "Travelodge Chichester Central", "Travelodge Chichester Emsworth", "Travelodge Chippenham", "Travelodge Chippenham Leigh Delamere M4 Eastbound", "Travelodge Chippenham Leigh Delamere M4 Westbound", "Travelodge Christchurch", "Travelodge Cirencester", "Travelodge Clacton-on-Sea Central", "Travelodge Cockermouth", "Travelodge Colchester Feering", "Travelodge Colchester Northern Gateway", "Travelodge Colwyn Bay", "Travelodge Coventry Binley", "Travelodge Crewe", "Travelodge Crewe Barthomley", "Travelodge Croydon Central",
-            "Travelodge Darlington", "Travelodge Dartford", "Travelodge Derby Chaddesden", "Travelodge Derby Cricket Ground", "Travelodge Derby Pride Park", "Travelodge Devizes", "Travelodge Doncaster", "Travelodge Doncaster Lakeside", "Travelodge Doncaster M18 M180", "Travelodge Dorking", "Travelodge Dover", "Travelodge Droitwich", "Travelodge Dudley Town Centre", "Travelodge Dumbarton", "Travelodge Dumfries", "Travelodge Dundee Central", "Travelodge Dundee Strathmore Avenue", "Travelodge Dunfermline", "Travelodge Durham",
-            "Travelodge Eastbourne Willingdon Drove", "Travelodge East Grinstead", "Travelodge Eastleigh Central", "Travelodge Edinburgh Airport Ratho Station", "Travelodge Edinburgh Cameron Toll", "Travelodge Edinburgh Central", "Travelodge Edinburgh Central Queen Street", "Travelodge Edinburgh Central Rose Street", "Travelodge Edinburgh Central Waterloo Place", "Travelodge Edinburgh Dreghorn", "Travelodge Edinburgh Haymarket", "Travelodge Edinburgh Park", "Travelodge Elgin", "Travelodge Ely", "Travelodge Exeter M5",
-            "Travelodge Falkirk", "Travelodge Farnborough Central", "Travelodge Fleet", "Travelodge Fort William", "Travelodge Frimley",
-            "Travelodge Gainsborough", "Travelodge Gateshead", "Travelodge Gatwick Airport Central", "Travelodge Glasgow Airport", "Travelodge Glasgow Braehead", "Travelodge Glasgow Central", "Travelodge Glasgow Cumbernauld", "Travelodge Glasgow Govan", "Travelodge Glasgow Paisley Road", "Travelodge Glasgow Queen Street", "Travelodge Glastonbury", "Travelodge Glenrothes", "Travelodge Gloucester", "Travelodge Gosport", "Travelodge Grantham A1", "Travelodge Grantham Colsterworth", "Travelodge Grantham South Witham", "Travelodge Gravesend", "Travelodge Great Yarmouth", "Travelodge Great Yarmouth Acle", "Travelodge Guildford",
-            "Travelodge Halifax", "Travelodge Halkyn", "Travelodge Harlow", "Travelodge Harrogate", "Travelodge Harrogate West Park", "Travelodge Hartlebury", "Travelodge Hastings", "Travelodge Hatfield Central", "Travelodge Havant Rowlands Castle", "Travelodge Haverhill", "Travelodge Haydock St Helens", "Travelodge Hayle", "Travelodge Heathrow Heston M4 Eastbound", "Travelodge Heathrow Heston M4 Westbound", "Travelodge Hellingly Eastbourne", "Travelodge Hemel Hempstead", "Travelodge Hereford", "Travelodge Hereford Grafton", "Travelodge Hexham", "Travelodge Hickstead", "Travelodge Highbridge Burnham-on-Sea", "Travelodge High Wycombe Central", "Travelodge Holyhead", "Travelodge Horsham Central", "Travelodge Huddersfield", "Travelodge Hull Central", "Travelodge Hull South Cave", "Travelodge Huntingdon Fenstanton",
-            "Travelodge Ilminster", "Travelodge Inverness", "Travelodge Inverness City Centre", "Travelodge Inverness Fairways", "Travelodge Ipswich", "Travelodge Ipswich Beacon Hill", "Travelodge Ipswich Capel St Mary", "Travelodge Ipswich Central", "Travelodge Ipswich Stowmarket",
-            "Travelodge Keighley", "Travelodge Kendal", "Travelodge Kendal Town Centre", "Travelodge Kettering", "Travelodge Kettering Thrapston", "Travelodge Kidderminster", "Travelodge Kilmarnock", "Travelodge Kings Lynn", "Travelodge Kings Lynn Long Sutton", "Travelodge Kingston Upon Thames Central", "Travelodge Kinross M90", "Travelodge Knutsford M6",
-            "Travelodge Lancaster M6", "Travelodge Langley", "Travelodge Leatherhead", "Travelodge Leeds Bradford Airport", "Travelodge Leeds Central", "Travelodge Leeds Central Vicar Lane", "Travelodge Leeds Colton", "Travelodge Leeds Morley", "Travelodge Leicester Central", "Travelodge Leicester Central North", "Travelodge Leicester City Centre", "Travelodge Leicester Hinckley Road", "Travelodge Leicester Markfield", "Travelodge Lincoln City Centre", "Travelodge Lincoln Thorpe On The Hill", "Travelodge Littlehampton Rustington", "Travelodge Liverpool Aigburth", "Travelodge Liverpool Central", "Travelodge Liverpool Central The Strand", "Travelodge Liverpool Docks", "Travelodge Liverpool Edge Lane", "Travelodge Liverpool John Lennon Airport", "Travelodge Liverpool Stonedale Park", "Travelodge Liverpool Stoneycroft", "Travelodge Livingston", "Travelodge Llandudno", "Travelodge Llanelli Central", "Travelodge Llanelli Cross Hands", "Travelodge London Acton", "Travelodge London Barking", "Travelodge London Battersea", "Travelodge London Beckenham", "Travelodge London Beckton", "Travelodge London Belvedere", "Travelodge London Bermondsey", "Travelodge London Brent Cross", "Travelodge London Bromley", "Travelodge London Central Aldgate East", "Travelodge London Central Bank", "Travelodge London Central City Road", "Travelodge London Central Elephant and Castle", "Travelodge London Central Euston", "Travelodge London Central Kings Cross", "Travelodge London Central Marylebone", "Travelodge London Central Southwark", "Travelodge London Central Tower Bridge", "Travelodge London Central Waterloo", "Travelodge London Chessington Tolworth", "Travelodge London Chigwell", "Travelodge London City", "Travelodge London City Airport", "Travelodge London Covent Garden", "Travelodge London Cricklewood", "Travelodge London Crystal Palace", "Travelodge London Dagenham", "Travelodge London Dagenham East", "Travelodge London Docklands", "Travelodge London Ealing", "Travelodge London Edmonton", "Travelodge London Excel", "Travelodge London Farringdon", "Travelodge London Feltham", "Travelodge London Finchley", "Travelodge London Finsbury Park", "Travelodge London Fulham", "Travelodge London Greenwich", "Travelodge London Greenwich High Road", "Travelodge London Hackney", "Travelodge London Harrow", "Travelodge London Ilford", "Travelodge London Ilford Gants Hill", "Travelodge London Kew Bridge", "Travelodge London Kings Cross Royal Scot", "Travelodge London Kingston Upon Thames", "Travelodge London Lewisham", "Travelodge London Liverpool Street", "Travelodge London Mile End", "Travelodge London Northolt", "Travelodge London Oval Cricket Ground", "Travelodge London Park Royal", "Travelodge London Peckham", "Travelodge London Raynes Park", "Travelodge London Richmond Central", "Travelodge London Romford", "Travelodge London Romford The Quadrant", "Travelodge London Snaresbrook", "Travelodge London South Croydon", "Travelodge London Southgate", "Travelodge London Stratford", "Travelodge London Stratford Centre", "Travelodge London Teddington", "Travelodge London Twickenham", "Travelodge London Wembley", "Travelodge London Wembley High Road", "Travelodge London Whetstone", "Travelodge London Wimbledon Central", "Travelodge London Wimbledon Morden", "Travelodge London Wood Green", "Travelodge Loughborough Central", "Travelodge Lowestoft", "Travelodge Ludlow", "Travelodge Ludlow Woofferton", "Travelodge Luton", "Travelodge Lutterworth", "Travelodge Lytham St Annes",
-            "Travelodge Macclesfield Adlington", "Travelodge Macclesfield Central", "Travelodge Maidenhead Central", "Travelodge Maidstone Central", "Travelodge Maldon", "Travelodge Manchester Ancoats", "Travelodge Manchester Birch M62 Eastbound", "Travelodge Manchester Birch M62 Westbound", "Travelodge Manchester Central", "Travelodge Manchester Central Arena", "Travelodge Manchester Didsbury", "Travelodge Manchester Piccadilly", "Travelodge Manchester Sale", "Travelodge Manchester Salford Quays", "Travelodge Manchester Sportcity", "Travelodge Manchester Trafford Park", "Travelodge Manchester Upper Brook Street", "Travelodge Mansfield", "Travelodge Margate Westwood", "Travelodge Market Harborough", "Travelodge Marlow", "Travelodge Medway M2", "Travelodge Melksham", "Travelodge Merthyr Tydfil", "Travelodge Middlesbrough", "Travelodge Middlewich", "Travelodge Milton Keynes at The Hub", "Travelodge Milton Keynes Central", "Travelodge Milton Keynes Old Stratford", "Travelodge Milton Keynes Shenley Church End", "Travelodge Morecambe",
-            "Travelodge Newark-on-Trent", "Travelodge Newbury Chieveley M4", "Travelodge Newbury London Road", "Travelodge Newbury Tot Hill", "Travelodge Newcastle Airport", "Travelodge Newcastle Central", "Travelodge Newcastle Cobalt Business Park", "Travelodge Newcastle Gosforth", "Travelodge Newcastle Quayside", "Travelodge Newcastle Seaton Burn", "Travelodge Newcastle Under Lyme Central", "Travelodge Newcastle Whitemare Pool", "Travelodge Newport Central", "Travelodge Newport Isle Of Wight", "Travelodge Newquay Seafront", "Travelodge Northampton Central", "Travelodge Northampton Round Spinney", "Travelodge Northampton Upton Way", "Travelodge Northampton Wootton", "Travelodge Northwich Lostock Gralam", "Travelodge Norwich Central", "Travelodge Norwich Central Riverside", "Travelodge Norwich Cringleford", "Travelodge Nottingham Central", "Travelodge Nottingham Em Airport Donington Park M1", "Travelodge Nottingham Riverside", "Travelodge Nottingham Trowell M1", "Travelodge Nottingham Wollaton Park", "Travelodge Nuneaton", "Travelodge Nuneaton Bedworth",
-            "Travelodge Okehampton Sourton Cross", "Travelodge Okehampton Whiddon Down", "Travelodge Oldham Chadderton", "Travelodge Oswestry", "Travelodge Oxford Abingdon Road", "Travelodge Oxford Peartree", "Travelodge Oxford Wheatley",
-            "Travelodge Paignton Seafront", "Travelodge Pembroke Dock", "Travelodge Penrith", "Travelodge Perth A9", "Travelodge Perth Broxden Junction", "Travelodge Perth Central", "Travelodge Peterborough Alwalton", "Travelodge Peterborough Central", "Travelodge Peterborough Eye Green", "Travelodge Plymouth", "Travelodge Plymouth Derriford", "Travelodge Plymouth Roborough", "Travelodge Pontefract Ferrybridge A1 M62", "Travelodge Poole", "Travelodge Poole North", "Travelodge Porthmadog", "Travelodge Portsmouth", "Travelodge Portsmouth City Centre", "Travelodge Portsmouth Hilsea", "Travelodge Preston Central", "Travelodge Preston Chorley", "Travelodge Preston North",
-            "Travelodge Ramsgate Seafront", "Travelodge Reading Central", "Travelodge Reading M4 Eastbound", "Travelodge Reading M4 Westbound", "Travelodge Reading Whitley", "Travelodge Redhill", "Travelodge Redhill Town Centre", "Travelodge Retford Markham Moor", "Travelodge Rhyl Seafront", "Travelodge Ringwood", "Travelodge Rochdale", "Travelodge Rugby Central", "Travelodge Rugby Dunchurch", "Travelodge Rugeley", "Travelodge Ryde Isle of Wight",
-            "Travelodge Saltash", "Travelodge Sandwich", "Travelodge Scarborough St Nicholas", "Travelodge Scotch Corner A1 Southbound", "Travelodge Scotch Corner Skeeby", "Travelodge Scunthorpe", "Travelodge Sedgefield", "Travelodge Sheffield Central", "Travelodge Sheffield Meadowhall", "Travelodge Sheffield Richmond", "Travelodge Shrewsbury Battlefield", "Travelodge Shrewsbury Bayston Hill", "Travelodge Sittingbourne", "Travelodge Skegness Seafront", "Travelodge Skipton", "Travelodge Sleaford", "Travelodge Slough", "Travelodge Southampton", "Travelodge Southampton Central", "Travelodge Southampton Eastleigh", "Travelodge Southend On Sea", "Travelodge Spalding", "Travelodge Stafford Central", "Travelodge Stafford M6", "Travelodge Staines", "Travelodge St Albans City Centre", "Travelodge Stansted Great Dunmow", "Travelodge St Austell", "Travelodge St Clears Carmarthen", "Travelodge Stirling City Centre", "Travelodge Stirling M80", "Travelodge Stockport", "Travelodge Stoke-on-Trent Trentham", "Travelodge Stoke Talke", "Travelodge Stonehouse", "Travelodge Stoney Cross Lyndhurst", "Travelodge Stratford Alcester", "Travelodge Stratford Upon Avon", "Travelodge Sunbury M3", "Travelodge Sunderland Central", "Travelodge Swansea Central", "Travelodge Swansea M4", "Travelodge Swindon Central", "Travelodge Swindon West",
-            "Travelodge Tamworth Central", "Travelodge Tamworth M42", "Travelodge Taunton", "Travelodge Telford", "Travelodge Telford Shawbirch", "Travelodge Tewkesbury", "Travelodge Thame", "Travelodge The Regent Hotel Leamington Spa", "Travelodge Thetford", "Travelodge Thurrock Lakeside", "Travelodge Tiverton", "Travelodge Toddington M1 Southbound", "Travelodge Torquay", "Travelodge Towcester Silverstone", "Travelodge Tunbridge Wells",
-            "Travelodge Wadebridge", "Travelodge Wakefield", "Travelodge Wakefield Woolley Edge M1 Northbound", "Travelodge Wakefield Woolley Edge M1 Southbound", "Travelodge Wallasey New Brighton", "Travelodge Walsall", "Travelodge Walton-on-Thames", "Travelodge Walton-on-Thames Central", "Travelodge Warminster", "Travelodge Warrington", "Travelodge Warrington Gemini", "Travelodge Warrington Lowton", "Travelodge Washington A1m Northbound", "Travelodge Washington A1m Southbound", "Travelodge Watford Central", "Travelodge Wellingborough", "Travelodge Wellingborough Rushden", "Travelodge Welwyn Garden City", "Travelodge West Bromwich", "Travelodge Weston-super-Mare", "Travelodge Widnes", "Travelodge Winchester", "Travelodge Windsor Central", "Travelodge Wirral Eastham", "Travelodge Witney", "Travelodge Worcester", "Travelodge Workington", "Travelodge Worksop", "Travelodge Worthing Seafront", "Travelodge Wrexham",
-            "Travelodge Yeovil Podimore", "Travelodge York Central", "Travelodge York Central Layerthorpe", "Travelodge York Central Micklegate", "Travelodge York Hull Road", "Travelodge York Monks Cross", "Travelodge York Tadcaster"
+            "Travelog Aberdeen Airport", "Travelog Aberdeen Bucksburn", "Travelog Aberdeen Central", "Travelog Aldershot", "Travelog Alfreton", "Travelog Alton Four Marks", "Travelog Altrincham Central", "Travelog Amesbury Stonehenge", "Travelog Andover", "Travelog Arundel Fontwell", "Travelog Arundel Fontwell Park", "Travelog Ashbourne", "Travelog Ashford", "Travelog Ashford Town Centre", "Travelog Ashton Under Lyne", "Travelog Aylesbury", "Travelog Ayr",
+            "Travelog Bangor", "Travelog Barnsley", "Travelog Barnstaple", "Travelog Barrow In Furness", "Travelog Barton Mills", "Travelog Barton Stacey", "Travelog Basildon", "Travelog Basildon Wickford", "Travelog Basingstoke", "Travelog Bath Central", "Travelog Bath City Centre Bath Spa", "Travelog Bath Waterside", "Travelog Beaconsfield Central", "Travelog Beckington", "Travelog Bedford", "Travelog Bedford Goldington Road", "Travelog Bedford Marston Moretaine", "Travelog Belfast Central", "Travelog Berwick upon Tweed", "Travelog Bicester", "Travelog Bicester Cherwell Valley M40", "Travelog Billingshurst Five Oaks", "Travelog Birmingham Airport", "Travelog Birmingham Castle Bromwich", "Travelog Birmingham Central", "Travelog Birmingham Central Broadway Plaza", "Travelog Birmingham Central Moor Street", "Travelog Birmingham Central Newhall Street", "Travelog Birmingham Fort Dunlop", "Travelog Birmingham Frankley M5 Southbound", "Travelog Birmingham Halesowen", "Travelog Birmingham Hilton Park M6 Southbound", "Travelog Birmingham Kingswinford", "Travelog Birmingham Maypole", "Travelog Birmingham Oldbury", "Travelog Birmingham Perry Barr", "Travelog Birmingham Sheldon", "Travelog Birmingham Streetly", "Travelog Birmingham Sutton Coldfield", "Travelog Birmingham Yardley", "Travelog Blackburn M65", "Travelog Blackpool South Promenade", "Travelog Blackpool South Shore", "Travelog Blyth A1 M", "Travelog Bodmin Roche", "Travelog Bolton Central River Street", "Travelog Borehamwood", "Travelog Borehamwood Studio Way", "Travelog Boston", "Travelog Bournemouth", "Travelog Bournemouth Cooper Dean", "Travelog Bournemouth Seafront", "Travelog Bracknell", "Travelog Bracknell Central", "Travelog Bradford", "Travelog Bradford Central", "Travelog Bradford Shipley", "Travelog Braintree", "Travelog Brentwood East Horndon", "Travelog Bridgwater M5", "Travelog Brighton", "Travelog Brighton Seafront", "Travelog Bristol Abbey Wood", "Travelog Bristol Avonmouth", "Travelog Bristol Central", "Travelog Bristol Central Mitchell Lane", "Travelog Bristol Cribbs Causeway", "Travelog Bristol Emersons Green", "Travelog Bristol Filton", "Travelog Bristol Severn View M48", "Travelog Bromborough", "Travelog Bromsgrove Marlbrook", "Travelog Buckingham", "Travelog Burford Cotswolds", "Travelog Burnley", "Travelog Burton A38 Northbound", "Travelog Burton A38 Southbound", "Travelog Burton M6 Northbound", "Travelog Burton upon Trent Central", "Travelog Bury",
+            "Travelog Caernarfon", "Travelog Caerphilly", "Travelog Camberley", "Travelog Camberley Central", "Travelog Cambridge Central", "Travelog Cambridge Fourwentways", "Travelog Cambridge Orchard Park", "Travelog Cambridge Swavesey", "Travelog Canterbury Chaucer Central", "Travelog Canterbury Whitstable", "Travelog Cardiff Airport", "Travelog Cardiff Atlantic Wharf", "Travelog Cardiff Central", "Travelog Cardiff Central Queen Street", "Travelog Cardiff Gate", "Travelog Cardiff Llanedeyrn", "Travelog Cardiff M4", "Travelog Cardiff Whitchurch", "Travelog Carlisle Central", "Travelog Carlisle M6", "Travelog Carlisle Todhills", "Travelog Caterham Whyteleafe", "Travelog Chatham Maritime Hotel", "Travelog Chelmsford", "Travelog Cheltenham", "Travelog Chertsey", "Travelog Cheshire Oaks", "Travelog Cheshunt", "Travelog Chester-le-Street", "Travelog Chester Central", "Travelog Chester Central Bridge Street", "Travelog Chesterfield", "Travelog Chesterfield Town Centre", "Travelog Chester Northop Hall", "Travelog Chester Warrington Road", "Travelog Chichester Central", "Travelog Chichester Emsworth", "Travelog Chippenham", "Travelog Chippenham Leigh Delamere M4 Eastbound", "Travelog Chippenham Leigh Delamere M4 Westbound", "Travelog Christchurch", "Travelog Cirencester", "Travelog Clacton-on-Sea Central", "Travelog Cockermouth", "Travelog Colchester Feering", "Travelog Colchester Northern Gateway", "Travelog Colwyn Bay", "Travelog Coventry Binley", "Travelog Crewe", "Travelog Crewe Barthomley", "Travelog Croydon Central",
+            "Travelog Darlington", "Travelog Dartford", "Travelog Derby Chaddesden", "Travelog Derby Cricket Ground", "Travelog Derby Pride Park", "Travelog Devizes", "Travelog Doncaster", "Travelog Doncaster Lakeside", "Travelog Doncaster M18 M180", "Travelog Dorking", "Travelog Dover", "Travelog Droitwich", "Travelog Dudley Town Centre", "Travelog Dumbarton", "Travelog Dumfries", "Travelog Dundee Central", "Travelog Dundee Strathmore Avenue", "Travelog Dunfermline", "Travelog Durham",
+            "Travelog Eastbourne Willingdon Drove", "Travelog East Grinstead", "Travelog Eastleigh Central", "Travelog Edinburgh Airport Ratho Station", "Travelog Edinburgh Cameron Toll", "Travelog Edinburgh Central", "Travelog Edinburgh Central Queen Street", "Travelog Edinburgh Central Rose Street", "Travelog Edinburgh Central Waterloo Place", "Travelog Edinburgh Dreghorn", "Travelog Edinburgh Haymarket", "Travelog Edinburgh Park", "Travelog Elgin", "Travelog Ely", "Travelog Exeter M5",
+            "Travelog Falkirk", "Travelog Farnborough Central", "Travelog Fleet", "Travelog Fort William", "Travelog Frimley",
+            "Travelog Gainsborough", "Travelog Gateshead", "Travelog Gatwick Airport Central", "Travelog Glasgow Airport", "Travelog Glasgow Braehead", "Travelog Glasgow Central", "Travelog Glasgow Cumbernauld", "Travelog Glasgow Govan", "Travelog Glasgow Paisley Road", "Travelog Glasgow Queen Street", "Travelog Glastonbury", "Travelog Glenrothes", "Travelog Gloucester", "Travelog Gosport", "Travelog Grantham A1", "Travelog Grantham Colsterworth", "Travelog Grantham South Witham", "Travelog Gravesend", "Travelog Great Yarmouth", "Travelog Great Yarmouth Acle", "Travelog Guildford",
+            "Travelog Halifax", "Travelog Halkyn", "Travelog Harlow", "Travelog Harrogate", "Travelog Harrogate West Park", "Travelog Hartlebury", "Travelog Hastings", "Travelog Hatfield Central", "Travelog Havant Rowlands Castle", "Travelog Haverhill", "Travelog Haydock St Helens", "Travelog Hayle", "Travelog Heathrow Heston M4 Eastbound", "Travelog Heathrow Heston M4 Westbound", "Travelog Hellingly Eastbourne", "Travelog Hemel Hempstead", "Travelog Hereford", "Travelog Hereford Grafton", "Travelog Hexham", "Travelog Hickstead", "Travelog Highbridge Burnham-on-Sea", "Travelog High Wycombe Central", "Travelog Holyhead", "Travelog Horsham Central", "Travelog Huddersfield", "Travelog Hull Central", "Travelog Hull South Cave", "Travelog Huntingdon Fenstanton",
+            "Travelog Ilminster", "Travelog Inverness", "Travelog Inverness City Centre", "Travelog Inverness Fairways", "Travelog Ipswich", "Travelog Ipswich Beacon Hill", "Travelog Ipswich Capel St Mary", "Travelog Ipswich Central", "Travelog Ipswich Stowmarket",
+            "Travelog Keighley", "Travelog Kendal", "Travelog Kendal Town Centre", "Travelog Kettering", "Travelog Kettering Thrapston", "Travelog Kidderminster", "Travelog Kilmarnock", "Travelog Kings Lynn", "Travelog Kings Lynn Long Sutton", "Travelog Kingston Upon Thames Central", "Travelog Kinross M90", "Travelog Knutsford M6",
+            "Travelog Lancaster M6", "Travelog Langley", "Travelog Leatherhead", "Travelog Leeds Bradford Airport", "Travelog Leeds Central", "Travelog Leeds Central Vicar Lane", "Travelog Leeds Colton", "Travelog Leeds Morley", "Travelog Leicester Central", "Travelog Leicester Central North", "Travelog Leicester City Centre", "Travelog Leicester Hinckley Road", "Travelog Leicester Markfield", "Travelog Lincoln City Centre", "Travelog Lincoln Thorpe On The Hill", "Travelog Littlehampton Rustington", "Travelog Liverpool Aigburth", "Travelog Liverpool Central", "Travelog Liverpool Central The Strand", "Travelog Liverpool Docks", "Travelog Liverpool Edge Lane", "Travelog Liverpool John Lennon Airport", "Travelog Liverpool Stonedale Park", "Travelog Liverpool Stoneycroft", "Travelog Livingston", "Travelog Llandudno", "Travelog Llanelli Central", "Travelog Llanelli Cross Hands", "Travelog London Acton", "Travelog London Barking", "Travelog London Battersea", "Travelog London Beckenham", "Travelog London Beckton", "Travelog London Belvedere", "Travelog London Bermondsey", "Travelog London Brent Cross", "Travelog London Bromley", "Travelog London Central Aldgate East", "Travelog London Central Bank", "Travelog London Central City Road", "Travelog London Central Elephant and Castle", "Travelog London Central Euston", "Travelog London Central Kings Cross", "Travelog London Central Marylebone", "Travelog London Central Southwark", "Travelog London Central Tower Bridge", "Travelog London Central Waterloo", "Travelog London Chessington Tolworth", "Travelog London Chigwell", "Travelog London City", "Travelog London City Airport", "Travelog London Covent Garden", "Travelog London Cricklewood", "Travelog London Crystal Palace", "Travelog London Dagenham", "Travelog London Dagenham East", "Travelog London Docklands", "Travelog London Ealing", "Travelog London Edmonton", "Travelog London Excel", "Travelog London Farringdon", "Travelog London Feltham", "Travelog London Finchley", "Travelog London Finsbury Park", "Travelog London Fulham", "Travelog London Greenwich", "Travelog London Greenwich High Road", "Travelog London Hackney", "Travelog London Harrow", "Travelog London Ilford", "Travelog London Ilford Gants Hill", "Travelog London Kew Bridge", "Travelog London Kings Cross Royal Scot", "Travelog London Kingston Upon Thames", "Travelog London Lewisham", "Travelog London Liverpool Street", "Travelog London Mile End", "Travelog London Northolt", "Travelog London Oval Cricket Ground", "Travelog London Park Royal", "Travelog London Peckham", "Travelog London Raynes Park", "Travelog London Richmond Central", "Travelog London Romford", "Travelog London Romford The Quadrant", "Travelog London Snaresbrook", "Travelog London South Croydon", "Travelog London Southgate", "Travelog London Stratford", "Travelog London Stratford Centre", "Travelog London Teddington", "Travelog London Twickenham", "Travelog London Wembley", "Travelog London Wembley High Road", "Travelog London Whetstone", "Travelog London Wimbledon Central", "Travelog London Wimbledon Morden", "Travelog London Wood Green", "Travelog Loughborough Central", "Travelog Lowestoft", "Travelog Ludlow", "Travelog Ludlow Woofferton", "Travelog Luton", "Travelog Lutterworth", "Travelog Lytham St Annes",
+            "Travelog Macclesfield Adlington", "Travelog Macclesfield Central", "Travelog Maidenhead Central", "Travelog Maidstone Central", "Travelog Maldon", "Travelog Manchester Ancoats", "Travelog Manchester Birch M62 Eastbound", "Travelog Manchester Birch M62 Westbound", "Travelog Manchester Central", "Travelog Manchester Central Arena", "Travelog Manchester Didsbury", "Travelog Manchester Piccadilly", "Travelog Manchester Sale", "Travelog Manchester Salford Quays", "Travelog Manchester Sportcity", "Travelog Manchester Trafford Park", "Travelog Manchester Upper Brook Street", "Travelog Mansfield", "Travelog Margate Westwood", "Travelog Market Harborough", "Travelog Marlow", "Travelog Medway M2", "Travelog Melksham", "Travelog Merthyr Tydfil", "Travelog Middlesbrough", "Travelog Middlewich", "Travelog Milton Keynes at The Hub", "Travelog Milton Keynes Central", "Travelog Milton Keynes Old Stratford", "Travelog Milton Keynes Shenley Church End", "Travelog Morecambe",
+            "Travelog Newark-on-Trent", "Travelog Newbury Chieveley M4", "Travelog Newbury London Road", "Travelog Newbury Tot Hill", "Travelog Newcastle Airport", "Travelog Newcastle Central", "Travelog Newcastle Cobalt Business Park", "Travelog Newcastle Gosforth", "Travelog Newcastle Quayside", "Travelog Newcastle Seaton Burn", "Travelog Newcastle Under Lyme Central", "Travelog Newcastle Whitemare Pool", "Travelog Newport Central", "Travelog Newport Isle Of Wight", "Travelog Newquay Seafront", "Travelog Northampton Central", "Travelog Northampton Round Spinney", "Travelog Northampton Upton Way", "Travelog Northampton Wootton", "Travelog Northwich Lostock Gralam", "Travelog Norwich Central", "Travelog Norwich Central Riverside", "Travelog Norwich Cringleford", "Travelog Nottingham Central", "Travelog Nottingham Em Airport Donington Park M1", "Travelog Nottingham Riverside", "Travelog Nottingham Trowell M1", "Travelog Nottingham Wollaton Park", "Travelog Nuneaton", "Travelog Nuneaton Bedworth",
+            "Travelog Okehampton Sourton Cross", "Travelog Okehampton Whiddon Down", "Travelog Oldham Chadderton", "Travelog Oswestry", "Travelog Oxford Abingdon Road", "Travelog Oxford Peartree", "Travelog Oxford Wheatley",
+            "Travelog Paignton Seafront", "Travelog Pembroke Dock", "Travelog Penrith", "Travelog Perth A9", "Travelog Perth Broxden Junction", "Travelog Perth Central", "Travelog Peterborough Alwalton", "Travelog Peterborough Central", "Travelog Peterborough Eye Green", "Travelog Plymouth", "Travelog Plymouth Derriford", "Travelog Plymouth Roborough", "Travelog Pontefract Ferrybridge A1 M62", "Travelog Poole", "Travelog Poole North", "Travelog Porthmadog", "Travelog Portsmouth", "Travelog Portsmouth City Centre", "Travelog Portsmouth Hilsea", "Travelog Preston Central", "Travelog Preston Chorley", "Travelog Preston North",
+            "Travelog Ramsgate Seafront", "Travelog Reading Central", "Travelog Reading M4 Eastbound", "Travelog Reading M4 Westbound", "Travelog Reading Whitley", "Travelog Redhill", "Travelog Redhill Town Centre", "Travelog Retford Markham Moor", "Travelog Rhyl Seafront", "Travelog Ringwood", "Travelog Rochdale", "Travelog Rugby Central", "Travelog Rugby Dunchurch", "Travelog Rugeley", "Travelog Ryde Isle of Wight",
+            "Travelog Saltash", "Travelog Sandwich", "Travelog Scarborough St Nicholas", "Travelog Scotch Corner A1 Southbound", "Travelog Scotch Corner Skeeby", "Travelog Scunthorpe", "Travelog Sedgefield", "Travelog Sheffield Central", "Travelog Sheffield Meadowhall", "Travelog Sheffield Richmond", "Travelog Shrewsbury Battlefield", "Travelog Shrewsbury Bayston Hill", "Travelog Sittingbourne", "Travelog Skegness Seafront", "Travelog Skipton", "Travelog Sleaford", "Travelog Slough", "Travelog Southampton", "Travelog Southampton Central", "Travelog Southampton Eastleigh", "Travelog Southend On Sea", "Travelog Spalding", "Travelog Stafford Central", "Travelog Stafford M6", "Travelog Staines", "Travelog St Albans City Centre", "Travelog Stansted Great Dunmow", "Travelog St Austell", "Travelog St Clears Carmarthen", "Travelog Stirling City Centre", "Travelog Stirling M80", "Travelog Stockport", "Travelog Stoke-on-Trent Trentham", "Travelog Stoke Talke", "Travelog Stonehouse", "Travelog Stoney Cross Lyndhurst", "Travelog Stratford Alcester", "Travelog Stratford Upon Avon", "Travelog Sunbury M3", "Travelog Sunderland Central", "Travelog Swansea Central", "Travelog Swansea M4", "Travelog Swindon Central", "Travelog Swindon West",
+            "Travelog Tamworth Central", "Travelog Tamworth M42", "Travelog Taunton", "Travelog Telford", "Travelog Telford Shawbirch", "Travelog Tewkesbury", "Travelog Thame", "Travelog The Regent Hotel Leamington Spa", "Travelog Thetford", "Travelog Thurrock Lakeside", "Travelog Tiverton", "Travelog Toddington M1 Southbound", "Travelog Torquay", "Travelog Towcester Silverstone", "Travelog Tunbridge Wells",
+            "Travelog Wadebridge", "Travelog Wakefield", "Travelog Wakefield Woolley Edge M1 Northbound", "Travelog Wakefield Woolley Edge M1 Southbound", "Travelog Wallasey New Brighton", "Travelog Walsall", "Travelog Walton-on-Thames", "Travelog Walton-on-Thames Central", "Travelog Warminster", "Travelog Warrington", "Travelog Warrington Gemini", "Travelog Warrington Lowton", "Travelog Washington A1m Northbound", "Travelog Washington A1m Southbound", "Travelog Watford Central", "Travelog Wellingborough", "Travelog Wellingborough Rushden", "Travelog Welwyn Garden City", "Travelog West Bromwich", "Travelog Weston-super-Mare", "Travelog Widnes", "Travelog Winchester", "Travelog Windsor Central", "Travelog Wirral Eastham", "Travelog Witney", "Travelog Worcester", "Travelog Workington", "Travelog Worksop", "Travelog Worthing Seafront", "Travelog Wrexham",
+            "Travelog Yeovil Podimore", "Travelog York Central", "Travelog York Central Layerthorpe", "Travelog York Central Micklegate", "Travelog York Hull Road", "Travelog York Monks Cross", "Travelog York Tadcaster"
         ];
 
         // Colour mapping for sticker dots
-        const colorHexMap = {
-            "Red": "#ef4444", "Blue": "#3b82f6", "Green": "#10b981", 
+        const colourHexMap = {
+            "Red": "#ef4444", "Blue": "#4BACE3", "Green": "#10b981", 
             "Yellow": "#eab308", "Orange": "#f97316", "Purple": "#a855f7", 
             "White": "#9ca3af", "Black": "#1f2937"
         };
@@ -685,7 +862,7 @@
         }
 
         function loadFromLocalStorage() {
-            const saved = localStorage.getItem('travelodge_depot_state');
+            const saved = localStorage.getItem('travelog_depot_state');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -710,7 +887,7 @@
 
         function saveToLocalStorage() {
             try {
-                localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
+                localStorage.setItem('travelog_depot_state', JSON.stringify(appState));
             } catch (e) {
                 console.error("Error saving to local storage:", e);
             }
@@ -812,7 +989,7 @@
             saveToLocalStorage();
             db.ref('routeData').set(appState).catch(err => console.warn(err));
 
-            alert("Shift hours saved successfully (" + hoursWorked + " hours)!");
+            playSuccessChime();
             renderWeeklyHoursView();
         }
 
@@ -826,9 +1003,9 @@
                 let hrs = appState.currentWeekHours[day] || 0;
                 totalWeekly += hrs;
                 container.innerHTML += `
-                    <div class="manifest-card" style="padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="manifest-card" style="padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.8);">
                         <span style="font-size: 14px; font-weight:600; color:var(--tl-navy);">${day}</span>
-                        <span style="font-size: 14px; color:var(--text-main);">${hrs} hrs</span>
+                        <span style="font-size: 14px; color:var(--text-main); font-weight:700;">${hrs} hrs</span>
                     </div>
                 `;
             });
@@ -853,7 +1030,8 @@
 
                 saveToLocalStorage();
                 db.ref('routeData').set(appState).catch(err => console.warn(err));
-                alert("Week successfully archived!");
+                
+                playSuccessChime();
                 renderWeeklyHoursView();
                 renderHistoricalWeeks();
             }
@@ -863,20 +1041,21 @@
             const container = document.getElementById('historicalWeeksList');
             container.innerHTML = '';
             if (!appState.archivedWeeks || appState.archivedWeeks.length === 0) {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No archived weeks saved yet.</p>`;
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 10px 0;">No archived weeks saved yet.</p>`;
                 return;
             }
             appState.archivedWeeks.forEach((week, idx) => {
                 container.innerHTML += `
-                    <div class="manifest-card" style="background:#f9fafb; margin-bottom:10px;">
+                    <div class="manifest-card" style="background: rgba(255,255,255,0.6); border: 2px dashed var(--border-color); margin-bottom:12px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <strong style="font-size: 14px; color:var(--tl-navy);">Week ${idx + 1} (${week.dateRange})</strong>
-                            <span style="font-size: 13px; font-weight:600; color:var(--success-color);">${week.totalHours} hrs</span>
+                            <span style="font-size: 14px; font-weight:700; color:var(--success-color); background: #d1fae5; padding: 4px 8px; border-radius: 6px;">${week.totalHours} hrs</span>
                         </div>
-                        <p style="font-size: 12px; color:var(--text-muted); margin-top:4px;">Driver: ${week.driverName}</p>
+                        <p style="font-size: 12px; color:var(--text-muted); margin-top:8px;"><i data-lucide="steering-wheel" style="width:14px; vertical-align:text-bottom;"></i> ${week.driverName}</p>
                     </div>
                 `;
             });
+            lucide.createIcons();
         }
 
         function populateDropdowns() {
@@ -920,7 +1099,7 @@
 
         function filterOpHotels() {
             const query = document.getElementById('opHotelSearch').value.toLowerCase().trim();
-            const filtered = hotelDatabase.filter(h => query === "" || h.replace("Travelodge ", "").toLowerCase().includes(query));
+            const filtered = hotelDatabase.filter(h => query === "" || h.replace("Travelog ", "").toLowerCase().includes(query));
             populateOpHotels(filtered);
         }
 
@@ -953,7 +1132,7 @@
                 let opt = colorSelect.options[i];
                 if (opt.value === "") continue;
                 if (usedColors.includes(opt.value)) {
-                    opt.disabled = true; opt.text = opt.value + " (Already used)";
+                    opt.disabled = true; opt.text = opt.value + " (Used)";
                 } else {
                     opt.disabled = false; opt.text = opt.value;
                 }
@@ -1014,23 +1193,23 @@
 
                 container.innerHTML = '';
                 appState.manifest.forEach((d, idx) => {
-                    let hex = colorHexMap[d.color] || '#ccc';
+                    let hex = colourHexMap[d.color] || '#ccc';
                     let mappedAddr = getMappedHotelAddress(d.hotel);
                     container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 4px solid ${hex};">
+                        <div class="manifest-card" style="border-left: 5px solid ${hex};">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong>Stop ${idx + 1}: ${d.hotel}</strong>
-                                <button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeDrop(${idx})">Remove</button>
+                                <strong style="font-size: 15px; color: var(--tl-navy);">Stop ${idx + 1}: ${d.hotel}</strong>
+                                <button class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 12px; margin: 0;" onclick="removeDrop(${idx})"><i data-lucide="trash-2" style="width:14px;"></i></button>
                             </div>
-                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
-                            <p style="margin: 8px 0; font-size: 13px; color: var(--text-muted);">
-                                Engineers: <b style="color: var(--tl-navy);">${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b style="color: var(--tl-navy);">${d.color}</b>
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-light-blue); margin-top:4px; font-weight:600;"><i data-lucide="map-pin" style="width:12px;"></i> ${mappedAddr}</p>` : ''}
+                            <p style="margin: 12px 0 8px 0; font-size: 13px; color: var(--text-muted);">
+                                Eng: <b style="color: var(--tl-navy);">${d.engineers.join(', ')}</b> | Dot: <span class="colour-dot" style="background-color: ${hex};"></span><b style="color: var(--tl-navy);">${d.color}</b>
                             </p>
-                            ${d.notes ? `<div class="notes-box">📝 Notes: <input type="text" value="${d.notes}" style="background:transparent; border:none; width:80\%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDropNote(${idx}, this.value)"></div>` : ''}
+                            ${d.notes ? `<div class="notes-box"><i data-lucide="file-text" style="width:14px; vertical-align:middle;"></i> <input type="text" value="${d.notes}" style="background:transparent; border:none; width:80\%; font-size:13px; color:var(--tl-navy); font-weight:600;" onchange="updateDropNote(${idx}, this.value)"></div>` : ''}
                             ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
-                            <div class="route-order-controls">
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Move Up</button>
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Move Down</button>
+                            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                <button class="btn btn-secondary" style="margin-top:0; padding:8px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Up</button>
+                                <button class="btn btn-secondary" style="margin-top:0; padding:8px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Down</button>
                             </div>
                         </div>
                     `;
@@ -1038,8 +1217,9 @@
             } else {
                 publishBtn.setAttribute('disabled', 'true');
                 summaryBox.style.display = 'none';
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No drops added for today yet.</p>`;
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No drops added for today yet.</p>`;
             }
+            lucide.createIcons();
         }
 
         function launchOpFullRouteMap() {
@@ -1075,11 +1255,29 @@
         }
 
         function publishManifest() {
-            const payload = { ...appState };
+            const manifestObj = {};
+            appState.manifest.forEach((d, idx) => { manifestObj['drop_' + idx] = d; });
+            const payload = { ...appState, manifest: manifestObj };
+
             db.ref('routeData').set(payload).catch(err => console.warn(err));
-            alert("Route manifest published successfully!");
             saveToLocalStorage();
-            openDriverPortal();
+            
+            // Trigger bells and whistles animation
+            playCinematicPublish();
+            const overlay = document.getElementById('publishAnimationOverlay');
+            overlay.style.left = '0';
+            overlay.classList.add('publish-active');
+            
+            setTimeout(() => {
+                overlay.style.left = '100%';
+                overlay.classList.remove('publish-active');
+                setTimeout(() => {
+                    overlay.style.transition = 'none';
+                    overlay.style.left = '-100%';
+                    setTimeout(() => overlay.style.transition = 'left 0.6s cubic-bezier(0.77, 0, 0.175, 1)', 50);
+                    openDriverPortal();
+                }, 600);
+            }, 1800);
         }
 
         function renderDriverManifest() {
@@ -1102,33 +1300,34 @@
             if (appState.manifest.length > 0) {
                 container.innerHTML = '';
                 appState.manifest.forEach((d, idx) => {
-                    let hex = colorHexMap[d.color] || '#ccc';
-                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 600;">✔ Delivered</span>' : '<span style="color: #f59e0b; font-weight: 600;">Pending</span>';
+                    let hex = colourHexMap[d.color] || '#ccc';
+                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 700; background:#d1fae5; padding:4px 8px; border-radius:6px; font-size:12px;"><i data-lucide="check" style="width:12px;"></i> Delivered</span>' : '<span style="color: #d97706; font-weight: 700; background:#fef3c7; padding:4px 8px; border-radius:6px; font-size:12px;">Pending</span>';
                     let mappedAddr = getMappedHotelAddress(d.hotel);
 
                     container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
+                        <div class="manifest-card" style="border-left: 5px solid ${hex}; opacity: ${d.completed ? '0.7' : '1'};">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong style="font-size: 16px;">Stop ${idx + 1}: ${d.hotel}</strong>
+                                <strong style="font-size: 16px; color: var(--tl-navy);">Stop ${idx + 1}: ${d.hotel}</strong>
                                 ${statusBadge}
                             </div>
-                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
-                            <p style="margin: 8px 0; font-size: 14px;">
-                                Engineers: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
-                                Sticker Dot: <span class="color-dot" style="background-color: ${hex};"></span><b style="color:var(--tl-navy);">${d.color}</b>
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-light-blue); margin-top:4px; font-weight:600;"><i data-lucide="map-pin" style="width:12px;"></i> ${mappedAddr}</p>` : ''}
+                            <p style="margin: 12px 0; font-size: 14px;">
+                                Eng: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
+                                Sticker Dot: <span class="colour-dot" style="background-color: ${hex}; margin-left: 4px;"></span><b style="color:var(--tl-navy);">${d.color}</b>
                             </p>
-                            <div class="notes-box">📝 Notes: <input type="text" value="${d.notes || ''}" style="background:transparent; border:none; width:70%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
+                            <div class="notes-box"><i data-lucide="file-text" style="width:14px; vertical-align:middle;"></i> Notes: <input type="text" value="${d.notes || ''}" style="background:transparent; border:none; width:70%; font-size:13px; color:var(--tl-navy); font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
                             ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
-                            ${d.proofPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
-                            <div style="margin-top: 12px;">
-                                ${!d.completed ? `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Delivery Photo & Complete</button>` : `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`}
+                            ${d.proofPhoto ? `<p style="margin:12px 0 4px 0; font-size:13px; font-weight:600; color:var(--success-color);"><i data-lucide="image" style="width:14px;"></i> Handover Photo Attached</p>` : ''}
+                            <div style="margin-top: 16px;">
+                                ${!d.completed ? `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})"><i data-lucide="camera" style="width:18px;"></i> Take Photo & Complete</button>` : `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`}
                             </div>
                         </div>
                     `;
                 });
             } else {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px;">No active route manifest available yet.</p>`;
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No active route manifest available yet.</p>`;
             }
+            lucide.createIcons();
         }
 
         function updateDriverDropNote(idx, val) {
@@ -1157,17 +1356,18 @@
             if (fileInput.files && fileInput.files[0]) {
                 compressImage(fileInput.files[0], function(compressedUrl) {
                     drop.proofPhoto = compressedUrl;
-                    finalizeDropCompletion(drop);
+                    finaliseDropCompletion(drop);
                 });
             } else {
-                finalizeDropCompletion(drop);
+                finaliseDropCompletion(drop);
             }
         }
 
-        function finalizeDropCompletion(drop) {
+        function finaliseDropCompletion(drop) {
             drop.completed = true;
             saveToLocalStorage();
             closeProofModal();
+            playSuccessChime();
             renderDriverManifest();
             document.getElementById('whatsappTextOutput').textContent = `delivery to ${drop.hotel} for ${drop.engineers.join(', ')}`;
             document.getElementById('whatsappModal').style.display = 'flex';
@@ -1181,7 +1381,10 @@
         }
 
         function copyTextAndClose() {
-            navigator.clipboard.writeText(document.getElementById('whatsappTextOutput').textContent).then(() => alert("Text copied!"));
+            navigator.clipboard.writeText(document.getElementById('whatsappTextOutput').textContent).then(() => {
+                document.getElementById('whatsappModal').style.display = 'none';
+                launchLiveGPSRoute();
+            });
         }
 
         function continueRouteFromModal() {
@@ -1226,10 +1429,29 @@
 
         function completeShiftDone() {
             if (confirm("Sign off and complete today's shift? Clears active manifest & photos.")) {
-                appState.manifest = [];
-                saveToLocalStorage();
-                db.ref('routeData').set(appState).catch(err => console.warn(err));
-                returnHome();
+                
+                // Firework explosion!
+                var duration = 3 * 1000;
+                var animationEnd = Date.now() + duration;
+                var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+                function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+                playSuccessChime();
+
+                var interval = setInterval(function() {
+                    var timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) { return clearInterval(interval); }
+                    var particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+                }, 250);
+
+                setTimeout(() => {
+                    appState.manifest = [];
+                    saveToLocalStorage();
+                    db.ref('routeData').set(appState).catch(err => console.warn(err));
+                    returnHome();
+                }, 1500);
             }
         }
 
@@ -1282,7 +1504,7 @@
             if (address) appState.hotelAddresses[hotel] = address; else delete appState.hotelAddresses[hotel];
             saveToLocalStorage();
             renderSettingsLists();
-            alert(`Address saved for ${hotel}!`);
+            playSuccessChime();
         }
 
         function removeCustomHotelAddress(hotelName) {
@@ -1298,37 +1520,38 @@
             const startContainer = document.getElementById('startHubConfigList');
             startContainer.innerHTML = '';
             appState.startHubs.forEach((h, idx) => {
-                startContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button></div>`;
+                startContainer.innerHTML += `<div class="manifest-card" style="padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 14px; font-weight: 500;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeStartHubItem(${idx})"><i data-lucide="trash-2" style="width:14px;"></i></button></div>`;
             });
 
             const endContainer = document.getElementById('endHubConfigList');
             endContainer.innerHTML = '';
             appState.endHubs.forEach((h, idx) => {
-                endContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button></div>`;
+                endContainer.innerHTML += `<div class="manifest-card" style="padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 14px; font-weight: 500;">${h}</span><button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeEndHubItem(${idx})"><i data-lucide="trash-2" style="width:14px;"></i></button></div>`;
             });
 
             const engContainer = document.getElementById('engConfigList');
             engContainer.innerHTML = '';
             appState.engineers.forEach((eng, idx) => {
-                engContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 14px;">${eng}</span><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button></div>`;
+                engContainer.innerHTML += `<div class="manifest-card" style="padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 15px; font-weight: 600;">${eng}</span><button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeEngineer(${idx})"><i data-lucide="trash-2" style="width:14px;"></i></button></div>`;
             });
 
             const addressContainer = document.getElementById('customAddressesList');
             addressContainer.innerHTML = '';
             const overriddenHotels = Object.keys(appState.hotelAddresses || {});
             if (overriddenHotels.length > 0) {
-                addressContainer.innerHTML = `<h4 style="font-size: 14px; color: var(--tl-navy); margin-bottom: 8px;">Active Overrides (${overriddenHotels.length}):</h4>`;
+                addressContainer.innerHTML = `<h4 style="font-size: 14px; color: var(--tl-navy); margin-bottom: 12px;">Active Overrides (${overriddenHotels.length}):</h4>`;
                 overriddenHotels.forEach(hotelName => {
-                    addressContainer.innerHTML += `<div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;"><div style="font-size: 12px;"><strong>${hotelName}</strong><br><span style="color: var(--text-muted);">${appState.hotelAddresses[hotelName]}</span></div><button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')">X</button></div>`;
+                    addressContainer.innerHTML += `<div class="manifest-card" style="padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;"><div style="font-size: 13px;"><strong>${hotelName}</strong><br><span style="color: var(--text-muted); font-weight:500;">${appState.hotelAddresses[hotelName]}</span></div><button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')"><i data-lucide="trash-2" style="width:14px;"></i></button></div>`;
                 });
             }
+            lucide.createIcons();
         }
 
         function saveSettings() {
             appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
             saveToLocalStorage();
             db.ref('routeData').set(appState).catch(err => console.warn(err));
-            alert("Settings saved successfully!");
+            playSuccessChime();
             returnHome();
         }
 
@@ -1366,17 +1589,7 @@
                 appState.currentWeekHours = remoteData.currentWeekHours || appState.currentWeekHours;
                 appState.shiftTimes = remoteData.shiftTimes || appState.shiftTimes;
                 appState.archivedWeeks = Array.isArray(remoteData.archivedWeeks) ? remoteData.archivedWeeks : [];
-                
-                // Fixed robust array conversion for Firebase JSON arrays
-                if (remoteData.manifest) {
-                    if (Array.isArray(remoteData.manifest)) {
-                        appState.manifest = remoteData.manifest;
-                    } else {
-                        appState.manifest = Object.values(remoteData.manifest).filter(item => item !== null && typeof item === 'object');
-                    }
-                } else {
-                    appState.manifest = [];
-                }
+                appState.manifest = remoteData.manifest ? (Array.isArray(remoteData.manifest) ? remoteData.manifest : Object.values(remoteData.manifest)) : [];
             }
             saveToLocalStorage();
             if (typeof renderOpManifest === 'function') renderOpManifest();
