@@ -510,17 +510,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Sticker Dot Colour Identifier</label>
+                    <label>Colour ID</label>
                     <select id="opColorSelect">
                         <option value="">-- Select Dot Colour --</option>
-                        <option value="Red">Red</option>
-                        <option value="Blue">Blue</option>
-                        <option value="Green">Green</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Orange">Orange</option>
-                        <option value="Purple">Purple</option>
-                        <option value="White">White</option>
-                        <option value="Black">Black</option>
+                        <option value="Red" style="color: #ef4444; font-weight: bold;">Red</option>
+                        <option value="Blue" style="color: #4BACE3; font-weight: bold;">Blue</option>
+                        <option value="Green" style="color: #10b981; font-weight: bold;">Green</option>
+                        <option value="Yellow" style="color: #eab308; font-weight: bold;">Yellow</option>
+                        <option value="Orange" style="color: #f97316; font-weight: bold;">Orange</option>
+                        <option value="Purple" style="color: #a855f7; font-weight: bold;">Purple</option>
+                        <option value="White" style="color: #9ca3af; font-weight: bold;">White</option>
+                        <option value="Black" style="color: #1f2937; font-weight: bold;">Black</option>
                     </select>
                 </div>
 
@@ -530,8 +530,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Staging Photo</label>
-                    <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; padding: 8px;">
+                    <label>photo of this delivery</label>
+                    <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoSelect(this)">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('opPhotoInput').click()" style="justify-content: flex-start; gap: 10px;">
+                        <i data-lucide="camera" style="width: 20px; height: 20px; color: var(--tl-navy);"></i>
+                        <span id="takePhotoBtnText">take photo</span>
+                    </button>
                 </div>
 
                 <button class="btn btn-primary" onclick="addManifestDrop()"><i data-lucide="plus-circle" style="width: 18px;"></i> Add Drop to Manifest</button>
@@ -777,7 +781,7 @@
             osc.stop(audioCtx.currentTime + 1.2);
         }
 
-        // Full Complete UK Travelog Database (Replaced Travelodge with Travelog)
+        // Full Complete UK Travelog Database
         const hotelDatabase = [
             "Travelog Aberdeen Airport", "Travelog Aberdeen Bucksburn", "Travelog Aberdeen Central", "Travelog Aldershot", "Travelog Alfreton", "Travelog Alton Four Marks", "Travelog Altrincham Central", "Travelog Amesbury Stonehenge", "Travelog Andover", "Travelog Arundel Fontwell", "Travelog Arundel Fontwell Park", "Travelog Ashbourne", "Travelog Ashford", "Travelog Ashford Town Centre", "Travelog Ashton Under Lyne", "Travelog Aylesbury", "Travelog Ayr",
             "Travelog Bangor", "Travelog Barnsley", "Travelog Barnstaple", "Travelog Barrow In Furness", "Travelog Barton Mills", "Travelog Barton Stacey", "Travelog Basildon", "Travelog Basildon Wickford", "Travelog Basingstoke", "Travelog Bath Central", "Travelog Bath City Centre Bath Spa", "Travelog Bath Waterside", "Travelog Beaconsfield Central", "Travelog Beckington", "Travelog Bedford", "Travelog Bedford Goldington Road", "Travelog Bedford Marston Moretaine", "Travelog Belfast Central", "Travelog Berwick upon Tweed", "Travelog Bicester", "Travelog Bicester Cherwell Valley M40", "Travelog Billingshurst Five Oaks", "Travelog Birmingham Airport", "Travelog Birmingham Castle Bromwich", "Travelog Birmingham Central", "Travelog Birmingham Central Broadway Plaza", "Travelog Birmingham Central Moor Street", "Travelog Birmingham Central Newhall Street", "Travelog Birmingham Fort Dunlop", "Travelog Birmingham Frankley M5 Southbound", "Travelog Birmingham Halesowen", "Travelog Birmingham Hilton Park M6 Southbound", "Travelog Birmingham Kingswinford", "Travelog Birmingham Maypole", "Travelog Birmingham Oldbury", "Travelog Birmingham Perry Barr", "Travelog Birmingham Sheldon", "Travelog Birmingham Streetly", "Travelog Birmingham Sutton Coldfield", "Travelog Birmingham Yardley", "Travelog Blackburn M65", "Travelog Blackpool South Promenade", "Travelog Blackpool South Shore", "Travelog Blyth A1 M", "Travelog Bodmin Roche", "Travelog Bolton Central River Street", "Travelog Borehamwood", "Travelog Borehamwood Studio Way", "Travelog Boston", "Travelog Bournemouth", "Travelog Bournemouth Cooper Dean", "Travelog Bournemouth Seafront", "Travelog Bracknell", "Travelog Bracknell Central", "Travelog Bradford", "Travelog Bradford Central", "Travelog Bradford Shipley", "Travelog Braintree", "Travelog Brentwood East Horndon", "Travelog Bridgwater M5", "Travelog Brighton", "Travelog Brighton Seafront", "Travelog Bristol Abbey Wood", "Travelog Bristol Avonmouth", "Travelog Bristol Central", "Travelog Bristol Central Mitchell Lane", "Travelog Bristol Cribbs Causeway", "Travelog Bristol Emersons Green", "Travelog Bristol Filton", "Travelog Bristol Severn View M48", "Travelog Bromborough", "Travelog Bromsgrove Marlbrook", "Travelog Buckingham", "Travelog Burford Cotswolds", "Travelog Burnley", "Travelog Burton A38 Northbound", "Travelog Burton A38 Southbound", "Travelog Burton M6 Northbound", "Travelog Burton upon Trent Central", "Travelog Bury",
@@ -859,6 +863,15 @@
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
+        }
+
+        function handlePhotoSelect(input) {
+            const btnText = document.getElementById('takePhotoBtnText');
+            if (input.files && input.files[0]) {
+                btnText.textContent = `Photo Selected: ${input.files[0].name}`;
+            } else {
+                btnText.textContent = "take photo";
+            }
         }
 
         function loadFromLocalStorage() {
@@ -1099,7 +1112,12 @@
 
         function filterOpHotels() {
             const query = document.getElementById('opHotelSearch').value.toLowerCase().trim();
-            const filtered = hotelDatabase.filter(h => query === "" || h.replace("Travelog ", "").toLowerCase().includes(query));
+            const filtered = hotelDatabase.filter(h => {
+                if (query === "") return true;
+                // Strip out "Travelog " or "Travelodge " at start to match the actual place name
+                const placeName = h.replace(/^(Travelog|Travelodge)\s+/i, '').toLowerCase();
+                return placeName.startsWith(query);
+            });
             populateOpHotels(filtered);
         }
 
@@ -1131,6 +1149,10 @@
             for (let i = 0; i < colorSelect.options.length; i++) {
                 let opt = colorSelect.options[i];
                 if (opt.value === "") continue;
+                if (colourHexMap[opt.value]) {
+                    opt.style.color = colourHexMap[opt.value];
+                    opt.style.fontWeight = 'bold';
+                }
                 if (usedColors.includes(opt.value)) {
                     opt.disabled = true; opt.text = opt.value + " (Used)";
                 } else {
@@ -1150,7 +1172,7 @@
 
             if (!hotel) { alert("Please select a hotel destination."); return; }
             if (checkedEngs.length === 0) { alert("Please select at least one engineer."); return; }
-            if (!colour) { alert("Please select a sticker dot colour."); return; }
+            if (!colour) { alert("Please select a dot colour."); return; }
 
             if (!appState.hotelNotes) appState.hotelNotes = {};
             if (notes) appState.hotelNotes[hotel] = notes; else delete appState.hotelNotes[hotel];
@@ -1171,6 +1193,8 @@
             document.querySelectorAll('input[name="opEngineer"]').forEach(cb => cb.checked = false);
             document.getElementById('opColorSelect').value = "";
             document.getElementById('opPhotoInput').value = "";
+            const photoBtnText = document.getElementById('takePhotoBtnText');
+            if (photoBtnText) photoBtnText.textContent = "take photo";
             document.getElementById('opHotelNotes').value = "";
 
             saveToLocalStorage();
