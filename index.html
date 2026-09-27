@@ -15,7 +15,7 @@
         :root {
             --tl-navy: #002D62;
             --tl-red: #E31B23;
-            --tl-blue: #38bdf8;
+            --tl-blue: #00539F;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #1f2937;
@@ -48,10 +48,17 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .header-logo {
-            height: 32px;
+        /* Clean Vector Logo Styling */
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .brand-logo svg {
+            height: 28px;
             width: auto;
-            object-fit: contain;
         }
 
         .header-btn {
@@ -130,7 +137,7 @@
         select:focus, input:focus {
             outline: none;
             border-color: var(--tl-blue);
-            box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+            box-shadow: 0 0 0 3px rgba(0,83,159,0.1);
         }
 
         .btn {
@@ -149,9 +156,9 @@
 
         .btn-primary {
             background-color: var(--tl-blue);
-            color: var(--tl-navy);
+            color: white;
         }
-        .btn-primary:hover { background-color: #0ea5e9; color: white; }
+        .btn-primary:hover { background-color: #003d73; }
 
         .btn-danger {
             background-color: var(--tl-red);
@@ -193,7 +200,7 @@
 
         .split-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(56,189,248,0.2);
+            box-shadow: 0 6px 16px rgba(0,83,159,0.12);
         }
 
         .split-card-top {
@@ -216,7 +223,7 @@
 
         .split-card-bottom {
             background-color: var(--tl-blue);
-            color: var(--tl-navy);
+            color: white;
             padding: 12px 10px;
             text-align: center;
             font-size: 14px;
@@ -310,10 +317,12 @@
 <body>
 
     <header id="headerBar" style="display: none;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <svg class="header-logo" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="140" height="32" rx="4" fill="#E31B23"/>
-                <text x="12" y="22" fill="white" font-family="system-ui, sans-serif" font-weight="900" font-size="16" letter-spacing="0.5">Travelodge</text>
+        <!-- Clean vector Travelodge logo for header -->
+        <div class="brand-logo">
+            <svg viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="36" height="36" rx="6" fill="#E31B23"/>
+                <path d="M10 26V10H14V22H22V26H10Z" fill="white"/>
+                <text x="44" y="24" fill="white" font-family="system-ui, sans-serif" font-weight="800" font-size="18" letter-spacing="-0.5">Travelodge</text>
             </svg>
         </div>
         <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
@@ -324,8 +333,13 @@
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
             <div style="text-align: center; margin: 16px 0 24px 0;">
-                <div style="display: inline-block; padding: 10px 20px; background: #E31B23; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(227,27,35,0.3);">
-                    <span style="color: white; font-size: 24px; font-weight: 900; letter-spacing: 0.5px;">Travelodge</span>
+                <!-- Larger Clean Vector Logo for Home Screen -->
+                <div style="display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                    <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 48px; width: auto;">
+                        <rect width="44" height="44" rx="8" fill="#E31B23"/>
+                        <path d="M12 32V12H17V27H28V32H12Z" fill="white"/>
+                        <text x="54" y="30" fill="#002D62" font-family="system-ui, sans-serif" font-weight="800" font-size="24" letter-spacing="-0.5">Travelodge</text>
+                    </svg>
                 </div>
                 <h2 style="font-size: 20px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
                 <p style="color: var(--text-muted); font-size: 13px;">Select your workflow mode below</p>
@@ -452,7 +466,7 @@
                 <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
                 
                 <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-primary" style="margin: 0;" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
+                    <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
                     <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
                 </div>
             </div>
