@@ -47,7 +47,7 @@
             overflow-x: hidden;
         }
 
-        /* Modernized Header */
+        /* Modernised Header */
         header {
             background: linear-gradient(135deg, var(--tl-navy), #001a3a);
             color: white;
@@ -708,7 +708,16 @@
         <div class="modal-card">
             <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="camera" style="color: var(--tl-light-blue);"></i> Delivery Proof</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Capture or upload a handover photo.</p>
-            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 20px; border: 1px solid var(--border-color); padding: 8px; border-radius: 8px; width: 100%;">
+            
+            <!-- Hidden File Input -->
+            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleProofPhotoSelect(this)">
+            
+            <!-- Custom Button with Camera Logo -->
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('proofPhotoInput').click()" style="margin-bottom: 20px; justify-content: flex-start; gap: 10px;">
+                <i data-lucide="camera" style="width: 20px; height: 20px; color: var(--tl-navy);"></i>
+                <span id="proofPhotoBtnText">Take Photo</span>
+            </button>
+
             <button class="btn btn-success" onclick="submitDeliveryProof()"><i data-lucide="check-circle"></i> Confirm Drop</button>
             <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
         </div>
@@ -1366,7 +1375,19 @@
         function promptDeliveryProof(idx) {
             activeDeliveryIndex = idx;
             document.getElementById('proofPhotoInput').value = "";
+            const photoBtnText = document.getElementById('proofPhotoBtnText');
+            if (photoBtnText) photoBtnText.textContent = "Take Photo";
             document.getElementById('proofPhotoModal').style.display = 'flex';
+            lucide.createIcons();
+        }
+
+        function handleProofPhotoSelect(input) {
+            const btnText = document.getElementById('proofPhotoBtnText');
+            if (input.files && input.files[0]) {
+                btnText.textContent = `Photo Selected: ${input.files[0].name}`;
+            } else {
+                btnText.textContent = "Take Photo";
+            }
         }
 
         function closeProofModal() {
