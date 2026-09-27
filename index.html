@@ -372,8 +372,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Staging Photo (Optional)</label>
-                    <input type="file" id="opPhotoInput" accept="image/*" style="font-size: 14px;">
+                    <label>Staging Photo (Optional - Auto Compressed)</label>
+                    <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 14px;">
                 </div>
 
                 <button class="btn btn-primary" onclick="addManifestDrop()">➕ Add Drop to Manifest</button>
@@ -427,7 +427,7 @@
                 </div>
 
                 <button class="btn btn-success" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
-                <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift</button>
+                <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift (Clears Photos)</button>
             </div>
         </div>
 
@@ -492,7 +492,7 @@
     <div id="proofPhotoModal" class="modal-overlay">
         <div class="modal-card">
             <h3>📷 Delivery Photo Proof</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Capture or upload a handover photo to confirm delivery.</p>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Capture or upload a handover photo (automatically compressed for memory safety).</p>
             <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 16px;">
             <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Stop</button>
             <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
@@ -560,19 +560,18 @@
             if (appState.hotelAddresses && appState.hotelAddresses[hotelName]) {
                 return appState.hotelAddresses[hotelName];
             }
-            // Fallback: append UK if no override exists to help maps locate it better
             return hotelName + ", UK";
         }
 
-        // Image compression helper to prevent localStorage quota overflows
+        // Heavy Image compression helper to shrink photos to tiny footprints (under ~50KB)
         function compressImage(file, callback) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 const img = new Image();
                 img.onload = function () {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800;
-                    const MAX_HEIGHT = 800;
+                    const MAX_WIDTH = 600;
+                    const MAX_HEIGHT = 600;
                     let width = img.width;
                     let height = img.height;
 
@@ -593,7 +592,8 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    // Compress heavily with 0.5 quality JPEG
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
                     callback(compressedDataUrl);
                 };
                 img.src = e.target.result;
@@ -627,7 +627,7 @@
                 localStorage.setItem('travelodge_depot_state', JSON.stringify(appState));
             } catch (e) {
                 if (e.name === 'QuotaExceededError') {
-                    alert("Storage limit reached! Photos are too large. Try removing older drops or uploading smaller images.");
+                    alert("Storage limit reached! Photos are too large. Try completing your shift or removing older items.");
                 } else {
                     console.error("Error saving to local storage:", e);
                 }
@@ -1160,11 +1160,11 @@
         }
 
         function completeShiftDone() {
-            if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest for the day.")) {
+            if (confirm("Are you sure you want to sign off and complete today's shift? This will clear the active manifest and delete today's photos to free up memory.")) {
                 appState.manifest = [];
                 saveToLocalStorage();
                 db.ref('routeData').set(appState).catch(err => console.warn(err));
-                alert("Shift successfully completed! Great driving today.");
+                alert("Shift successfully completed and photos cleared! Ready for the next run.");
                 returnHome();
             }
         }
@@ -1248,7 +1248,6 @@
                     addressInput.value = "";
                 }
             };
-            // Trigger initial load for first option
             if (hotelDatabase.length > 0) {
                 document.getElementById('settingHotelAddressInput').value = appState.hotelAddresses[hotelDatabase[0]] || "";
             }
@@ -1332,7 +1331,7 @@
         }
 
         function saveSettings() {
-            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
+            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) | 10;
             saveToLocalStorage();
             db.ref('routeData').set(appState).catch(err => console.warn(err));
             alert("Hub configuration and settings saved successfully!");
