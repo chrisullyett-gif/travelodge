@@ -15,7 +15,7 @@
         :root {
             --tl-navy: #002D62;
             --tl-red: #E31B23;
-            --tl-blue: #00539F;
+            --tl-blue: #38bdf8;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #1f2937;
@@ -130,7 +130,7 @@
         select:focus, input:focus {
             outline: none;
             border-color: var(--tl-blue);
-            box-shadow: 0 0 0 3px rgba(0,83,159,0.1);
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
         }
 
         .btn {
@@ -149,9 +149,9 @@
 
         .btn-primary {
             background-color: var(--tl-blue);
-            color: white;
+            color: var(--tl-navy);
         }
-        .btn-primary:hover { background-color: #003d73; }
+        .btn-primary:hover { background-color: #0ea5e9; color: white; }
 
         .btn-danger {
             background-color: var(--tl-red);
@@ -193,7 +193,7 @@
 
         .split-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,83,159,0.12);
+            box-shadow: 0 6px 16px rgba(56,189,248,0.2);
         }
 
         .split-card-top {
@@ -216,7 +216,7 @@
 
         .split-card-bottom {
             background-color: var(--tl-blue);
-            color: white;
+            color: var(--tl-navy);
             padding: 12px 10px;
             text-align: center;
             font-size: 14px;
@@ -310,7 +310,12 @@
 <body>
 
     <header id="headerBar" style="display: none;">
-        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23ffffff'>Travelodge</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelodge" class="header-logo" style="height:26px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <svg class="header-logo" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="140" height="32" rx="4" fill="#E31B23"/>
+                <text x="12" y="22" fill="white" font-family="system-ui, sans-serif" font-weight="900" font-size="16" letter-spacing="0.5">Travelodge</text>
+            </svg>
+        </div>
         <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
     </header>
 
@@ -319,7 +324,9 @@
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
             <div style="text-align: center; margin: 16px 0 24px 0;">
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 30'><text x='0' y='22' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%23002D62'>Travelodge</text><circle cx='130' cy='16' r='4' fill='%23E31B23'/></svg>" alt="Travelodge Logo" style="max-width: 220px; height: auto; margin-bottom: 12px;">
+                <div style="display: inline-block; padding: 10px 20px; background: #E31B23; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(227,27,35,0.3);">
+                    <span style="color: white; font-size: 24px; font-weight: 900; letter-spacing: 0.5px;">Travelodge</span>
+                </div>
                 <h2 style="font-size: 20px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
                 <p style="color: var(--text-muted); font-size: 13px;">Select your workflow mode below</p>
             </div>
@@ -445,7 +452,7 @@
                 <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
                 
                 <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
+                    <button class="btn btn-primary" style="margin: 0;" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
                     <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
                 </div>
             </div>
