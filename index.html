@@ -14,20 +14,13 @@
             --tl-navy: #002D62;
             --tl-red: #E31B23;
             --tl-blue: #00539F;
-            --tl-blue-hover: #003d73;
-            --bg-color: #f8fafc;
+            --bg-color: #f4f6f9;
             --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #cbd5e1;
-            --border-light: #e2e8f0;
-            --success-color: #059669;
-            --warning-color: #d97706;
-            --radius-lg: 16px;
-            --radius-md: 10px;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0_0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
         }
 
         * {
@@ -35,174 +28,146 @@
             margin: 0;
             padding: 0;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            -webkit-font-smoothing: antialiased;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding-bottom: 50px;
-            line-height: 1.5;
+            padding-bottom: 40px;
         }
 
         header {
-            background: linear-gradient(135deg, var(--tl-navy) 0%, #001a38 100%);
+            background-color: var(--tl-navy);
             color: white;
-            padding: 18px 24px;
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: var(--shadow-md);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         header h1 {
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
 
         .header-btn {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.15);
+            border: none;
             color: white;
-            padding: 8px 14px;
-            border-radius: var(--radius-md);
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 13px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         .header-btn:hover {
-            background: rgba(255, 255, 255, 0.22);
-            transform: translateY(-1px);
+            background: rgba(255,255,255,0.25);
         }
 
         .container {
-            max-width: 640px;
-            margin: 24px auto;
-            padding: 0 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 16px;
         }
 
         .screen {
             display: none;
-            animation: fadeIn 0.25s ease-in-out;
         }
 
         .active-screen {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .card {
             background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
         }
 
         h2 {
             font-size: 20px;
-            font-weight: 700;
             color: var(--tl-navy);
-            margin-bottom: 18px;
-            letter-spacing: -0.3px;
+            margin-bottom: 16px;
         }
 
         h3 {
             font-size: 16px;
-            font-weight: 700;
             color: var(--tl-navy);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         label {
             display: block;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-muted);
             margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
         }
 
         select, input[type="text"], input[type="number"], input[type="time"], textarea {
             width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid var(--border-color);
-            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             font-size: 15px;
             background: #fff;
             color: var(--text-main);
-            transition: all 0.2s ease;
         }
 
-        select:hover, input:hover, textarea:hover {
-            border-color: var(--tl-blue);
-        }
-
-        select:focus, input:focus, textarea:focus {
+        select:focus, input:focus {
             outline: none;
             border-color: var(--tl-blue);
-            box-shadow: 0 0 0 4px rgba(0, 83, 159, 0.12);
+            box-shadow: 0 0 0 3px rgba(0,83,159,0.1);
         }
 
         .btn {
             display: block;
             width: 100%;
-            padding: 13px 18px;
+            padding: 12px;
             border: none;
-            border-radius: var(--radius-md);
+            border-radius: 8px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
-            margin-top: 12px;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
+            margin-top: 10px;
+            transition: background 0.2s;
         }
 
         .btn-primary {
             background-color: var(--tl-blue);
             color: white;
         }
-        .btn-primary:hover { background-color: var(--tl-blue-hover); box-shadow: var(--shadow-md); }
+        .btn-primary:hover { background-color: #003d73; }
 
         .btn-danger {
             background-color: var(--tl-red);
             color: white;
         }
-        .btn-danger:hover { background-color: #c5141b; box-shadow: var(--shadow-md); }
+        .btn-danger:hover { background-color: #c5141b; }
 
         .btn-success {
             background-color: var(--success-color);
             color: white;
         }
-        .btn-success:hover { background-color: #047857; box-shadow: var(--shadow-md); }
+        .btn-success:hover { background-color: #059669; }
 
         .btn-secondary {
-            background-color: #f1f5f9;
+            background-color: #e5e7eb;
             color: var(--text-main);
-            border: 1px solid var(--border-light);
         }
-        .btn-secondary:hover { background-color: #e2e8f0; }
+        .btn-secondary:hover { background-color: #d1d5db; }
 
         .home-menu-grid {
             display: grid;
@@ -213,19 +178,17 @@
 
         .menu-tile {
             background: white;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             padding: 24px;
             text-align: left;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
         }
 
         .menu-tile:hover {
             border-color: var(--tl-blue);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 4px 12px rgba(0,83,159,0.08);
         }
 
         .menu-tile h3 {
@@ -237,55 +200,34 @@
         .menu-tile p {
             font-size: 14px;
             color: var(--text-muted);
-            line-height: 1.4;
         }
 
         .checkbox-group {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 8px;
             margin-top: 6px;
         }
 
         .eng-checkbox-label {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #f8fafc;
-            padding: 10px 14px;
-            border: 1.5px solid var(--border-light);
-            border-radius: var(--radius-md);
+            gap: 8px;
+            background: #f9fafb;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .eng-checkbox-label:hover {
-            background: #f1f5f9;
-            border-color: var(--border-color);
-        }
-
-        .eng-checkbox-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--tl-blue);
             cursor: pointer;
         }
 
         .manifest-card {
             background: white;
-            border: 1.5px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
             position: relative;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-        }
-
-        .manifest-card:hover {
-            box-shadow: var(--shadow-md);
         }
 
         .color-dot {
@@ -293,67 +235,53 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            margin-right: 6px;
+            margin-right: 4px;
             vertical-align: middle;
-            box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
         }
 
         .notes-box {
             background: #fffbeb;
-            border: 1.5px solid #fef3c7;
-            padding: 10px 14px;
-            border-radius: var(--radius-md);
+            border: 1px solid #fef3c7;
+            padding: 8px;
+            border-radius: 6px;
             font-size: 13px;
             color: #b45309;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .item-photo {
             width: 100%;
-            height: 140px;
+            height: 120px;
             object-fit: cover;
-            border-radius: var(--radius-md);
-            margin-top: 10px;
-            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            margin-top: 8px;
+            border: 1px solid var(--border-color);
         }
 
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.5);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 20px;
+            padding: 16px;
         }
 
         .modal-card {
             background: white;
             width: 100%;
-            max-width: 420px;
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            box-shadow: var(--shadow-lg);
-            animation: modalPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            max-width: 400px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .route-order-controls {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
-        }
-
-        hr {
-            border: 0;
-            border-top: 1.5px solid var(--border-light);
-            margin: 20px 0;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -368,9 +296,9 @@
 
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
-            <div style="text-align: center; margin: 10px 0 28px 0;">
-                <h2 style="font-size: 26px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
-                <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Select your workflow mode below to get started</p>
+            <div style="text-align: center; margin: 20px 0 30px 0;">
+                <h2 style="font-size: 24px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
+                <p style="color: var(--text-muted); font-size: 14px;">Select your workflow mode below</p>
             </div>
 
             <div class="home-menu-grid">
@@ -411,7 +339,7 @@
                     <select id="opEndHubSelect" onchange="updateRouteEndpoints()"></select>
                 </div>
 
-                <hr>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
 
                 <div class="form-group">
                     <label>Search Travelodge Hotel</label>
@@ -450,7 +378,7 @@
 
                 <div class="form-group">
                     <label>Staging Photo (Optional - Auto Compressed)</label>
-                    <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; padding: 10px;">
+                    <input type="file" id="opPhotoInput" accept="image/*" capture="environment" style="font-size: 14px;">
                 </div>
 
                 <button class="btn btn-primary" onclick="addManifestDrop()">➕ Add Drop to Manifest</button>
@@ -459,12 +387,12 @@
             <div class="card">
                 <h3>Current Route Manifest (<span id="opDropCount">0</span> Stops)</h3>
                 
-                <div id="opRouteSummaryContainer" style="margin-bottom: 14px; display: none;">
+                <div id="opRouteSummaryContainer" style="margin-bottom: 12px; display: none;">
                     <div class="notes-box" style="background:#eff6ff; border-color:#dbeafe; color:#1e40af;">
                         ⏱️ <strong>Estimated Workload:</strong> <span id="opEstWorkload">0 mins</span><br>
                         <span style="font-size:12px; color:var(--text-muted);">Based on <span id="opDropTimeDisplay">10</span> mins per stop + transit time.</span>
                     </div>
-                    <button class="btn btn-secondary" style="margin-top: 10px;" onclick="launchOpFullRouteMap()">🗺️ Open Full Route in Google Maps</button>
+                    <button class="btn btn-secondary" style="margin-top: 8px;" onclick="launchOpFullRouteMap()">🗺️ Open Full Route in Google Maps</button>
                 </div>
 
                 <div id="opManifestList">
@@ -477,13 +405,13 @@
 
         <!-- DRIVER PORTAL -->
         <div id="driverScreen" class="screen">
-            <div class="card" style="background: linear-gradient(135deg, var(--tl-navy) 0%, #001a38 100%); color: white; border: none;">
-                <h2 style="color: white; margin-bottom: 6px;">🚚 Driver Live Manifest</h2>
-                <p style="font-size: 13px; opacity: 0.85; margin-bottom: 16px;">Start: <strong style="color:white;"><span id="driverStartHub">Sheffield Parts Depot</span></strong> | End: <strong style="color:white;"><span id="driverEndHub">Sheffield Parts Depot</span></strong></p>
+            <div class="card" style="background: var(--tl-navy); color: white;">
+                <h2 style="color: white; margin-bottom: 8px;">🚚 Driver Live Manifest</h2>
+                <p style="font-size: 13px; opacity: 0.85; margin-bottom: 12px;">Start: <strong id="driverStartHub">Sheffield Parts Depot</strong> | End: <strong id="driverEndHub">Sheffield Parts Depot</strong></p>
                 
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.2);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
-                    <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy); border: none;" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary" style="margin: 0; background: var(--tl-blue); border: 1px solid rgba(255,255,255,0.3);" onclick="launchLiveGPSRoute()">📍 Navigate Next Stop</button>
+                    <button class="btn btn-secondary" style="margin: 0; background: white; color: var(--tl-navy);" onclick="launchCompleteDriverRoute()">🗺️ Full Route Map</button>
                 </div>
             </div>
 
@@ -496,7 +424,7 @@
 
             <div class="card" id="returnJourneySection" style="display: none; background: #f0fdf4; border-color: #bbf7d0;">
                 <h3 style="color: #166534;">🏁 End of Route / Return Journey</h3>
-                <p style="font-size: 13px; color: #15803d; margin-bottom: 14px;">All deliveries are completed! Select your return destination.</p>
+                <p style="font-size: 13px; color: #15803d; margin-bottom: 12px;">All deliveries are completed! Select your return destination.</p>
                 
                 <div class="form-group">
                     <label style="color: #166534;">Return Hub / Destination</label>
@@ -504,7 +432,7 @@
                 </div>
 
                 <button class="btn btn-success" onclick="launchReturnNavigation()">🚗 Navigate Return Journey</button>
-                <button class="btn btn-secondary" style="margin-top: 10px; background: #dcfce7; color: #166534; border-color: #bbf7d0;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift (Clears Photos)</button>
+                <button class="btn btn-secondary" style="margin-top: 8px; background: #dcfce7; color: #166534;" onclick="completeShiftDone()">✔ Sign Off & Complete Shift (Clears Photos)</button>
             </div>
         </div>
 
@@ -518,7 +446,7 @@
                     <input type="text" id="driverDetailsNameInput" value="Sheffield Driver" placeholder="Enter driver name...">
                 </div>
 
-                <hr>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
 
                 <h3>⏱️ Today's Shift Log (<span id="currentDayDisplay">Today</span>)</h3>
                 
@@ -526,19 +454,19 @@
                     <div class="form-group">
                         <label>Shift Start Time (Before First Drop)</label>
                         <input type="time" id="shiftStartTimeInput">
-                        <button class="btn btn-secondary" style="margin-top: 6px; padding: 6px 12px; font-size: 12px; width: auto;" onclick="setNowTime('shiftStartTimeInput')">⏱️ Set to Current Time</button>
+                        <button class="btn btn-secondary" style="margin-top: 6px; padding: 6px; font-size: 12px;" onclick="setNowTime('shiftStartTimeInput')">⏱️ Set to Current Time</button>
                     </div>
 
                     <div class="form-group">
                         <label>Shift Finish Time (At End of Shift)</label>
                         <input type="time" id="shiftEndTimeInput">
-                        <button class="btn btn-secondary" style="margin-top: 6px; padding: 6px 12px; font-size: 12px; width: auto;" onclick="setNowTime('shiftEndTimeInput')">⏱️ Set to Current Time</button>
+                        <button class="btn btn-secondary" style="margin-top: 6px; padding: 6px; font-size: 12px;" onclick="setNowTime('shiftEndTimeInput')">⏱️ Set to Current Time</button>
                     </div>
 
                     <button class="btn btn-primary" onclick="saveTodayShiftHours()">💾 Save Today's Shift Hours</button>
                 </div>
 
-                <hr>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
 
                 <h3>📅 This Week's Hours (Mon - Fri)</h3>
                 <div id="weeklyHoursBreakdownList" style="margin-bottom: 16px;">
@@ -569,33 +497,33 @@
                     <input type="number" id="settingDropTime" min="1" max="60" value="10">
                 </div>
 
-                <hr>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
 
                 <h3>Starting Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                     <input type="text" id="newStartHubInput" placeholder="Add new starting hub...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 18px;" onclick="addStartHubItem()">Add</button>
+                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addStartHubItem()">Add</button>
                 </div>
                 <div id="startHubConfigList" style="margin-bottom: 16px;"></div>
 
                 <h3>End Destinations / Hubs</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                     <input type="text" id="newEndHubInput" placeholder="Add end hub destination...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 18px;" onclick="addEndHubItem()">Add</button>
+                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEndHubItem()">Add</button>
                 </div>
                 <div id="endHubConfigList" style="margin-bottom: 16px;"></div>
 
                 <h3>Registered Engineers</h3>
-                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                     <input type="text" id="newEngInput" placeholder="Add engineer name...">
-                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 18px;" onclick="addEngineer()">Add</button>
+                    <button class="btn btn-primary" style="width: auto; margin:0; padding: 10px 16px;" onclick="addEngineer()">Add</button>
                 </div>
                 <div id="engConfigList" style="margin-bottom: 16px;"></div>
 
-                <hr>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin: 16px 0;">
 
                 <h3>🏨 Custom Hotel Address Overrides</h3>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Select any hotel and assign a full street address, town, or postcode to ensure Google Maps navigates accurately every time.</p>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Select any hotel and assign a full street address, town, or postcode to ensure Google Maps navigates accurately every time.</p>
                 
                 <div class="form-group">
                     <label>Select Hotel</label>
@@ -610,7 +538,7 @@
                 <button class="btn btn-primary" style="margin-bottom: 16px;" onclick="saveCustomHotelAddress()">💾 Save Hotel Address</button>
                 <div id="customAddressesList"></div>
 
-                <button class="btn btn-primary" style="margin-top: 24px;" onclick="saveSettings()">💾 Save All Hub Settings</button>
+                <button class="btn btn-primary" style="margin-top: 20px;" onclick="saveSettings()">💾 Save All Hub Settings</button>
             </div>
         </div>
 
@@ -620,8 +548,8 @@
     <div id="proofPhotoModal" class="modal-overlay">
         <div class="modal-card">
             <h3>📷 Delivery Photo Proof</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Capture or upload a handover photo (automatically compressed for memory safety).</p>
-            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 16px; padding: 8px;">
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Capture or upload a handover photo (automatically compressed for memory safety).</p>
+            <input type="file" id="proofPhotoInput" accept="image/*" capture="environment" style="font-size: 14px; margin-bottom: 16px;">
             <button class="btn btn-success" onclick="submitDeliveryProof()">Confirm & Complete Stop</button>
             <button class="btn btn-secondary" onclick="closeProofModal()">Cancel</button>
         </div>
@@ -632,7 +560,7 @@
         <div class="modal-card">
             <h3>💬 Delivery Notification</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Copy text summary for WhatsApp confirmation:</p>
-            <div id="whatsappTextOutput" style="background: #f8fafc; border: 1.5px solid var(--border-light); padding: 12px; border-radius: var(--radius-md); font-size: 13px; margin-bottom: 16px; word-break: break-all; color: var(--tl-navy); font-weight: 500;"></div>
+            <div id="whatsappTextOutput" style="background: #f9fafb; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; word-break: break-all;"></div>
             <button class="btn btn-primary" onclick="copyTextAndClose()">📋 Copy Text & Continue</button>
             <button class="btn btn-secondary" onclick="continueRouteFromModal()">Skip & Continue Route</button>
         </div>
@@ -898,7 +826,7 @@
                 container.innerHTML += `
                     <div class="manifest-card" style="padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 14px; font-weight:600; color:var(--tl-navy);">${day}</span>
-                        <span style="font-size: 14px; font-weight:600; color:var(--text-main);">${hrs} hrs</span>
+                        <span style="font-size: 14px; color:var(--text-main);">${hrs} hrs</span>
                     </div>
                 `;
             });
@@ -922,10 +850,12 @@
                     breakdown: {...appState.currentWeekHours}
                 });
 
+                // Keep only the last 4 weeks (delete 5th week onwards)
                 if (appState.archivedWeeks.length > 4) {
                     appState.archivedWeeks = appState.archivedWeeks.slice(0, 4);
                 }
 
+                // Reset current week
                 appState.currentWeekHours = { Monday: 0, Tuesday: 0, Wednesday: 0, Thursday: 0, Friday: 0 };
 
                 saveToLocalStorage();
@@ -948,10 +878,10 @@
 
             appState.archivedWeeks.forEach((week, idx) => {
                 container.innerHTML += `
-                    <div class="manifest-card" style="background:#f8fafc; margin-bottom:10px;">
+                    <div class="manifest-card" style="background:#f9fafb; margin-bottom:10px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <strong style="font-size: 14px; color:var(--tl-navy);">Week ${idx + 1} (${week.dateRange})</strong>
-                            <span style="font-size: 13px; font-weight:700; color:var(--success-color);">${week.totalHours} hrs</span>
+                            <span style="font-size: 13px; font-weight:600; color:var(--success-color);">${week.totalHours} hrs</span>
                         </div>
                         <p style="font-size: 12px; color:var(--text-muted); margin-top:4px;">Driver: ${week.driverName}</p>
                     </div>
@@ -1139,12 +1069,12 @@
                     let hex = colorHexMap[d.color] || '#ccc';
                     let mappedAddr = getMappedHotelAddress(d.hotel);
                     container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 5px solid ${hex};">
+                        <div class="manifest-card" style="border-left: 4px solid ${hex};">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong style="font-size:15px; color:var(--tl-navy);">Stop ${idx + 1}: ${d.hotel}</strong>
+                                <strong>Stop ${idx + 1}: ${d.hotel}</strong>
                                 <button class="btn btn-danger" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0;" onclick="removeDrop(${idx})">Remove</button>
                             </div>
-                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px; font-weight:500;">📍 ${mappedAddr}</p>` : ''}
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
                             <p style="margin: 8px 0; font-size: 13px; color: var(--text-muted);">
                                 Engineers: <b style="color: var(--tl-navy);">${d.engineers.join(', ')}</b> | Sticker: <span class="color-dot" style="background-color: ${hex};"></span><b style="color: var(--tl-navy);">${d.color}</b>
                             </p>
@@ -1152,8 +1082,8 @@
                             ${d.stagingPhoto ? `<img src="${d.stagingPhoto}" class="item-photo">` : ''}
                             
                             <div class="route-order-controls">
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px 12px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Move Up</button>
-                                <button class="btn btn-secondary" style="margin-top:0; padding:6px 12px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Move Down</button>
+                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲ Move Up</button>
+                                <button class="btn btn-secondary" style="margin-top:0; padding:6px; font-size:12px;" onclick="moveDrop(${idx}, 1)" ${idx === appState.manifest.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼ Move Down</button>
                             </div>
                         </div>
                     `;
@@ -1271,25 +1201,25 @@
                 container.innerHTML = '';
                 appState.manifest.forEach((d, idx) => {
                     let hex = colorHexMap[d.color] || '#ccc';
-                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 700;">✔ Delivered</span>' : '<span style="color: var(--warning-color); font-weight: 700;">Pending</span>';
+                    let statusBadge = d.completed ? '<span style="color: var(--success-color); font-weight: 600;">✔ Delivered</span>' : '<span style="color: #f59e0b; font-weight: 600;">Pending</span>';
                     let mappedAddr = getMappedHotelAddress(d.hotel);
 
                     container.innerHTML += `
-                        <div class="manifest-card" style="border-left: 5px solid ${hex}; opacity: ${d.completed ? '0.7' : '1'};">
+                        <div class="manifest-card" style="border-left: 4px solid ${hex}; opacity: ${d.completed ? '0.65' : '1'};">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong style="font-size: 16px; color:var(--tl-navy);">Stop ${idx + 1}: ${d.hotel}</strong>
+                                <strong style="font-size: 16px;">Stop ${idx + 1}: ${d.hotel}</strong>
                                 ${statusBadge}
                             </div>
-                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px; font-weight:500;">📍 ${mappedAddr}</p>` : ''}
+                            ${mappedAddr !== d.hotel + ", UK" ? `<p style="font-size:12px; color:var(--tl-blue); margin-top:2px;">📍 ${mappedAddr}</p>` : ''}
                             <p style="margin: 8px 0; font-size: 14px;">
                                 Engineers: <b style="color:var(--tl-navy);">${d.engineers.join(', ')}</b><br>
                                 Sticker Dot: <span class="color-dot" style="background-color: ${hex};"></span><b style="color:var(--tl-navy);">${d.color}</b>
                             </p>
                             <div class="notes-box">📝 Hotel / Parking Notes (Editable): <input type="text" value="${d.notes || ''}" placeholder="Add parking or access notes..." style="background:transparent; border:none; width:70%; font-size:13px; color:#92400e; font-weight:600;" onchange="updateDriverDropNote(${idx}, this.value)"></div>
-                            ${d.stagingPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--text-muted); font-weight:500;">Drop Staging Photo:</p><img src="${d.stagingPhoto}" class="item-photo">` : ''}
-                            ${d.proofPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--success-color); font-weight:600;">Delivery Handover Photo Attached ✓</p>` : ''}
+                            ${d.stagingPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--text-muted);">Drop Staging Photo:</p><img src="${d.stagingPhoto}" class="item-photo">` : ''}
+                            ${d.proofPhoto ? `<p style="margin:8px 0 2px 0; font-size:12px; color:var(--success-color);">Delivery Handover Photo Attached ✓</p>` : ''}
                             
-                            <div style="margin-top: 14px;">
+                            <div style="margin-top: 12px;">
                                 ${!d.completed ? 
                                     `<button class="btn btn-success" onclick="promptDeliveryProof(${idx})">📸 Take Delivery Photo & Complete</button>` : 
                                     `<button class="btn btn-secondary" onclick="undoDelivery(${idx})">Undo Completed Status</button>`
@@ -1578,9 +1508,9 @@
             startContainer.innerHTML = '';
             appState.startHubs.forEach((h, idx) => {
                 startContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 13px; font-weight:500;">${h}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 3px 10px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button>
+                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px;">${h}</span>
+                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeStartHubItem(${idx})">X</button>
                     </div>
                 `;
             });
@@ -1589,9 +1519,9 @@
             endContainer.innerHTML = '';
             appState.endHubs.forEach((h, idx) => {
                 endContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 13px; font-weight:500;">${h}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 3px 10px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
+                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px;">${h}</span>
+                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEndHubItem(${idx})">X</button>
                     </div>
                 `;
             });
@@ -1600,9 +1530,9 @@
             engContainer.innerHTML = '';
             appState.engineers.forEach((eng, idx) => {
                 engContainer.innerHTML += `
-                    <div class="manifest-card" style="padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 14px; font-weight:500;">${eng}</span>
-                        <button class="btn btn-danger" style="width: auto; padding: 3px 10px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
+                    <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px;">${eng}</span>
+                        <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeEngineer(${idx})">X</button>
                     </div>
                 `;
             });
@@ -1614,9 +1544,9 @@
                 addressContainer.innerHTML = `<h4 style="font-size: 14px; color: var(--tl-navy); margin-bottom: 8px;">Active Overrides (${overriddenHotels.length}):</h4>`;
                 overriddenHotels.forEach(hotelName => {
                     addressContainer.innerHTML += `
-                        <div class="manifest-card" style="padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="manifest-card" style="padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
                             <div style="font-size: 12px;"><strong>${hotelName}</strong><br><span style="color: var(--text-muted);">${appState.hotelAddresses[hotelName]}</span></div>
-                            <button class="btn btn-danger" style="width: auto; padding: 3px 10px; font-size: 11px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')">X</button>
+                            <button class="btn btn-danger" style="width: auto; padding: 2px 8px; font-size: 11px; margin: 0;" onclick="removeCustomHotelAddress('${hotelName}')">X</button>
                         </div>
                     `;
                 });
@@ -1624,7 +1554,7 @@
         }
 
         function saveSettings() {
-            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) || 10;
+            appState.dropTimeMins = parseInt(document.getElementById('settingDropTime').value) | 10;
             saveToLocalStorage();
             db.ref('routeData').set(appState).catch(err => console.warn(err));
             alert("Hub configuration and settings saved successfully!");
