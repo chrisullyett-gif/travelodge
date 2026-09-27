@@ -14,6 +14,7 @@
             --tl-navy: #002D62;
             --tl-red: #E31B23;
             --tl-blue: #00539F;
+            --tl-bright-blue: #0066cc;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #1f2937;
@@ -36,34 +37,98 @@
             padding-bottom: 40px;
         }
 
+        /* Travelodge Official App Header Style */
         header {
             background-color: var(--tl-navy);
             color: white;
-            padding: 16px 20px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .travelodge-logo-svg {
+            height: 28px;
+            width: auto;
         }
 
         header h1 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .header-btn {
             background: rgba(255,255,255,0.15);
             border: none;
             color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 6px 10px;
+            border-radius: 8px;
             font-size: 13px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: background 0.2s;
         }
 
         .header-btn:hover {
             background: rgba(255,255,255,0.25);
+        }
+
+        .notification-badge-btn {
+            position: relative;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .notification-badge-btn::after {
+            content: "1";
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: var(--tl-red);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--tl-navy);
         }
 
         .container {
@@ -169,37 +234,59 @@
         }
         .btn-secondary:hover { background-color: #d1d5db; }
 
+        /* App Style 2-Column Home Menu Grid matching the screenshot */
         .home-menu-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-top: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 10px;
         }
 
         .menu-tile {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: left;
+            background: var(--tl-navy);
+            border-radius: 14px;
+            overflow: hidden;
+            text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 45, 98, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .menu-tile:hover {
-            border-color: var(--tl-blue);
-            box-shadow: 0 4px 12px rgba(0,83,159,0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 45, 98, 0.25);
         }
 
-        .menu-tile h3 {
-            font-size: 18px;
-            color: var(--tl-navy);
-            margin-bottom: 6px;
+        .menu-tile-icon-area {
+            padding: 32px 16px 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
         }
 
-        .menu-tile p {
+        .menu-tile-icon-area svg {
+            width: 56px;
+            height: 56px;
+            stroke: white;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .menu-tile-banner {
+            background-color: var(--tl-blue);
+            color: white;
+            padding: 12px 8px;
             font-size: 14px;
-            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .checkbox-group {
@@ -288,33 +375,82 @@
 <body>
 
     <header id="headerBar" style="display: none;">
-        <h1>Travelodge Sheffield Depot Portal</h1>
-        <button class="header-btn" onclick="returnHome()">🏠 Home Menu</button>
+        <div class="header-left">
+            <button class="header-btn" onclick="returnHome()">🏠 Home</button>
+            <div class="logo-container">
+                <!-- Travelodge Sunrise Brand Graphic Icon -->
+                <svg class="travelodge-logo-svg" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 30C15 20 25 15 35 20C45 25 55 10 70 15C85 20 95 30 110 25" stroke="#E31B23" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M5 35C15 25 30 20 45 25C60 30 75 15 90 20C100 23 105 28 115 30" stroke="#00539F" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <h1>Sheffield Depot</h1>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="notification-badge-btn" title="Notifications">🔔</button>
+        </div>
     </header>
 
     <div class="container">
 
         <!-- PORTAL HOME -->
         <div id="portalHome" class="screen active-screen">
-            <div style="text-align: center; margin: 20px 0 30px 0;">
-                <h2 style="font-size: 24px; color: var(--tl-navy);">Sheffield Parts Hub Portal</h2>
-                <p style="color: var(--text-muted); font-size: 14px;">Select your workflow mode below</p>
+            <!-- App Header Branding Banner -->
+            <div style="background: var(--tl-navy); color: white; padding: 20px; border-radius: 14px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,45,98,0.15);">
+                <svg viewBox="0 0 180 50" fill="none" style="height: 36px; width: auto; margin-bottom: 8px;" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 38C25 18 45 12 65 22C85 32 105 10 135 18C165 26 175 35 175 35" stroke="#E31B23" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M5 45C25 30 55 22 85 30C115 38 145 18 175 28" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <h2 style="font-size: 20px; color: white; margin-bottom: 4px;">Sheffield Parts Hub Portal</h2>
+                <p style="color: rgba(255,255,255,0.8); font-size: 13px;">Select your workflow mode below</p>
             </div>
 
+            <!-- Official App Style 2-Column Grid -->
             <div class="home-menu-grid">
+                <!-- Tile 1: Operative / Staging -->
                 <div class="menu-tile" onclick="openOperativePortal()">
-                    <h3>📋 Operative / Staging Mode</h3>
-                    <p>Build daily delivery manifests, allocate parts to engineers, map sticker dots, and preview routes.</p>
+                    <div class="menu-tile-icon-area">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <div class="menu-tile-banner">Operative / Staging</div>
                 </div>
 
+                <!-- Tile 2: Driver & Delivery -->
                 <div class="menu-tile" onclick="openDriverPortal()">
-                    <h3>🚚 Driver & Delivery Portal</h3>
-                    <p>View active route, update drop-off notes, capture delivery photo proof, and trigger live GPS maps.</p>
+                    <div class="menu-tile-icon-area">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                    </div>
+                    <div class="menu-tile-banner">Driver Portal</div>
                 </div>
 
+                <!-- Tile 3: Full Route Map Overview -->
+                <div class="menu-tile" onclick="launchOpFullRouteMap()">
+                    <div class="menu-tile-icon-area">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                            <line x1="16" y1="6" x2="16" y2="22"></line>
+                        </svg>
+                    </div>
+                    <div class="menu-tile-banner">Route Maps</div>
+                </div>
+
+                <!-- Tile 4: Settings -->
                 <div class="menu-tile" onclick="openSettingsPortal()">
-                    <h3>⚙️ Hub & Driver Settings</h3>
-                    <p>Configure starting hubs, end destinations, registered engineers, drop durations, and custom hotel addresses.</p>
+                    <div class="menu-tile-icon-area">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c0 .69.41 1.31 1.03 1.51h.09a2 2 0 012 2 2 2 0 01-2 2h-.09c-.62.2-1.03.82-1.03 1.51z"></path>
+                        </svg>
+                    </div>
+                    <div class="menu-tile-banner">Hub Settings</div>
                 </div>
             </div>
         </div>
